@@ -1,9 +1,9 @@
-fnames=list.files("data/behaviour/", pattern="*.csv", full.names = T) 
+fnames=list.files("data/behaviour", pattern="*.csv", full.names = T) 
 fnames=fnames[str_detect(fnames, "day")]
 
 data <- 
   map_df(fnames, function(fname){
-  day = str_split(fname, "[/_]")[[1]][4]
+  day = str_split(fnames, "[/_]")[[1]][4]
   dd <- read_csv(fname, comment = "#", col_types = cols(
     subj = col_character(),
     trial = col_double(),

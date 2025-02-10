@@ -77,8 +77,9 @@ read_sheet <- function(fname) {
     spread(Q, val) -> s6q120
   
   ##' section 7: Alcohol
-  read_xlsx(fname, sheet="Sleep Quiz", range="AC3:AC5", col_names = F, na="NA") |>
-    rename(val=`...1`) |> mutate(Q=sprintf("S7_Q%i", 1:3)) |>
+  read_xlsx(fname, sheet="Sleep Quiz", range="AB3:AC5", col_names = F, na="NA") |>
+    rename(val=`...2`) |> mutate(Q=sprintf("S7_Q%i", 1:3)) |> 
+    select(-`...1`) |>
     spread(Q, val) -> s7q13
   
   ##' Putting it together

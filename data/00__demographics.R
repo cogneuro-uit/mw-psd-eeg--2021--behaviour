@@ -1,5 +1,5 @@
-fnames=list.files("data/baseline+diary/", pattern="*.xlsx", full.names = T) 
-fnames=fnames[!str_detect(fnames, "~")]
+fnames = list.files("data/baseline+diary/", pattern="*.xlsx", full.names = T)
+fnames = fnames[!str_detect(fnames, "~")]
 
 
 read_xlsx <- function(...){
@@ -7,6 +7,9 @@ read_xlsx <- function(...){
 }
 
 read_sheet <- function(fname) {
+  
+  datasheet <- read_xlsx(fname, sheet="DataSheet")
+  
   read_xlsx(fname, sheet="DataSheet", range="B2:D6", col_names = F) |>
     setNames(c("var","drop","val")) |> select(-drop) |> spread(var,val) |>
     mutate(subj=sprintf("%03i",Code)) |> select(-Code) |>

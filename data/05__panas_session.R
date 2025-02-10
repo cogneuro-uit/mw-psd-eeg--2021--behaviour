@@ -1,6 +1,6 @@
 #' this is the PANAS pre and post each session
 #'
-fnames=list.files("data/baseline+diary/", pattern="*.xlsx", full.names = T) 
+fnames=list.files("data/baseline+diary", pattern="*.xlsx", full.names = T) 
 fnames=fnames[!str_detect(fnames, "~")]
 
 read_xlsx <- function(...){

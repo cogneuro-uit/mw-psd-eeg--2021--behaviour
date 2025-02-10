@@ -1,4 +1,4 @@
-fnames = list.files("data/baseline+diary/", pattern="*.xlsx", full.names = T) 
+fnames = list.files("data/baseline+diary", pattern="*.xlsx", full.names = T) 
 fnames = fnames[!str_detect(fnames, "~")]
 
 read_xlsx <- function(...){
@@ -17,14 +17,14 @@ read_xlsx2 <- function(...){
 #' read_sheet <- function(fname) {
 #'   print(fname)
 #'   subj = str_split(fname, "/")[[1]][3] |> str_split("_")[[1]][1]
-#'   
+#' 
 #'   ##' section 1: Generell sovn
 #'   diary <- read_xlsx2(fname, sheet="Sleep Diary", range="A3:R20", col_names = T)
-#'   diary |> mutate(date=as_date(Dato), dayno=dag, 
+#'   diary |> mutate(date=as_date(Dato), dayno=dag,
 #'                   sleep_onset_h=Q2_Time+(Q2_Min+`Q3 _Min`)/60.,
 #'                   wake_onset_h =Q6_Time+(Q6_Min)/60.,
 #'                   sleep_duration=wake_onset_h-(sleep_onset_h-24),
-#'                   sleep_quality = S_Quality) |> 
+#'                   sleep_quality = S_Quality) |>
 #'     select(date, sleep_onset_h, wake_onset_h, sleep_duration, sleep_quality) |>
 #'     filter(!is.na(date)) |>
 #'     mutate(group=if_else(n()==14, "LSD", "ESD"),
@@ -37,13 +37,13 @@ read_xlsx2 <- function(...){
 #'     dc$pre_control[15:17]=1
 #'     dc$pre_sleepdep[8:10]=1
 #'   }
-#'   
+#' 
 #'   #' subj 31 was missing SR for last 3 nights of normal sleep, substitute with
 #'   #' previous 4 nights
 #'   if(subj=="031"){
 #'     dc$pre_control[11:17]=1
 #'   }
-#'   
+#' 
 #'   tibble(subj=subj, dc)
 #' }
 
