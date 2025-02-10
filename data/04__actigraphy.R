@@ -94,7 +94,6 @@ map_df(subjs, \(subj){
   #'  yyyy-mm-dd
   #'  mm/dd/yyyy
   #'  
-  print(dd)
   dd |>     #rename(date=`End Date`) |>
     mutate(
     #' It appears as though participant 17 has flipped AM/PM 
