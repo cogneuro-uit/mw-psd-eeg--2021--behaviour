@@ -97,18 +97,16 @@ experiment_information <- list(
   ),
   
   en = list(
-    probe_information <- list(
-      en = list(
-        questions = list(
-          probe1 = "To what extent were you focused on the task right before this question?",
-          probe2 = "To the extent that you were not focused on the task, were you thinking about nothing or were you thinking about something specific?",
-          probe3 = "Were you aware of where you were directing your attention (either task-related or otherwise) or was it spontaneous?"
-        ),
-        descriptions = list(
-          probe1 = "1 = definitely NOT focused; 4 = definitely focused",
-          probe2 = "1 = definitely nothing; 4 = definitely something specific",
-          probe3 = "1 = definitely spontaneous; 4 = definitely aware"
-        )
+    probe_information = list(
+      questions = list(
+        probe1 = "To what extent were you focused on the task right before this question?",
+        probe2 = "To the extent that you were not focused on the task, were you thinking about nothing or were you thinking about something specific?",
+        probe3 = "Were you aware of where you were directing your attention (either task-related or otherwise) or was it spontaneous?"
+      ),
+      descriptions = list(
+        probe1 = "1 = definitely NOT focused; 4 = definitely focused",
+        probe2 = "1 = definitely nothing; 4 = definitely something specific",
+        probe3 = "1 = definitely spontaneous; 4 = definitely aware"
       )
     ),
     
