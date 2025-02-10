@@ -574,24 +574,6 @@ p_l_on[[34]] <- p_l_on[[34]] |> add_onset_change(o = 25.88, c=6, z="D-NO", a=25.
 p_l_on2 <- p_l_on
 p_l_wak2 <- p_l_wak
 
-# fix empty entries & transform to character.
-p_l_wak2 <- map(p_l_wak2, \(x){
-  if( !is.null( x ) ){
-    if( nrow( x ) != 0 ){
-      x |> mutate(wake_zone = as.character(wake_zone))
-    }
-  } else { tibble() }
-}) 
-
-p_l_on2 <- map(p_l_on2, \(x){
-  if( !is.null( x ) ){
-    if( nrow( x ) != 0 ){
-      x |> mutate(onset_zone = as.character(onset_zone))
-    }
-  } else { tibble() }
-}) 
-
-
 # Save adjustment 
 save(p_l_on2, p_l_wak2, file = "data/sleep_adjustment-fix_GC-SA.rdata")
 

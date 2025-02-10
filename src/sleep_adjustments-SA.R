@@ -1335,23 +1335,5 @@ p_l_on[[34]][row,] |> check_onset_act_lig(our = 23.75)
 p_l_on[[34]] <- p_l_on[[34]] |> add_onset_change(o = 23.75, c=5, z="D-NO", a=p_l_on[[34]][row, "sleep_onset_ag_h"][[1]])
 
 
-# Fix empty entries & transform to character.
-p_l_wak <- map(p_l_wak, \(x){
-  if( !is.null( x ) ){
-    if( nrow( x ) != 0 ){
-      x |> mutate(wake_zone = as.character(wake_zone))
-    }
-  } else { tibble() }
-}) |> list_rbind()
-
-p_l_on <- map(p_l_on, \(x){
-  if( !is.null( x ) ){
-    if( nrow( x ) != 0 ){
-      x |> mutate(onset_zone = as.character(onset_zone))
-    }
-  } else { tibble() }
-}) |> list_rbind()
-
-
 ## Save =====
 save(p_l_on, p_l_wak, file = "data/sleep_adjustment-SA.rdata")
