@@ -1,20 +1,17 @@
 fnames=list.files("data/behaviour", pattern="*.csv", full.names = T) 
 fnames=fnames[str_detect(fnames, "day")]
 
-data <- 
-  map_df(fnames, function(fname){
-  day = str_split(fnames, "[/_]")[[1]][4]
-  dd <- read_csv(fname, comment = "#", col_types = cols(
+data <- map_df(fnames, \(fname){
+  print(fname)
+  read_csv(fname, comment = "#", col_types = cols(
     subj = col_character(),
     trial = col_double(),
     time = col_double(),
     stimulus = col_character(),
-    response = col_character()
-  )) %>%
-    mutate(day=day) -> dd
-  dd
+    response = col_character())
+  ) |> 
+    mutate(day = str_split(fname, "[/_]")[[1]][4])
 })
-
 
 # add block variable
 data <- 

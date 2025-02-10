@@ -1,14 +1,15 @@
 #' this is the PANAS pre and post each session
 #'
-fnames=list.files("data/baseline+diary", pattern="*.xlsx", full.names = T) 
-fnames=fnames[!str_detect(fnames, "~")]
+fnames = list.files("data/baseline+diary", pattern="*.xlsx", full.names = T) 
+fnames = fnames[!str_detect(fnames, "~")]
 
 read_xlsx <- function(...){
   suppressMessages(readxl::read_xlsx(...))
 }
 
 pos.items <- c("Q1", "Q3", "Q5", "Q9", "Q10", "Q12", "Q14", "Q16", "Q17", "Q19")
-read_sheet <- function(fname) {
+
+panas_session <- map(fnames, \(fname) {
   print(fname)
   subj = str_split(fname, "[/_]")[[1]][3]
   
@@ -24,10 +25,8 @@ read_sheet <- function(fname) {
       PANASsum = unique( sum(Value, na.rm=T) ),
       PANASsum = ifelse(PANASsum<5, NA, PANASsum) 
     )
-}
+}) |> list_rbind()
 
-panas_session <- map_df(fnames, read_sheet)
-
-rm(subjs)
-rm(pos.items)
 rm(fnames)
+rm(read_xlsx)
+rm(pos.items)

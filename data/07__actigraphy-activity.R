@@ -1,6 +1,6 @@
 fnames = list.files("data/actigraphy", pattern="*.csv", full.names = T) 
 
-subjs <- map_chr(fnames, ~str_split(.x, "[/_]")[[1]][[3]]) |>  unique() 
+subjs <- map_chr(fnames, ~str_split(.x, "[/_]")[[1]][[3]]) |> unique() 
 subjs <- subjs[!subjs=="030"]
   #' Subject 030 **does not** have actigraphy data
 

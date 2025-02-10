@@ -49,34 +49,34 @@ read_xlsx2 <- function(...){
 
 
 # New diary: "sleepdiary2"
-read_sheet <- function(fname) {
+sleep_diary <- map(fnames, \(fname) {
   print(fname)
-  strsplit(fname, "\\/|\\_")[[1]][3] -> subj
+  subj <- strsplit(fname, "\\/|\\_")[[1]][3]
   
   ##' section 1: Generell sovn
-  read_xlsx2(fname, sheet="sleepdiary2", range="A1:J20", col_names = T) -> diary
+  diary <- read_xlsx2(fname, sheet="sleepdiary2", range="A1:J20", col_names = T)
   
   if(isFALSE("notes" %in% names(diary))){
     diary$notes <- NA
   }
   
-  diary |> mutate(
+  dc <- diary |> mutate(
     date = as.Date(Dato),
     # Convert to only time -> time code (hms) -> seconds -> hours.
     entered_bed = period_to_seconds(hms(strftime(q1, "%H:%M:%S", tz="UTC")))/60/60,
-      
+    
     # Cumulative time  
     entered_bed_cum = if_else(entered_bed<=7.3, entered_bed+24, entered_bed),
-      # latest bed we found is 7h 10min
+    # latest bed we found is 7h 10min
     tried_to_sleep = period_to_seconds(hms(strftime(q2, "%H:%M:%S", tz="UTC")))/60/60,
     tried_to_sleep_cum = if_else(tried_to_sleep<=7.7, tried_to_sleep+24, tried_to_sleep),
-      # latest sleep we found is 7h 15m 
+    # latest sleep we found is 7h 15m 
     sleep_delay = ifelse(!is.na(q3), period_to_seconds(minutes(round(q3)))/60/60, 0), 
-      #' If it is "NA" then add 0, b/c, calculation problems.  
-        #' Round because some par. have ".x" (some value that does not convert)
+    #' If it is "NA" then add 0, b/c, calculation problems.  
+    #' Round because some par. have ".x" (some value that does not convert)
     night_wake_ups = q4,
     night_wake_up_time = ifelse(!is.na(q5), period_to_seconds(minutes(round(q5)))/60/60, 0), 
-      #' to hours. If missing, to 0 
+    #' to hours. If missing, to 0 
     last_awaking = period_to_seconds(hms(strftime(q6, "%H:%M:%S", tz="UTC")))/60/60,
     rise_from_bed = period_to_seconds(hms(strftime(q7, "%H:%M:%S", tz="UTC")))/60/60,
     sleep_quality = q8,
@@ -91,12 +91,12 @@ read_sheet <- function(fname) {
                             tried_to_sleep_cum + sleep_delay),
     
     # last awake fix: 
-      # if the difference between rise_from_bed and last_awaking is more than 2 hours, 
-      # use rise_from_bed instead. The reason is that some participants has reported 
-      # their last awaking as 1, while they rose from bed at 9. 
-      # 3 Hours has been decided based on being more reasonable estimate. We 
-      # Believe that if more than 3 hours pass, it is more likely that participants 
-      # fell asleep than laying in bed for that amount of time.
+    # if the difference between rise_from_bed and last_awaking is more than 2 hours, 
+    # use rise_from_bed instead. The reason is that some participants has reported 
+    # their last awaking as 1, while they rose from bed at 9. 
+    # 3 Hours has been decided based on being more reasonable estimate. We 
+    # Believe that if more than 3 hours pass, it is more likely that participants 
+    # fell asleep than laying in bed for that amount of time.
     diff_awake_bed = rise_from_bed-last_awaking,
     last_awaking_fix = ifelse(is.na(diff_awake_bed), rise_from_bed,
                               ifelse(diff_awake_bed>3, rise_from_bed, last_awaking)),
@@ -106,15 +106,15 @@ read_sheet <- function(fname) {
     sleep_duration_sub = ifelse(is.na(night_wake_up_time), 
                                 sleep_duration, 
                                 sleep_duration-night_wake_up_time),
-      #' Subtracts away night wake ups (similar to what the watch does for "sleep time")
+    #' Subtracts away night wake ups (similar to what the watch does for "sleep time")
     # Add participants notes
     notes = notes, 
-    ) |> 
-  select(date:sleep_duration, notes) |> 
-  filter(!is.na(date)) |>
-  mutate(group=if_else(n()==14, "LSD", "ESD"),
-         pre_control=0,
-         pre_sleepdep=0) -> dc
+  ) |> 
+    select(date:sleep_duration, notes) |> 
+    filter(!is.na(date)) |>
+    mutate(group=if_else(n()==14, "LSD", "ESD"),
+           pre_control=0,
+           pre_sleepdep=0)
   
   
   if(first(dc$group)=="LSD"){
@@ -132,8 +132,8 @@ read_sheet <- function(fname) {
   }
   
   tibble(subj=subj, dc)
-}
-
-sleep_diary <- map_df(fnames, read_sheet)
+}) |> list_rbind()
 
 rm(fnames)
+rm(read_xlsx)
+rm(read_xlsx2)

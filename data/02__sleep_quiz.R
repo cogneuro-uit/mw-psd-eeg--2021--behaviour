@@ -1,5 +1,5 @@
-fnames=list.files("data/baseline+diary/", pattern="*.xlsx", full.names = T) 
-fnames=fnames[!str_detect(fnames, "~")]
+fnames = list.files("data/baseline+diary", pattern="*.xlsx", full.names = T) 
+fnames = fnames[!str_detect(fnames, "~")]
 
 
 read_xlsx <- function(...){
@@ -14,9 +14,7 @@ read_xlsx2 <- function(...){
   }
 }
 
-
-
-read_sheet <- function(fname) {
+sleep_quiz <- map(fnames, \(fname) {
   print(fname)
   
   ##' section 1: Generell sovn
@@ -26,15 +24,15 @@ read_sheet <- function(fname) {
   read_xlsx(fname, sheet="Sleep Quiz", range="B5:C6", col_names = F) |>
     mutate(hms=sprintf("%i:%i:00", `...1`, `...2`)) |>
     pull(hms) -> q23
-
+  
   read_xlsx(fname, sheet="Sleep Quiz", range="B7:B9", col_names = F) |>
     rename(val=`...1`) |> mutate(Q=sprintf("S1_Q%i", 4:6)) |>
     spread(Q, val) -> q46
-    
+  
   read_xlsx(fname, sheet="Sleep Quiz", range="B11:B12", col_names = F) |>
     rename(val=`...1`) |> mutate(Q=sprintf("S1_Q%i", 7:8)) |>
     spread(Q, val) -> q78
-
+  
   ##' section 2: Fatique
   read_xlsx(fname, sheet="Sleep Quiz", range="F3:F11", col_names = F) |>
     rename(val=`...1`) |> mutate(Q=sprintf("S2_Q%i", 1:9)) |>
@@ -49,7 +47,7 @@ read_sheet <- function(fname) {
   read_xlsx(fname, sheet="Sleep Quiz", range="L3:L9", col_names = F) |>
     rename(val=`...1`) |> mutate(Q=sprintf("S4_Q%i", 1:7)) |>
     spread(Q, val) -> s4q17
-
+  
   read_xlsx(fname, sheet="Sleep Quiz", range="O3:P3", col_names = F) |>
     mutate(hms=sprintf("%i:%i:00", `...1`, `...2`)) |>
     pull(hms) -> s4q8
@@ -61,7 +59,7 @@ read_sheet <- function(fname) {
     replace_na(list(`...2`=0)) |>
     mutate(val=sprintf("%i:%i:00", `...1`, `...2`), Q=sprintf("S4_Q%i", 10:11)) |>
     select(Q,val) |> spread(Q, val) -> s4q1011
-
+  
   read_xlsx(fname, sheet="Sleep Quiz", range="O10:O23", col_names = F) |>
     rename(val=`...1`) |> mutate(Q=sprintf("S4_Q%i", 12:25)) |>
     spread(Q, val) -> s4q1225
@@ -91,8 +89,8 @@ read_sheet <- function(fname) {
     bind_cols(q46, q78, s2q19, s3q18,
               s4q17, S4_Q8=hms(s4q8), S4_Q9=s4q9, S4_Q10=hms(s4q1011[1]), S4_Q11=hms(s4q1011[2]) , s4q1225,
               s5q17, s6q120, s7q13)
-}
-
-sleep_quiz <- map_df(fnames, read_sheet)
+}) |> list_rbind()
 
 rm(fnames)
+rm(read_xlsx)
+rm(read_xlsx2)

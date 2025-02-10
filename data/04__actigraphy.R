@@ -1,8 +1,5 @@
-fnames=list.files("data/actigraphy", pattern="*.csv", full.names = T) 
-subjs = unique(map_chr(fnames, \(fname) 
-                       (str_split(fname, "/")[[1]][3] |> 
-                           str_split("_"))[[1]][1]))
-
+fnames = list.files("data/actigraphy", pattern="*.csv", full.names = T) 
+subjs = map_chr(fnames, ~str_split(.x, "[/_]")[[1]][[3]]) |> unique() 
 
 as_hour_time <- function(stime){
   map_dbl(str_split(stime,":"), \(x){
@@ -43,7 +40,7 @@ as_hour_time_wake <- function(stime){
   })
 } 
 # 19 special --------------------------------------------- --
-h_slp_19 <- \(stime){ # sleep onset
+h_slp_19 <- function(stime){ # sleep onset
   map_dbl(str_split(stime,":"), \(x){
     # Subj 19 seems to have a 12 hours discrepancy between sleep onset & wake
     h <- as.numeric(x[1])+12 # hour
@@ -54,7 +51,7 @@ h_slp_19 <- \(stime){ # sleep onset
   })
 }
 
-h_wk_19 <- \(stime){ # wake 
+h_wk_19 <- function(stime){ # wake 
   map_dbl(str_split(stime,":"), \(x){
     # Subj 19 seems to have a 12 hours discrepancy between sleep onset & wake
     h <- as.numeric(x[1])-12 # hour
@@ -68,7 +65,7 @@ h_wk_19 <- \(stime){ # wake
 
 
 ##' combine files per subj because some files have duplicate days
-map_df(subjs, \(subj){
+actigraphy <- map(subjs, \(subj){
   fnames=list.files("data/actigraphy", pattern=sprintf("%s_.*.csv",subj), full.names = T) 
 
   map_df(fnames, \(fname){
@@ -124,9 +121,13 @@ map_df(subjs, \(subj){
        #' A score of sleep efficiency (sleep time / wake time * 100 [I think]) 
      ) |>
     select(subj,date_start_ag:sleep_efficiency) #contains("sleep", ignore.case=F))|> View()
-}) -> actigraphy
-
-# actigraphy2 <- actigraphy
-  # with wake time
+}) |> list_rbind()
 
 
+# clear:
+rm(fnames)
+rm(subjs)
+rm(as_hour_time)
+rm(as_hour_time_wake)
+rm(h_slp_19)
+rm(h_wk_19)

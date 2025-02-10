@@ -6,7 +6,8 @@ read_xlsx <- function(...){
   suppressMessages(readxl::read_xlsx(...))
 }
 
-read_sheet <- function(fname) {
+demographics <- map(fnames, \(fname){
+  print(fname)
   
   datasheet <- read_xlsx(fname, sheet="DataSheet")
   
@@ -28,9 +29,8 @@ read_sheet <- function(fname) {
   
   d |> bind_cols(t1date=t1date, t2date=t2date, t1daylight=hms(t1daylight),
                  t2daylight=hms(t2daylight), instruments)
-
-}
-
-demographics <- map_df(fnames, read_sheet)
+  
+}) |> list_rbind()
 
 rm(fnames)
+rm(read_xlsx)
