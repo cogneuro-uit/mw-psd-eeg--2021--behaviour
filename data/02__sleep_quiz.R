@@ -81,14 +81,15 @@ sleep_quiz <- map(fnames, \(fname) {
     spread(Q, val) -> s7q13
   
   ##' Putting it together
-  subj = (str_split(fname, "/")[[1]][4] |> str_split("_"))[[1]][1]
-  tibble(subj,
-         S1_Q1=q1, 
-         S1_Q2=hms(q23[1]), 
-         S1_Q3=hms(q23[2])) |>
-    bind_cols(q46, q78, s2q19, s3q18,
-              s4q17, S4_Q8=hms(s4q8), S4_Q9=s4q9, S4_Q10=hms(s4q1011[1]), S4_Q11=hms(s4q1011[2]) , s4q1225,
-              s5q17, s6q120, s7q13)
+  tibble(
+    subj = str_split(fname, "[/_]")[[1]][3],
+    S1_Q1 = q1, S1_Q2 = hms(q23[1]), S1_Q3 = hms(q23[2])
+  ) |>
+    bind_cols(
+      q46, q78, s2q19, s3q18, s4q17, S4_Q8=hms(s4q8), S4_Q9=s4q9, 
+      S4_Q10 = hms(s4q1011[1]), S4_Q11=hms(s4q1011[2]) , s4q1225,
+      s5q17, s6q120, s7q13)
+  
 }) |> list_rbind()
 
 rm(fnames)
