@@ -5,8 +5,6 @@ fnames <- list.files("data/baseline+diary", pattern = ".xlsx", full.names = T)
 #' filter out open xlsx files:
 fnames <- fnames[!str_detect(fnames, "~")]
 
-message("Loading feedback comments...")
-
 feedback <- map(fnames, \(fname){
   print(fname)
   subj <- str_split(fname, "[/_]")[[1]][3]
