@@ -13,7 +13,7 @@ read_xlsx2 <- function(...){
   }
 }
 
-# 
+# old data reading
 #' read_sheet <- function(fname) {
 #'   print(fname)
 #'   subj = str_split(fname, "/")[[1]][3] |> str_split("_")[[1]][1]
@@ -135,4 +135,5 @@ read_sheet <- function(fname) {
 }
 
 sleep_diary <- map_df(fnames, read_sheet)
- 
+
+rm(fnames)

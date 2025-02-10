@@ -94,3 +94,5 @@ read_sheet <- function(fname) {
 }
 
 sleep_quiz <- map_df(fnames, read_sheet)
+
+rm(fnames)

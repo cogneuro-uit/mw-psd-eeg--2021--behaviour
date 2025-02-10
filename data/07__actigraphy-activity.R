@@ -86,4 +86,5 @@ actigraphy_activity <-
     )
   ) 
 
-
+rm(subjs)
+rm(fnames)

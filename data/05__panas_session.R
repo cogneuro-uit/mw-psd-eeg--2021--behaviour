@@ -27,3 +27,7 @@ read_sheet <- function(fname) {
 }
 
 panas_session <- map_df(fnames, read_sheet)
+
+rm(subjs)
+rm(pos.items)
+rm(fnames)

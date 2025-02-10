@@ -44,3 +44,5 @@ data <-
     group=="LSD" & day=="day1" ~ "control",
     group=="LSD" & day=="day2" ~ "SD",
     T ~ "unddef")) 
+
+rm(fnames)

@@ -1,4 +1,4 @@
-fnames = list.files("data/baseline+diary/", pattern="*.xlsx", full.names = T)
+fnames = list.files("data/baseline+diary", pattern="*.xlsx", full.names = T)
 fnames = fnames[!str_detect(fnames, "~")]
 
 
@@ -32,3 +32,5 @@ read_sheet <- function(fname) {
 }
 
 demographics <- map_df(fnames, read_sheet)
+
+rm(fnames)

@@ -87,3 +87,4 @@ feedback <- map(fnames, \(fname){
   par |> left_join(res, "subj")
 }) |> list_rbind()
 
+rm(fnames)
