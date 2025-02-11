@@ -1,3 +1,6 @@
+library(ProjectTemplate)
+load.project()
+
 # This script is used to fix the disagreement between the researchers
 
 library(tidyverse)
