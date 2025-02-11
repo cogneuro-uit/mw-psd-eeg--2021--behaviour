@@ -13,7 +13,7 @@ data <- map_df(fnames, \(fname){
     mutate(day = str_split(fname, "[/_]")[[1]][4])
 })
 
-# add block variable
+# add probenum variable
 data <- 
   data %>% 
   group_by(subj,day) %>% 
@@ -22,9 +22,9 @@ data <-
     dd=d[d$stimulus=="probe1",]
     dd$trial[-length(dd$trial)]
     dd$trial1=c(0,dd$trial[-length(dd$trial)])
-    d$block=0
+    d$probenum=0
     for(i in 1:dim(dd)[1]){
-      d$block[d$trial>dd$trial1[i] & d$trial<=dd$trial[i]]<-i
+      d$probenum[d$trial>dd$trial1[i] & d$trial<=dd$trial[i]]<-i
     }
     d
 })
@@ -35,11 +35,13 @@ data <-
     demographics |> select(subj, group), 
     by="subj"
   ) |>
-  mutate(sleepdep=case_when(
-    group=="ESD" & day=="day1" ~ "SD",
-    group=="ESD" & day=="day2" ~ "control",
-    group=="LSD" & day=="day1" ~ "control",
-    group=="LSD" & day=="day2" ~ "SD",
-    T ~ "unddef")) 
+  mutate(
+    sleepdep = case_when(
+      group=="ESD" & day=="day1" ~ "SD",
+      group=="ESD" & day=="day2" ~ "control",
+      group=="LSD" & day=="day1" ~ "control",
+      group=="LSD" & day=="day2" ~ "SD",
+      T ~ "unddef"),
+  ) 
 
 rm(fnames)
