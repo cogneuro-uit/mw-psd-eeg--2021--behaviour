@@ -1,10 +1,12 @@
-#'                         **PARAMETERS**                                    ======
+#'                    **PROJECT PARAMETERS**                              ======
 
 #' Project related settings: 
 project <- list(
-  
-  custom_ggplot = TRUE,
-  custom_gt = TRUE,
+  custom = list(
+    ggplot = TRUE,
+    ggplot_col = c("#F8766D", "#619CFF"),
+    gt = TRUE
+  ),
   
   #'     **BAYES RELATED**
   bayes = list(
@@ -133,6 +135,7 @@ experiment_information <- list(
   )
 )
 
+# Set date_time         ======
 #' Set the relevant date-time for storing outputs.
 if( project[["tbls"]][["save"]][["with_date_time"]] ){
   project[["tbls"]][["save"]][["date_time"]] <- format( Sys.time(), "_%Y-%m-%d_%H-%M-%S_")
@@ -146,21 +149,23 @@ if( project[["figs"]][["save"]][["with_date_time"]] ){
   project[["figs"]][["save"]][["date_time"]] <- NULL
 }
 
-# Set custom colours for ggplot (if enabled)
-if( project[["custom_ggplot"]] ){
-  
-  rg_colours <- c("#F8766D", "#619CFF")
-  options(ggplot2.continous.colour = rg_colours)
+if( project[["bayes"]][["save"]][["with_date_time"]] ){
+  project[["bayes"]][["save"]][["date_time"]] <- format( Sys.time(), "_%Y-%m-%d_%H-%M-%S_")
+} else {
+  project[["bayes"]][["save"]][["date_time"]] <- NULL
+}
+
+# Custom colours      =====
+#'  custom colours for ggplot (if enabled)
+if( project[["custom"]][["ggplot"]] ){
+  options(ggplot2.continous.colour = project[["custom"]] )
   options(ggplot2.continous.fill = rg_colours)
   options(ggplot2.discrete.colour = rg_colours)
   options(ggplot2.discrete.fill = rg_colours)
-  
   theme_set( theme_bw() )
 }
 
-
-
-# Set bayesian cores: 
+# Set bayesian cores     ======
 if( project[["bayes"]][["set"]][["parallel"]] ){
   ..cores = parallel::detectCores()
   
@@ -200,23 +205,36 @@ if( project[["bayes"]][["set"]][["parallel"]] ){
 
 
 
-
 #'                  **Warning**                  =======
+project_warning <- function(){
+  warning(
+    "\n============================================",
+    "\n           PROJECT PARAMETERS     ",
+    "\n--------------------------------------------",
+    "\n", "Custom ggplot: ", project[["custom"]][["ggplot"]],
+    "\n", "   colours: ", paste(project[["custom"]][["ggplot_col"]], collapse = " & "),
+    "\n", "Custom gt: ",  project[["custom"]][["gt"]],
+    "\n", "Save tables:",
+    "\n", "   Locally: ", project[["tbls"]][["save"]][["to_file"]],
+    "\n", "   With time/date: ", project[["tbls"]][["save"]][["with_date_time"]],
+    "\n", "   Formats formats: ", paste(project[["tbls"]][["save"]][["formats"]], collapse = " & "),
+    "\n", "Save figures:",
+    "\n", "   Locally: ", project[["figs"]][["save"]][["to_file"]],
+    "\n", "   With date/time:  ", project[["figs"]][["save"]][["with_date_time"]],
+    "\n", "   Formats: ", paste(project[["figs"]][["save"]][["with_date_time"]], collapse = " & "), 
+    "\n", "Bayesian:",
+    "\n", "   Run models:  ", project[["bayes"]][["run_models"]],
+    if (project[["bayes"]][["run_models"]] ){
+      paste0("\n", "\n \U0002757  WILL TAKE SOME TIME  \U0002757",
+             "\n", "   Save models: ", project[["bayes"]][["save"]][["to_file"]],
+             "\n", "   Save models with date/time: ", project[["bayes"]][["save"]][["with_date_time"]])
+    },
+    "\n============================================",
+    "\n", "Waiting 5 seconds..."
+  )
+}
 
-warning(
-  "\n============================================",
-  "\n           PROJECT PARAMETERS     ",
-  "\n", "SAVE outputs (figs and tbls) locally: ", project_save_outputs_to_file,
-  "\n", "   Table formats: ", paste(project_save_tbl_formats, collapse = " & "),
-  "\n", "   Figure formats: ", paste(project_save_fig_formats, collapse = " & "), 
-  "\n", "SAVE outputs with relative time/date: ", project_save_outputs_with_date_time,
-  "\n", "SET custom colours: ", project_set_custom_colours,
-  "\n", "RUN Bayesian models:  ", project_run_bayesian_models,
-  if(project_run_bayesian_models) "\n  \U0002757  WILL TAKE SOME TIME  \U0002757",
-  "\n", "SAVE GENERATED Bayesian models?  ", project_save_bayesian_model,
-  "\n",
-  "\n", "Waiting 5 seconds..."
-)
+project_warning()
 
 Sys.sleep(5)
 message("Starting...")
