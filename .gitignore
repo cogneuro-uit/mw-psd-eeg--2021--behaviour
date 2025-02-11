@@ -5,3 +5,7 @@
 
 # ignore locally opened files
 .~* 
+
+# Ignore cache
+cache/*.[rR][dD][aA][tT][aA]
+cache/*.hash
