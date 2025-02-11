@@ -14,11 +14,12 @@ project <- list(
     
     # Set various settings
     set = list(
+      diagnostic_feedback = FALSE,
       backend = "cmdstanr",
       
       # Parallel settings: 
       parallel = TRUE,
-      cores = .8
+      cores = .5
       #' Number of cores.
       #' Can be a whole number (*10*), a percent (*50%* or *.5*)
     ),
