@@ -26,7 +26,7 @@ project <- list(
     # Save settings
     save = list(
       to_file = FALSE,
-      with_date_time = FALSE
+      with_date_time = TRUE
     )
   ),
   
@@ -35,7 +35,7 @@ project <- list(
     save = list(
       to_file = FALSE,
       formats = c("pdf", "html"),
-      with_date_time = FALSE
+      with_date_time = TRUE
     )
   ),
   #'    **FIGURES**
@@ -43,7 +43,7 @@ project <- list(
     save = list(
       to_file = FALSE,
       formats = c("svg", "jpeg"),
-      with_date_time = FALSE
+      with_date_time = TRUE
     )
   )
 )
