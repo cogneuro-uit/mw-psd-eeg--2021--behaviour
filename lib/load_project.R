@@ -18,8 +18,9 @@ load_project <- function(relative_path){
                ignore.case = T, full.names = T)
   }
   # Paths:
-  load_path <- c(  get_path("lib", "\\.r"), 
+  load_path <- c(  get_path("lib",   "\\.r"), 
                    get_path("cache", "\\.rdata"), 
+                   get_path("data",  "\\.rdata"),
                    get_path("munge", "\\.r") )
   
   # Load local data/functions/pre-processing
