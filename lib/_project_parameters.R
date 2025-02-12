@@ -159,10 +159,10 @@ if( project[["bayes"]][["save"]][["with_date_time"]] ){
 # Custom colours      =====
 #'  custom colours for ggplot (if enabled)
 if( project[["custom"]][["ggplot"]] ){
-  options(ggplot2.continous.colour = project[["custom"]] )
-  options(ggplot2.continous.fill = rg_colours)
-  options(ggplot2.discrete.colour = rg_colours)
-  options(ggplot2.discrete.fill = rg_colours)
+  options(ggplot2.continous.colour = project[["custom"]][["ggplot_col"]])
+  options(ggplot2.continous.fill   = project[["custom"]][["ggplot_col"]])
+  options(ggplot2.discrete.colour  = project[["custom"]][["ggplot_col"]])
+  options(ggplot2.discrete.fill    = project[["custom"]][["ggplot_col"]])
   theme_set( theme_bw() )
 }
 
