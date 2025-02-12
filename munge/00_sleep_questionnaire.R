@@ -139,3 +139,5 @@ sleep_quiz_summary <-
   ) |>
   add_row(name = "PANAS", .before=6)
 
+rm(panas_neg)
+rm(panas_pos)
