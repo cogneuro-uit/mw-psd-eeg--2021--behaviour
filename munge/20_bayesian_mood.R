@@ -9,51 +9,60 @@ if( project[["bayes"]][["run_models"]] ){
     data = data.probe.mood, 
     family=cumulative("probit"), cores = 6, backend = "cmdstanr",
     init = 0, chains = 6, iter = 6000)
-  # Diagnostics
-  bayes_diag(mod_mood_full$mw)
-  # Summary:
-  bayes_tbl_sum(mod_mood_full$mw) |> gt()
+  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
+    # Diagnostics
+    bayes_diag(mod_mood_full$mw)
+    # Summary:
+    bayes_tbl_sum(mod_mood_full$mw) |> gt()
+  }
   
   # MB
   mod_mood_full$mb <- brm(
     mb ~ sleepdep * (zlogapen + zlogbv + probenum + pre_pos + pre_neg) + (1|subj), 
     data = data.probe.mood |> filter(mw > 2), family=cumulative("probit"), 
     init = 0, chains = 6, iter = 6000, cores = 6, backend = "cmdstanr")
-  # Diagnostics
-  bayes_diag(mod_mood_full$mb)
-  # Summary:
-  bayes_tbl_sum(mod_mood_full$mb)
-
+  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
+    # Diagnostics
+    bayes_diag(mod_mood_full$mb)
+    # Summary:
+    bayes_tbl_sum(mod_mood_full$mb)
+  }
+  
   # SMW  
   mod_mood_full$smw <- brm(
     smw ~ sleepdep * (zlogapen + zlogbv + probenum + pre_pos + pre_neg) + (1|subj), 
     data = data.probe.mood |> filter(mw > 2), family=cumulative("probit"),
     init = 0, chains = 6, iter = 6000, cores = 6, backend = "cmdstanr")
-  # Diagnostics
-  bayes_diag(mod_mood_full$smw)
-  # Summary:
-  bayes_tbl_sum(mod_mood_full$smw)
-
+  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
+    # Diagnostics
+    bayes_diag(mod_mood_full$smw)
+    # Summary:
+    bayes_tbl_sum(mod_mood_full$smw)
+  }
+  
   # BV  
   mod_mood_full$bv <- brm(
     zlogbv ~ sleepdep * (probenum + pre_pos + pre_neg) + (1|subj), 
     data = data.probe.mood, 
     init = 0, chains = 6, iter = 6000, cores = 6, backend = "cmdstanr")
-  # Diagnostics
-  bayes_diag(mod_mood_full$bv)
-  # Summary:
-  bayes_tbl_sum(mod_mood_full$bv)
-
+  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
+    # Diagnostics
+    bayes_diag(mod_mood_full$bv)
+    # Summary:
+    bayes_tbl_sum(mod_mood_full$bv)
+  }
+  
   # AE  
   mod_mood_full$ae <- brm(
     zlogapen ~ sleepdep * (probenum + pre_pos + pre_neg) + (1|subj), 
     data = data.probe.mood,
     init = 0, chains = 6, iter = 6000, cores = 6, backend = "cmdstanr")
-  # Diagnostics
-  bayes_diag(mod_mood_full$ae)
-  # Summary:
-  bayes_tbl_sum(mod_mood_full$ae) |> gt()
-  
+  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
+    # Diagnostics
+    bayes_diag(mod_mood_full$ae)
+    # Summary:
+    bayes_tbl_sum(mod_mood_full$ae) |> gt()
+  }
   
   # Criteria 
   mod_mood_full$mw  <- brms::add_criterion(mod_mood_full$mw,  c("bayes_R2", "loo")) 
