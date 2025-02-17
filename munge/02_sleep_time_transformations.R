@@ -186,7 +186,10 @@ sleeptimes_updated <-
     duration_final = if_else(subj=="017" & pre_sleepdep==1, duration_SR, duration_final),
   )
 
+
 ### Selected sleep times          =====
+#' Here we calculated the sleep difference between the conditions, as well as
+#' prepare the data for connecting to the behaviour.
 sleeptimes_updated_trans <- 
   sleeptimes_updated |>
   mutate(
@@ -198,45 +201,65 @@ sleeptimes_updated_trans <-
   filter(!is.na(condition)) |>
   select(
     subj, condition, 
+    # SR 
     wake_SR, onset_SR, duration_SR,
+    # AG
     wake_AG, onset_AG, duration_AG,
+    # Adjusted
     onset_final, wake_final, duration_final
   ) |> 
   pivot_longer(c(
-    # wake_SR, onset_SR, duration_SR,
-    # wake_AG, onset_AG, duration_AG,
+    wake_SR, onset_SR, duration_SR,
+    wake_AG, onset_AG, duration_AG,
     onset_final, wake_final, duration_final)
   ) |>
   summarise(
     .by = c(subj, condition, name),
     m = mean(value, na.rm=T) # small thing this
   ) |> 
-  mutate(name = case_when(
+  mutate(report  = case_when(
+    str_ends(name, "_SR") ~ "Self.report",
+    str_ends(name, "_AG") ~ "Actigraphy",
+    str_ends(name, "_final") ~ "Adjusted",
+  ), 
+  name = case_when(
     str_starts(name, "onset") ~ "Onset",
     str_starts(name, "wake") ~ "Wake",
     str_starts(name, "duration") ~ "Duration",
-  )) |>
-  pivot_wider(names_from = c(condition, name), values_from = m) |>
+    ),
+  ) |>
+  rename(sleep = name) |>
+  pivot_wider(names_from = c(condition, report, sleep), values_from = m) |>
   mutate(
-    .by = subj, 
-    SD_c.Duration = SD_Duration - control_Duration,
-    SD_c.Duration.SD.neg = if_else(SD_c.Duration>=0, -SD_c.Duration, SD_c.Duration),
-    SD_c.Duration.SD.pos = abs(SD_c.Duration.SD.neg),
-    control_c.Duration = 0,
-    control_c.Duration.SD.neg = 0,
-    control_c.Duration.SD.pos = 0,
+    # Self reported duration
+    SD_Self.report_Duration.diff      = SD_Self.report_Duration - control_Self.report_Duration,
+    control_Self.report_Duration.diff = SD_Self.report_Duration.diff,
+    # Self reported duration
+    SD_Actigraphy_Duration.diff       = SD_Actigraphy_Duration - control_Actigraphy_Duration,
+    control_Actigraphy_Duration.diff  = SD_Actigraphy_Duration.diff,
+    # Adjusted duration
+    SD_Adjusted_Duration.diff         = SD_Adjusted_Duration - control_Adjusted_Duration,
+    control_Adjusted_Duration.diff    = SD_Adjusted_Duration.diff
   ) |>
-  pivot_longer(
-    c(starts_with("SD_"), starts_with("control_")),
-    names_sep = "_", names_to = c("sleepdep", "name")
-  ) |>
-  pivot_wider(names_from=name, values_from=value)
+  pivot_longer(c(starts_with("SD"),starts_with("control")),
+               names_to = c("sleepdep", "report","type"), names_sep = "_") |>
+  pivot_wider(names_from = c("report", "type"), values_from = "value") |>
+  mutate(
+    Self.report_Duration.diff.pos   = Self.report_Duration.diff*-1,
+    Actigraphy_Duration.diff.pos    = Actigraphy_Duration.diff*-1,
+    Adjusted_Duration.diff.pos      = Adjusted_Duration.diff*-1,
+    c.Self.report_Duration.diff.pos = if_else(sleepdep=="SD", Self.report_Duration.diff.pos, 0),
+    c.Actigraphy_Duration.diff.pos  = if_else(sleepdep=="SD", Actigraphy_Duration.diff.pos, 0),
+    c.Adjusted_Duration.diff.pos    = if_else(sleepdep=="SD", Adjusted_Duration.diff.pos, 0),
+  )
+  
 
-# Bind sleep to behaviour      =====
-# Bind sleeptimes to behavioural data
+
+# Add sleep data to behavioural and mood data
 data.probe.mood.sleep <- 
   data.probe.mood |>
   left_join(
     sleeptimes_updated_trans,
     by = c("subj", "sleepdep")
   ) 
+    
