@@ -16,39 +16,35 @@ fmt_APA_numbers <- function(x, .p = FALSE, .psym = FALSE, .low_val = FALSE, .chr
     # p with symbol
     # = symbol:
     if(.psym & !.p){
+      if(num == 1){
+        return("= 1.00")
+      }
       if(num < .001){
         return("< .001")
-      } else {
-        return( round(num, 3) |> as.character() |> str_replace("0.", "= .") )
+      } 
+      if( num > .999 ){
+        return("> .999")
       }
+      return( round(num, 3) |> as.character() |> str_replace("0.", "= .") )
     }
     
     # < than symbol
     if(.p){
       if( num == 1 ){
-        if(.psym){
-          return("= 1.00")
-        }
         return( "1.00" )
       }
-      
-      num <- round(num, 3)
       if( num > .999 ){
-        return( "> .999")
+        return( ".999")
       }
-      
       if(num < .001){ 
-        num <- "< .001"
+        return( ".001" )
       } else {
-        num <- num |> as.character() |> str_replace("0.", ".")
+        num <- num |> round(digits = 3) |> as.character() |> str_replace("0.", ".")
         if(str_length(num) <= 3){
           for(x in 1:(4 - str_length( num)) ){
             num <- paste0(num, "0")
           }
         }
-      }
-      if(.psym & as.numeric(num)){
-        num <- paste0("= ", num)
       }
       return( num ) 
     }
@@ -114,7 +110,6 @@ fmt_APA_numbers <- function(x, .p = FALSE, .psym = FALSE, .low_val = FALSE, .chr
     
     return( num )
   }) |> unlist()
-  
   
 }
 
