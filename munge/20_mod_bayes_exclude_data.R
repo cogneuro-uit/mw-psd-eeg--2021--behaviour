@@ -84,7 +84,7 @@ if( project[["bayes"]][["run_models"]] ){
   ### Save      =======
   if( project[["bayes"]][["save"]][["to_file"]] ){
     save(mod_mood_full, file = paste0(
-      "data/mod_bayes_adjusted_sleep_exclude-1.5h", 
+      "data/mod_bayes_exclude-1.5h", 
       project[["bayes"]][["save"]][["date_time"]],".Rdata")
     )
   }
