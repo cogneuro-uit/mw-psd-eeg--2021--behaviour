@@ -1,14 +1,19 @@
 
 if( project[["bayes"]][["run_models"]] ){
 
+  #' Select only data related to our sleep deprivation condition
+  selected_data.probe.mood.sleep <- 
+    data.probe.mood.sleep |>
+    filter(Adjusted_Duration.diff < -1.5) 
+  
   mod_mood_full <- list()
 
   # MW  
   mod_mood_full$mw <- brm(
-    mw ~ sleepdep * (zlogapen + zlogbv + probenum + pre_pos + pre_neg) + (1|subj), 
-    data = data.probe.mood, 
-    family=cumulative("probit"), cores = 6, backend = "cmdstanr",
-    init = 0, chains = 6, iter = 6000)
+    mw ~ sleepdep * (zlogapen + zlogbv + probenum_prop + pre_pos + pre_neg) + (1|subj), 
+    data = selected_data.probe.mood.sleep, 
+    family = cumulative("probit"), init = 0, chains = 6, iter = 6000)
+  
   if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
     # Diagnostics
     bayes_diag(mod_mood_full$mw)
@@ -18,9 +23,10 @@ if( project[["bayes"]][["run_models"]] ){
   
   # MB
   mod_mood_full$mb <- brm(
-    mb ~ sleepdep * (zlogapen + zlogbv + probenum + pre_pos + pre_neg) + (1|subj), 
-    data = data.probe.mood |> filter(mw > 2), family=cumulative("probit"), 
-    init = 0, chains = 6, iter = 6000, cores = 6, backend = "cmdstanr")
+    mb ~ sleepdep * (zlogapen + zlogbv + probenum_prop + pre_pos + pre_neg) + (1|subj), 
+    data = selected_data.probe.mood.sleep |> filter(mw > 2), 
+    family = cumulative("probit"), init = 0, chains = 6, iter = 6000)
+  
   if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
     # Diagnostics
     bayes_diag(mod_mood_full$mb)
@@ -30,9 +36,10 @@ if( project[["bayes"]][["run_models"]] ){
   
   # SMW  
   mod_mood_full$smw <- brm(
-    smw ~ sleepdep * (zlogapen + zlogbv + probenum + pre_pos + pre_neg) + (1|subj), 
-    data = data.probe.mood |> filter(mw > 2), family=cumulative("probit"),
-    init = 0, chains = 6, iter = 6000, cores = 6, backend = "cmdstanr")
+    smw ~ sleepdep * (zlogapen + zlogbv + probenum_prop + pre_pos + pre_neg) + (1|subj), 
+    data = selected_data.probe.mood.sleep |> filter(mw > 2), 
+    family = cumulative("probit"), init = 0, chains = 6, iter = 6000)
+  
   if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
     # Diagnostics
     bayes_diag(mod_mood_full$smw)
@@ -42,9 +49,10 @@ if( project[["bayes"]][["run_models"]] ){
   
   # BV  
   mod_mood_full$bv <- brm(
-    zlogbv ~ sleepdep * (probenum + pre_pos + pre_neg) + (1|subj), 
-    data = data.probe.mood, 
-    init = 0, chains = 6, iter = 6000, cores = 6, backend = "cmdstanr")
+    zlogbv ~ sleepdep * (probenum_prop + pre_pos + pre_neg) + (1|subj), 
+    data = selected_data.probe.mood.sleep, 
+    init = 0, chains = 6, iter = 6000)
+  
   if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
     # Diagnostics
     bayes_diag(mod_mood_full$bv)
@@ -54,9 +62,10 @@ if( project[["bayes"]][["run_models"]] ){
   
   # AE  
   mod_mood_full$ae <- brm(
-    zlogapen ~ sleepdep * (probenum + pre_pos + pre_neg) + (1|subj), 
-    data = data.probe.mood,
-    init = 0, chains = 6, iter = 6000, cores = 6, backend = "cmdstanr")
+    zlogapen ~ sleepdep * (probenum_prop + pre_pos + pre_neg) + (1|subj), 
+    data = selected_data.probe.mood.sleep,
+    init = 0, chains = 6, iter = 6000)
+  
   if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
     # Diagnostics
     bayes_diag(mod_mood_full$ae)
@@ -75,7 +84,7 @@ if( project[["bayes"]][["run_models"]] ){
   ### Save      =======
   if( project[["bayes"]][["save"]][["to_file"]] ){
     save(mod_mood_full, file = paste0(
-      "data/bayes_full_model_SR_exclude", 
+      "data/mod_bayes_adjusted_sleep_exclude-1.5h", 
       project[["bayes"]][["save"]][["date_time"]],".Rdata")
     )
   }
