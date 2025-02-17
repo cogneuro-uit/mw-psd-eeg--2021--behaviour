@@ -60,12 +60,12 @@ coef_hdi_text <- function(x, ..., .preserve_negative = TRUE){
   mean                     <- mean(x) |> fmt_APA_numbers(...)
   hdi                      <- bayes_hdi(x, ...)
   evidence_ratio_direction <- bayes_er(x, ...)
-  probability_direction    <- bayes_p(x, ...)
+  probability_direction    <- bayes_p(x, .psym = T)
   
   if(.preserve_negative & mean < 0 & round(mean, 2)==0){
-    mean_check <- paste0("-", fmt_APA_numbers(mean, ...))
+    mean_fix <- paste0("-", fmt_APA_numbers(mean, ...))
   } else {
-    mean_check <- mean |> fmt_APA_numbers(...)
+    mean_fix <- mean |> fmt_APA_numbers(...)
   }
   
   if(is.infinite(evidence_ratio_direction)){
@@ -73,7 +73,7 @@ coef_hdi_text <- function(x, ..., .preserve_negative = TRUE){
   }
   
   sprintf("$b = %s$, %s, $\\text{ER}_\\text{dir} = %s$, $p_\\text{dir} %s$", 
-          mean_check, hdi, evidence_ratio_direction, probability_direction)
+          mean_fix, hdi, evidence_ratio_direction, probability_direction)
 }
 
 bayes_plot <- function( bayes_model, add_label = TRUE, offset = 0){
@@ -144,16 +144,16 @@ bayes_diag <- function( bayes_model, convergence = TRUE, offset = 0){
   
   tidybayes::summarise_draws(bayes_model) |>
     dplyr::summarise(
-      rhat  = dplyr::if_else(all(rhat >= 1.05), 
+      rhat  = dplyr::if_else( any(rhat >= 1.05), 
                      paste("CHECK (", round(max(rhat, na.rm=T), 0), ")"),
                      paste("OK    (", round(max(rhat, na.rm=T), 0), ")")), 
-      ESS_Bulk = dplyr::if_else(all(ess_bulk <= 1000),
+      ESS_Bulk = dplyr::if_else( any(ess_bulk <= 1000),
                      paste("CHECK (", round(min(ess_bulk, na.rm=T), 0), ")"),
                      paste("OK    (", round(min(ess_bulk, na.rm=T), 0), ")")),
-      ESS_Tail = dplyr::if_else(all(ess_tail <= 1000),
+      ESS_Tail = dplyr::if_else( any(ess_tail <= 1000),
                      paste("CHECK (", round(min(ess_tail, na.rm=T), 0), ")"),
                      paste("OK    (", round(min(ess_tail, na.rm=T), 0), ")")) 
-    ) |>  print()
+    ) |> print()
   
   if(convergence){
     bayesplot::mcmc_rank_ecdf(
