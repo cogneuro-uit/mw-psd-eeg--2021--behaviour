@@ -19,7 +19,7 @@ project <- list(
       
       # Parallel settings: 
       parallel = TRUE,
-      cores = .5
+      cores = 6
       #' Number of cores.
       #' Can be a whole number (*10*), a percent (*50%* or *.5*)
     ),
@@ -168,39 +168,69 @@ if( project[["custom"]][["ggplot"]] ){
 
 # Set bayesian cores     ======
 if( project[["bayes"]][["set"]][["parallel"]] ){
+  
+  check_next <- TRUE
+  
+  #' Get computer cores
   ..cores = parallel::detectCores()
   
+  #' If character, transform in this manner: 
+  #' *Note* that this function do not check against wrong character input...
   if( project[["bayes"]][["set"]][["cores"]] |> str_detect("%") ){
     project[["bayes"]][["set"]][["cores"]] <-
       project[["bayes"]][["set"]][["cores"]] |>
       str_remove("%") |> 
       as.numeric() / 100 * ..cores |> 
       floor()
+    check_next <- FALSE
   }
   
-  if( project[["bayes"]][["set"]][["cores"]] < 1 ){
+  #' If less than 1, (similar to percentage) set cores:
+  if( check_next & 
+      project[["bayes"]][["set"]][["cores"]] < 1 ){
     project[["bayes"]][["set"]][["cores"]] <-
       floor( project[["bayes"]][["set"]][["cores"]] * ..cores )
+    check_next <- FALSE
   }
   
-  if( project[["bayes"]][["set"]][["cores"]] > ..cores & 
-      ..cores >= 100){
-    warning("Core value set higher than detected available cores... Setting as percentage.")
+  #' If a value is above the number of cores, but below 100 interpret the set cores, 
+  if( check_next & 
+      project[["bayes"]][["set"]][["cores"]] > ..cores & 
+      ..cores >= 100 ){
+    warning("Core value set higher than detected available cores... Interpreting as percentage.")
     project[["bayes"]][["set"]][["cores"]] <-
       floor( project[["bayes"]][["set"]][["cores"]]/100 * ..cores )
+    check_next <- FALSE
+  }
+
+  if( check_next & 
+      project[["bayes"]][["set"]][["cores"]] > ..cores & 
+      ..cores < 100){
+    warning("Core value set higher than detected available cores... Setting to half, corresponding to: ",
+            floor(..cores * .5), " cores")
+    project[["bayes"]][["set"]][["cores"]] <-
+      floor( project[["bayes"]][["set"]][["cores"]]/100 * ..cores )
+    check_next <- FALSE
   }
   
-  if( project[["bayes"]][["set"]][["cores"]] < ..cores ){
+  if( check_next & 
+      project[["bayes"]][["set"]][["cores"]] < ..cores ){
     project[["bayes"]][["set"]][["cores"]] <-
-      floor( project[["bayes"]][["set"]][["cores"]]/100 * ..cores )
-    
-  } else {
-    warning("Could not interpret bayes cores, setting to half...")
+      floor( project[["bayes"]][["set"]][["cores"]] )
+    check_next <- FALSE
+  } 
+  
+  if(check_next <- FALSE &
+     !is.numeric(project[["bayes"]][["set"]][["cores"]]) ) {
+    warning("Could not interpret `bayes$set$cores`. Setting to half, corrresponding to: ", 
+            floor(..cores * .5), " cores")
     project[["bayes"]][["set"]][["cores"]] <- floor(..cores * .5)
+    check_next <- FALSE
   }
   
-    
+  cat("set:", project[["bayes"]][["set"]][["cores"]] )
   options( mc.cores = project[["bayes"]][["set"]][["cores"]] )
+  options( brms.backend = project[["bayes"]][["set"]][["backend"]] )
 }
 
 
@@ -222,7 +252,7 @@ project_warning <- function(){
     "\n", "Save figures:",
     "\n", "   Locally: ", project[["figs"]][["save"]][["to_file"]],
     "\n", "   With date/time:  ", project[["figs"]][["save"]][["with_date_time"]],
-    "\n", "   Formats: ", paste(project[["figs"]][["save"]][["with_date_time"]], collapse = " & "), 
+    "\n", "   Formats: ", paste(project[["figs"]][["save"]][["formats"]], collapse = " & "), 
     "\n", "Bayesian:",
     "\n", "   Run models:  ", project[["bayes"]][["run_models"]],
     if (project[["bayes"]][["run_models"]] ){
