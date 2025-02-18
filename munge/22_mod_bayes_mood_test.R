@@ -1,5 +1,5 @@
 
-if( project[["bayes"]][["run_models"]] ){
+if( getOption("project_bayes_run_models") ){
   
   #' Transform the PANAS to factor: 
   test_panas <- 
@@ -12,21 +12,21 @@ if( project[["bayes"]][["run_models"]] ){
   
   
   #  Dichotomous model       =====
-  simple_mood_test <- list()
+  mood_test <- list()
   
   ##     Frequentist        ======
   #' Although not bayesian, I put it in the Bayesian block to recalculate 
   #' it together with the Bayesian model (if anything were to change)
   
-  simple_mood_test[["neg"]][["freq"]] <- 
+  mood_test[["neg"]][["freq"]] <- 
     afex::aov_4(PANASsum_0 ~ sleepdep * prepost + (sleepdep*prepost|subj), 
                 panas_session |> filter(valence=="neg"))
-  simple_mood_test[["neg"]][["freq"]] |> summary()
+  mood_test[["neg"]][["freq"]] |> summary()
   
-  simple_mood_test[["pos"]][["freq"]] <- 
+  mood_test[["pos"]][["freq"]] <- 
     afex::aov_4(PANASsum_0 ~ sleepdep * prepost + (sleepdep*prepost|subj), 
                 panas_session |> filter(valence=="pos"))
-  simple_mood_test[["pos"]][["freq"]] |> summary()
+  mood_test[["pos"]][["freq"]] |> summary()
     
   
   ##     Bayesian         ======
@@ -34,30 +34,40 @@ if( project[["bayes"]][["run_models"]] ){
   #' was influenced by Sleep, Pre-post test, and their interaction. 
   
   # Dependent variable: Positive mood
-  simple_mood_test[["pos"]][["bayes"]][["aov"]] <- brm(
+  ## Model
+  mood_test[["pos"]][["bayes"]][["aov"]] <- brm(
     PANASsum_0 ~ sleepdep * prepost + (sleepdep * prepost | subj),
     data = test_panas |> filter(valence=="pos"),
     init = 0, iter = 6000, chains = 6)
-  
-  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
-    # Diagnostics
-    bayes_diag( simple_mood_test[["pos"]][["bayes"]][["aov"]] )
-    # Summary:
-    bayes_tbl_sum( simple_mood_test[["pos"]][["bayes"]][["aov"]] ) |> gt()
+  ## Diagnostics
+  if( getOption("project_bayes_diagnostics") ){ 
+    brms::pp_check(mood_test[["pos"]][["bayes"]][["aov"]], ndraws=50) # Predictive check
+    bayes_chain_stab(mood_test[["pos"]][["bayes"]][["aov"]]) # chain stability
+    bayes_diag(mood_test[["pos"]][["bayes"]][["aov"]]) # general model fit and coefficients
+    # bayes_tbl_sum(mood_test[["pos"]][["bayes"]][["aov"]]) # coefficients (table)
   }
+  ## Criterion
+  mood_test[["pos"]][["bayes"]][["aov"]] <- 
+    mood_test[["pos"]][["bayes"]][["aov"]] |>
+    add_criterion(c("loo", "bayes_R2"))
   
   # Dependent variable: Negative mood
-  simple_mood_test[["neg"]][["bayes"]][["aov"]] <- brm(
+  ## Model
+  mood_test[["neg"]][["bayes"]][["aov"]] <- brm(
     PANASsum_0 ~ sleepdep * prepost + (sleepdep * prepost | subj),
     data = test_panas |> filter(valence == "neg"),
     init = 0, iter = 6000, chains = 6)
-  
-  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
-    # Diagnostics
-    bayes_diag( simple_mood_test[["neg"]][["bayes"]][["aov"]] )
-    # Summary:
-    bayes_tbl_sum( simple_mood_test[["neg"]][["bayes"]][["aov"]] ) |> gt()
+  ## Diagnostics
+  if( getOption("project_bayes_diagnostics") ){ 
+    brms::pp_check(mood_test[["neg"]][["bayes"]][["aov"]], ndraws=50) # Predictive check
+    bayes_chain_stab(mood_test[["neg"]][["bayes"]][["aov"]]) # chain stability
+    bayes_diag(mood_test[["neg"]][["bayes"]][["aov"]]) # general model fit and coefficients
+    # bayes_tbl_sum(mood_test[["neg"]][["bayes"]][["aov"]]) # coefficients (table)
   }
+  ## Criterion
+  mood_test[["neg"]][["bayes"]][["aov"]] <- 
+    mood_test[["neg"]][["bayes"]][["aov"]] |>
+    add_criterion(c("loo", "bayes_R2"))
   
   
   
@@ -68,38 +78,50 @@ if( project[["bayes"]][["run_models"]] ){
       sleeptimes_updated_trans,
       c("subj","sleepdep")
     )
+  
   #' Dependent variable: positive mood
-  simple_mood_test[["pos"]][["bayes"]][["cont"]] <- brm(
+  ## Model
+  mood_test[["pos"]][["bayes"]][["cont"]] <- brm(
     PANASsum_0 ~ c.Adjusted_Duration.diff.pos * prepost + (c.Adjusted_Duration.diff.pos * prepost | subj),
     data = test_panas_sleep |> filter(valence=="pos"),
     init = 0, iter = 6000, chains = 6)
-  
-  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
-    # Diagnostics
-    bayes_diag( simple_mood_test[["pos"]][["bayes"]][["cont"]] )
-    # Summary:
-    bayes_tbl_sum( simple_mood_test[["pos"]][["bayes"]][["cont"]] ) |> gt()
+  ## Diagnostics
+  if( getOption("project_bayes_diagnostics") ){ 
+    brms::pp_check(mood_test[["pos"]][["bayes"]][["cont"]], ndraws=50) # Predictive check
+    bayes_chain_stab(mood_test[["pos"]][["bayes"]][["cont"]]) # chain stability
+    bayes_diag(mood_test[["pos"]][["bayes"]][["cont"]]) # general model fit and coefficients
+    # bayes_tbl_sum(mood_test[["pos"]][["bayes"]][["cont"]]) # coefficients (table)
   }
+  ## Criterion
+  mood_test[["pos"]][["bayes"]][["cont"]] <- 
+    mood_test[["pos"]][["bayes"]][["cont"]] |>
+    add_criterion(c("loo", "bayes_R2"))
   
   # Dependent variable: Negative mood
-  simple_mood_test[["neg"]][["bayes"]][["cont"]] <- brm(
+  ## Model
+  mood_test[["neg"]][["bayes"]][["cont"]] <- brm(
     PANASsum_0 ~ c.Adjusted_Duration.diff.pos * prepost + (c.Adjusted_Duration.diff.pos * prepost | subj),
     data = test_panas_sleep |> filter(valence=="neg"),
     init = 0, iter = 6000, chains = 6)
-  
-  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
-    # Diagnostics
-    bayes_diag( simple_mood_test[["neg"]][["bayes"]][["cont"]] )
-    # Summary:
-    bayes_tbl_sum( simple_mood_test[["neg"]][["bayes"]][["cont"]] ) |> gt()
+  ## Diagnostics
+  if( getOption("project_bayes_diagnostics") ){ 
+    brms::pp_check(mood_test[["neg"]][["bayes"]][["cont"]], ndraws=50) # Predictive check
+    bayes_chain_stab(mood_test[["neg"]][["bayes"]][["cont"]]) # chain stability
+    bayes_diag(mood_test[["neg"]][["bayes"]][["cont"]]) # general model fit and coefficients
+    # bayes_tbl_sum(mood_test[["neg"]][["bayes"]][["cont"]]) # coefficients (table)
   }
+  ## Criterion
+  mood_test[["neg"]][["bayes"]][["cont"]] <- 
+    mood_test[["neg"]][["bayes"]][["cont"]] |>
+    add_criterion(c("loo", "bayes_R2"))
   
   
   # Save models         =====
-  if( project[["bayes"]][["save"]][["to_file"]] ){
-    save( simple_mood_test, file = paste0(
-      "data/mod_bayes_mood_simple_test",
-      project[["bayes"]][["save"]][["date_time"]], ".RData"))
+  if( getOption("project_bayes_save_to_file") ){
+    time <- ""
+    if( getOption("project_bayes_save_with_date_time") ) time <- getOption("project_date_time")
+    save( mood_test, file = paste0(
+      "data/mod_bayes_mood_test", time, ".RData"))
   }
 }
 
