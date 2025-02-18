@@ -76,9 +76,9 @@ coef_hdi_text <- function(x, ..., .preserve_negative = TRUE){
           mean_fix, hdi, evidence_ratio_direction, probability_direction)
 }
 
-bayes_plot <- function( bayes_model, add_label = TRUE, offset = 0){
+
+bayes_coef_plot <- function( bayes_model, add_label = TRUE, offset = 0){
   #' Generate a Bayesian coefficient plot.
-  #' 
   
   require(brms)
   require(bayesplot)
@@ -132,37 +132,41 @@ bayes_plot <- function( bayes_model, add_label = TRUE, offset = 0){
   p
 }
 
+bayes_chain_stab <- function( bayes_model ){
+  
+  require(tidyverse)
+  require(tidybayes)
+  require(bayesplot)
+  
+  bayesplot::mcmc_rank_ecdf(
+    bayes_model, paste0("b_", bayes_model |> brms::fixef() |> rownames()), 
+    plot_diff = T, prob = .99)
+}
+
 bayes_diag <- function( bayes_model, convergence = TRUE, offset = 0){
   #'
   #' Criteria: 
   #'   -  Rhat > 1.05
   #'   -  ESS <= 1000 
   
+  require(tidyverse)
   require(tidybayes)
   require(bayesplot)
-  require(tidyverse)
   
   tidybayes::summarise_draws(bayes_model) |>
     dplyr::summarise(
-      rhat  = dplyr::if_else( any(rhat >= 1.05), 
+      rhat  = dplyr::if_else( any(rhat >= 1.05, na.rm=T), 
                      paste("CHECK (", round(max(rhat, na.rm=T), 0), ")"),
                      paste("OK    (", round(max(rhat, na.rm=T), 0), ")")), 
-      ESS_Bulk = dplyr::if_else( any(ess_bulk <= 1000),
+      ESS_Bulk = dplyr::if_else( any(ess_bulk <= 1000, na.rm=T),
                      paste("CHECK (", round(min(ess_bulk, na.rm=T), 0), ")"),
                      paste("OK    (", round(min(ess_bulk, na.rm=T), 0), ")")),
-      ESS_Tail = dplyr::if_else( any(ess_tail <= 1000),
+      ESS_Tail = dplyr::if_else( any(ess_tail <= 1000, na.rm=T),
                      paste("CHECK (", round(min(ess_tail, na.rm=T), 0), ")"),
                      paste("OK    (", round(min(ess_tail, na.rm=T), 0), ")")) 
     ) |> print()
   
-  if(convergence){
-    bayesplot::mcmc_rank_ecdf(
-      bayes_model, paste0("b_", bayes_model |> brms::fixef() |> rownames()), 
-      plot_diff = T, prob = .99) |> 
-      print()
-  }
-  
-  bayes_plot( bayes_model, offset )
+  bayes_coef_plot( bayes_model, offset = offset )
 }
 
 bayes_tbl_sum <- function( bayes_model, add_sigma = FALSE, add_loo = FALSE, add_R2 = FALSE, add_convergence = FALSE, apa_table = FALSE, .low_val=FALSE){
