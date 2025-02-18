@@ -1,5 +1,5 @@
 
-if( project[["bayes"]][["run_models"]] ){
+if( getOption("project_bayes_run_models") ){
 
   #' Select only data related to our sleep deprivation condition
   selected_data.probe.mood.sleep <- 
@@ -14,11 +14,12 @@ if( project[["bayes"]][["run_models"]] ){
     data = selected_data.probe.mood.sleep, 
     family = cumulative("probit"), init = 0, chains = 6, iter = 6000)
   
-  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
-    # Diagnostics
-    bayes_diag(mod_mood_full$mw)
-    # Summary:
-    bayes_tbl_sum(mod_mood_full$mw) |> gt()
+  if( getOption("project_bayes_diagnostics") ){ 
+    brms::pp_check(mod_mood_full$mw, ndraws=50) # Predictive check
+    bayes_chain_stab(mod_mood_full$mw) # chain stability
+    bayes_diag(mod_mood_full$mw) # general model fit and coefficients
+    bayes_coef_plot(mod_mood_full$mw) # general model fit and coefficients
+    # bayes_tbl_sum(mod_mood_full$mw) # coefficients (table)
   }
   
   # MB
@@ -27,11 +28,11 @@ if( project[["bayes"]][["run_models"]] ){
     data = selected_data.probe.mood.sleep |> filter(mw > 2), 
     family = cumulative("probit"), init = 0, chains = 6, iter = 6000)
   
-  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
-    # Diagnostics
-    bayes_diag(mod_mood_full$mb)
-    # Summary:
-    bayes_tbl_sum(mod_mood_full$mb)
+  if( getOption("project_bayes_diagnostics") ){ 
+    brms::pp_check(mod_mood_full$mb, ndraws=50) # Predictive check
+    bayes_chain_stab(mod_mood_full$mb) # chain stability
+    bayes_diag(mod_mood_full$mb) # general model fit and coefficients
+    # bayes_tbl_sum(mod_mood_full$mb) # coefficients (table)
   }
   
   # SMW  
@@ -40,11 +41,11 @@ if( project[["bayes"]][["run_models"]] ){
     data = selected_data.probe.mood.sleep |> filter(mw > 2), 
     family = cumulative("probit"), init = 0, chains = 6, iter = 6000)
   
-  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
-    # Diagnostics
-    bayes_diag(mod_mood_full$smw)
-    # Summary:
-    bayes_tbl_sum(mod_mood_full$smw)
+  if( getOption("project_bayes_diagnostics") ){ 
+    brms::pp_check(mod_mood_full$smw, ndraws=50) # Predictive check
+    bayes_chain_stab(mod_mood_full$smw) # chain stability
+    bayes_diag(mod_mood_full$smw) # general model fit and coefficients
+    # bayes_tbl_sum(mod_mood_full$smw) # coefficients (table)
   }
   
   # BV  
@@ -53,11 +54,17 @@ if( project[["bayes"]][["run_models"]] ){
     data = selected_data.probe.mood.sleep, 
     init = 0, chains = 6, iter = 6000)
   
-  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
-    # Diagnostics
-    bayes_diag(mod_mood_full$bv)
-    # Summary:
-    bayes_tbl_sum(mod_mood_full$bv)
+  if( getOption("project_bayes_diagnostics") ){ 
+    brms::pp_check(mod_mood_full$bv, ndraws=50) # Predictive check
+    bayes_chain_stab(mod_mood_full$bv) # chain stability
+    bayes_diag(mod_mood_full$bv) # general model fit and coefficients
+    # bayes_tbl_sum(mod_mood_full$bv) # coefficients (table)
+  }
+  if( getOption("project_bayes_diagnostics") ){ 
+    brms::pp_check(mod_mood_full$bv, ndraws=50) # Predictive check
+    bayes_chain_stab(mod_mood_full$bv) # chain stability
+    bayes_diag(mod_mood_full$bv) # general model fit and coefficients
+    # bayes_tbl_sum(mod_mood_full$bv) # coefficients (table)
   }
   
   # AE  
@@ -66,11 +73,11 @@ if( project[["bayes"]][["run_models"]] ){
     data = selected_data.probe.mood.sleep,
     init = 0, chains = 6, iter = 6000)
   
-  if( project[["bayes"]][["set"]][["diagnostic_feedback"]] ){
-    # Diagnostics
-    bayes_diag(mod_mood_full$ae)
-    # Summary:
-    bayes_tbl_sum(mod_mood_full$ae) |> gt()
+  if( getOption("project_bayes_diagnostics") ){
+    brms::pp_check(mod_mood_full$ae, ndraws=50) # Predictive check
+    bayes_chain_stab(mod_mood_full$ae) # chain stability
+    bayes_diag(mod_mood_full$ae) # general model fit and coefficients
+    # bayes_tbl_sum(mod_mood_full$ae) # coefficients (table)
   }
   
   # Criteria 
@@ -82,10 +89,11 @@ if( project[["bayes"]][["run_models"]] ){
   
   
   ### Save      =======
-  if( project[["bayes"]][["save"]][["to_file"]] ){
+  if( getOption("project_bayes_save_to_file")  ){
+    time <- ""
+    if( getOption("project_bayes_save_with_date_time") ) time <- getOption("project_date_timne")
     save(mod_mood_full, file = paste0(
-      "data/mod_bayes_exclude-1.5h", 
-      project[["bayes"]][["save"]][["date_time"]],".Rdata")
+      "data/mod_bayes_exclude-1.5h", time,".Rdata")
     )
   }
 } 
