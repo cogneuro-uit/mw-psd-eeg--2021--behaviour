@@ -1,62 +1,67 @@
 #'                    **PROJECT PARAMETERS**                              ======
 
-#' Project related settings: 
-project <- list(
-  custom = list(
-    ggplot = TRUE,
-    ggplot_col = c("#F8766D", "#619CFF"),
-    gt = TRUE
-  ),
+message("Setting project settings...")
+
+#' Set general project parameters
+options(
+  # Get current date/time
+  project_date_time = format( Sys.time(), "_%Y-%m-%d_%H-%M-%S_"),
+
+  # Figure related settings
+  project_save_figs_to_file = TRUE,
+  project_save_figs_location = "/outputs/figs/",
+  project_save_figs_formats = c(".svg", ".jpeg"),
+  project_save_figs_with_date_time = TRUE,
+
+  # Table related settings
+  project_save_tbls_location = "/outputs/tbls/",
+  project_save_tbls_to_file = TRUE,
+  project_save_tbls_formats = c(".html", ".docx"),
+  project_save_tbls_with_date_time = TRUE,
   
-  #'     **BAYES RELATED**
-  bayes = list(
-    run_models = FALSE,
-    
-    # Set various settings
-    set = list(
-      diagnostic_feedback = FALSE,
-      backend = "cmdstanr",
-      
-      # Parallel settings: 
-      parallel = TRUE,
-      cores = 6
-      #' Number of cores.
-      #' Can be a whole number (*10*), a percent (*50%* or *.5*)
-    ),
-    
-    # Save settings
-    save = list(
-      to_file = FALSE,
-      with_date_time = TRUE
-    )
-  ),
+  # Aesthetics: 
+  project_custom_ggplot = TRUE,
+  project_custom_ggplot_colour = c("#F8766D", "#619CFF"),
+
+  # Bayesian options:
+  project_bayes_run_models = FALSE,
+  project_bayes_save_to_file = FALSE,
+  project_bayes_save_with_date_time = TRUE,
+  project_bayes_diagnostics = TRUE,
   
-  #'    **TABLES**
-  tbls = list(
-    save = list(
-      to_file = FALSE,
-      formats = c("pdf", "html"),
-      with_date_time = TRUE
-    )
-  ),
-  #'    **FIGURES**
-  figs = list(
-    save = list(
-      to_file = FALSE,
-      formats = c("svg", "jpeg"),
-      with_date_time = TRUE
-    )
-  )
+  mc.cores = 6,   #' or as many as you have
+  brms.backend = "cmdstanr",
+
+    
+  #' Because partial matching exists, warn whenever such an instance occur, 
+  #' as this can be especially problematic for statistical analysis.
+  warnPartialMatchArgs = TRUE,
+  warnPartialMatchAttr = TRUE,
+  warnPartialMatchDollar = TRUE
 )
+
+#' If conditions can take vectors but only evaluate the first on, 
+#' this will add a warning. 
+Sys.setenv("_R_CHECK_LENGTH_1_CONDITION_"=1)
+
+
+
+# Custom colours      =====
+#'  custom colours for ggplot (if enabled)
+if( getOption("project_custom_ggplot") ){
+  options(
+    ggplot2.continous.colour = getOption("project_custom_ggplot_colour"),
+    ggplot2.continous.fill   = getOption("project_custom_ggplot_colour"), 
+    ggplot2.discrete.colour  = getOption("project_custom_ggplot_colour"), 
+    ggplot2.discrete.fill    = getOption("project_custom_ggplot_colour")
+  )
+  theme_set( theme_bw() )
+}
+
+
 
 
 #'                       **SET VARIABLES**                                   =======
-
-#' All outputs (figures/tables) should be stored in the same place.
-outputs <- list(
-  figs = list(),
-  tbls = list()
-) 
 
 #' Set parameters for AE/BV calculation
 nback=25
@@ -136,136 +141,36 @@ experiment_information <- list(
   )
 )
 
-# Set date_time         ======
-#' Set the relevant date-time for storing outputs.
-if( project[["tbls"]][["save"]][["with_date_time"]] ){
-  project[["tbls"]][["save"]][["date_time"]] <- format( Sys.time(), "_%Y-%m-%d_%H-%M-%S_")
-} else {
-  project[["tbls"]][["save"]][["date_time"]] <- NULL
-} 
-
-if( project[["figs"]][["save"]][["with_date_time"]] ){
-  project[["figs"]][["save"]][["date_time"]] <- format( Sys.time(), "_%Y-%m-%d_%H-%M-%S_")
-} else {
-  project[["figs"]][["save"]][["date_time"]] <- NULL
-}
-
-if( project[["bayes"]][["save"]][["with_date_time"]] ){
-  project[["bayes"]][["save"]][["date_time"]] <- format( Sys.time(), "_%Y-%m-%d_%H-%M-%S_")
-} else {
-  project[["bayes"]][["save"]][["date_time"]] <- NULL
-}
-
-# Custom colours      =====
-#'  custom colours for ggplot (if enabled)
-if( project[["custom"]][["ggplot"]] ){
-  options(ggplot2.continous.colour = project[["custom"]][["ggplot_col"]])
-  options(ggplot2.continous.fill   = project[["custom"]][["ggplot_col"]])
-  options(ggplot2.discrete.colour  = project[["custom"]][["ggplot_col"]])
-  options(ggplot2.discrete.fill    = project[["custom"]][["ggplot_col"]])
-  theme_set( theme_bw() )
-}
-
-# Set bayesian cores     ======
-if( project[["bayes"]][["set"]][["parallel"]] ){
-  
-  check_next <- TRUE
-  
-  #' Get computer cores
-  ..cores = parallel::detectCores()
-  
-  #' If character, transform in this manner: 
-  #' *Note* that this function do not check against wrong character input...
-  if( project[["bayes"]][["set"]][["cores"]] |> str_detect("%") ){
-    project[["bayes"]][["set"]][["cores"]] <-
-      project[["bayes"]][["set"]][["cores"]] |>
-      str_remove("%") |> 
-      as.numeric() / 100 * ..cores |> 
-      floor()
-    check_next <- FALSE
-  }
-  
-  #' If less than 1, (similar to percentage) set cores:
-  if( check_next & 
-      project[["bayes"]][["set"]][["cores"]] < 1 ){
-    project[["bayes"]][["set"]][["cores"]] <-
-      floor( project[["bayes"]][["set"]][["cores"]] * ..cores )
-    check_next <- FALSE
-  }
-  
-  #' If a value is above the number of cores, but below 100 interpret the set cores, 
-  if( check_next & 
-      project[["bayes"]][["set"]][["cores"]] > ..cores & 
-      ..cores >= 100 ){
-    warning("Core value set higher than detected available cores... Interpreting as percentage.")
-    project[["bayes"]][["set"]][["cores"]] <-
-      floor( project[["bayes"]][["set"]][["cores"]]/100 * ..cores )
-    check_next <- FALSE
-  }
-
-  if( check_next & 
-      project[["bayes"]][["set"]][["cores"]] > ..cores & 
-      ..cores < 100){
-    warning("Core value set higher than detected available cores... Setting to half, corresponding to: ",
-            floor(..cores * .5), " cores")
-    project[["bayes"]][["set"]][["cores"]] <-
-      floor( project[["bayes"]][["set"]][["cores"]]/100 * ..cores )
-    check_next <- FALSE
-  }
-  
-  if( check_next & 
-      project[["bayes"]][["set"]][["cores"]] < ..cores ){
-    project[["bayes"]][["set"]][["cores"]] <-
-      floor( project[["bayes"]][["set"]][["cores"]] )
-    check_next <- FALSE
-  } 
-  
-  if(check_next <- FALSE &
-     !is.numeric(project[["bayes"]][["set"]][["cores"]]) ) {
-    warning("Could not interpret `bayes$set$cores`. Setting to half, corrresponding to: ", 
-            floor(..cores * .5), " cores")
-    project[["bayes"]][["set"]][["cores"]] <- floor(..cores * .5)
-    check_next <- FALSE
-  }
-  
-  cat("set:", project[["bayes"]][["set"]][["cores"]] )
-  options( mc.cores = project[["bayes"]][["set"]][["cores"]] )
-  options( brms.backend = project[["bayes"]][["set"]][["backend"]] )
-}
-
-
-
 
 #'                  **Warning**                  =======
-project_warning <- function(){
-  warning(
-    "\n============================================",
-    "\n           PROJECT PARAMETERS     ",
-    "\n--------------------------------------------",
-    "\n", "Custom ggplot: ", project[["custom"]][["ggplot"]],
-    "\n", "   colours: ", paste(project[["custom"]][["ggplot_col"]], collapse = " & "),
-    "\n", "Custom gt: ",  project[["custom"]][["gt"]],
-    "\n", "Save tables:",
-    "\n", "   Locally: ", project[["tbls"]][["save"]][["to_file"]],
-    "\n", "   With time/date: ", project[["tbls"]][["save"]][["with_date_time"]],
-    "\n", "   Formats formats: ", paste(project[["tbls"]][["save"]][["formats"]], collapse = " & "),
-    "\n", "Save figures:",
-    "\n", "   Locally: ", project[["figs"]][["save"]][["to_file"]],
-    "\n", "   With date/time:  ", project[["figs"]][["save"]][["with_date_time"]],
-    "\n", "   Formats: ", paste(project[["figs"]][["save"]][["formats"]], collapse = " & "), 
-    "\n", "Bayesian:",
-    "\n", "   Run models:  ", project[["bayes"]][["run_models"]],
-    if (project[["bayes"]][["run_models"]] ){
-      paste0("\n", "\n \U0002757  WILL TAKE SOME TIME  \U0002757",
-             "\n", "   Save models: ", project[["bayes"]][["save"]][["to_file"]],
-             "\n", "   Save models with date/time: ", project[["bayes"]][["save"]][["with_date_time"]])
-    },
-    "\n============================================",
-    "\n", "Waiting 5 seconds..."
-  )
-}
+# project_warning <- function(){
+#   warning(
+#     "\n============================================",
+#     "\n           PROJECT PARAMETERS     ",
+#     "\n--------------------------------------------",
+#     "\n", "Custom ggplot: ", project[["custom"]][["ggplot"]],
+#     "\n", "   colours: ", paste(project[["custom"]][["ggplot_col"]], collapse = " & "),
+#     "\n", "Custom gt: ",  project[["custom"]][["gt"]],
+#     "\n", "Save tables:",
+#     "\n", "   Locally: ", project[["tbls"]][["save"]][["to_file"]],
+#     "\n", "   With time/date: ", project[["tbls"]][["save"]][["with_date_time"]],
+#     "\n", "   Formats formats: ", paste(project[["tbls"]][["save"]][["formats"]], collapse = " & "),
+#     "\n", "Save figures:",
+#     "\n", "   Locally: ", project[["figs"]][["save"]][["to_file"]],
+#     "\n", "   With date/time:  ", project[["figs"]][["save"]][["with_date_time"]],
+#     "\n", "   Formats: ", paste(project[["figs"]][["save"]][["formats"]], collapse = " & "), 
+#     "\n", "Bayesian:",
+#     "\n", "   Run models:  ", project[["bayes"]][["run_models"]],
+#     if (project[["bayes"]][["run_models"]] ){
+#       paste0("\n", "\n \U0002757  WILL TAKE SOME TIME  \U0002757",
+#              "\n", "   Save models: ", project[["bayes"]][["save"]][["to_file"]],
+#              "\n", "   Save models with date/time: ", project[["bayes"]][["save"]][["with_date_time"]])
+#     },
+#     "\n============================================",
+#     "\n", "Waiting 5 seconds..."
+#   )
+# }
+# project_warning()
 
-project_warning()
-
-Sys.sleep(5)
-message("Starting...")
+# Sys.sleep(5)
+message("Done...")
