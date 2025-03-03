@@ -169,7 +169,7 @@ bayes_diag <- function( bayes_model, convergence = TRUE, offset = 0){
   bayes_coef_plot( bayes_model, offset = offset )
 }
 
-bayes_tbl_sum <- function( bayes_model, add_sigma = FALSE, add_loo = FALSE, add_R2 = FALSE, add_convergence = FALSE, apa_table = FALSE, .low_val=FALSE){
+bayes_tbl_sum <- function( bayes_model, add_sigma = FALSE, add_loo = FALSE, add_R2 = FALSE, add_convergence = FALSE, apa_table = FALSE, .low_val=FALSE, fmt_md = FALSE){
   #' Generate a table for the Bayesian posterior statistics.
   #' 
   
@@ -211,10 +211,12 @@ bayes_tbl_sum <- function( bayes_model, add_sigma = FALSE, add_loo = FALSE, add_
   if(apa_table){
     tbl <- tbl |> dplyr::mutate(.before=1, group="Coefficients")
   }
-  
+
+  # Determine the sigma name:  
+  sigma_name <- if_else(fmt_md, "$\\sigma$ (subjects)", "Sigma (subjects)")
   if(add_sigma){
     sigma <- tibble::tibble(
-      var = "Sigma (subjects)",
+      var = sigma_name,
       m   = mean( as.numeric( mod_data[, "sd_subj__Intercept"] ) ) |> fmt_APA_numbers(.chr=T, .low_val=.low_val),
       hdi = bayes_hdi(mod_data[, "sd_subj__Intercept"]),
       er  = bayes_er( mod_data[, "sd_subj__Intercept"], .chr=T), 
@@ -226,7 +228,7 @@ bayes_tbl_sum <- function( bayes_model, add_sigma = FALSE, add_loo = FALSE, add_
           mod_sum |> 
             dplyr::filter( variable %in% "sd_subj__Intercept" ) |>
             dplyr::select( variable, rhat, ess_bulk, ess_tail ) |> 
-            dplyr::mutate( variable = "Sigma (subjects)" )
+            dplyr::mutate( variable = sigma_name )
           , by = c("var"="variable")
         )
     }
@@ -260,14 +262,15 @@ bayes_tbl_sum <- function( bayes_model, add_sigma = FALSE, add_loo = FALSE, add_
   
   if(add_R2){
     message("Adding R2...")
-    
+    R2_name <- if_else(fmt_md, "$\\text{R}^2$", "R2")
     if( !is.null(bayes_model[["criteria"]][["loo"]]) ){
+      # Determine the R squared name (if not empty)
       
       r2 <- tidybayes::mean_hdi( bayes_model[["criteria"]][["bayes_R2"]] ) |> 
         fmt_APA_numbers(.chr=T, .low_val=T)
       
       r2_df <- tibble(
-          var = "R2", 
+          var = R2_name, 
           m = r2[["y"]],
           hdi = paste0("[", r2[["ymin"]],", ", r2[["ymax"]], "]"),
           er="", p="")
@@ -299,5 +302,58 @@ bayes_tbl_add_sig <- function(data, sig = .95, na.rm = T){
     )
 }
 
+
+tab_bayes_generics <- function(data, pre_footnote="", post_footnote=""){
+  c_names <- names(data$`_data`)
+  vars <- data$`_data`$var
+  
+  # ER
+  if( any( str_ends(c_names, "er" ) ) ){
+    er_dir <- "ER~dir~ indicates the evidence ratio that the effect is in the *b* specified direction."
+    if(pre_footnote != ""){
+      er_dir = paste0(" ", er_dir)
+    }
+  } else { er_dir = ""}
+  # P
+  if( any( str_ends(c_names, "p") ) ){
+    p_dir <- " *p*~dir~ indicates the probability that the effect is in the *b* specified direction."
+  } else { p_dir <- "" }
+  
+  # Convergence
+  if( any( str_ends(c_names, "rhat") ) ){
+    rhat <- " $\\hat{R}^2$ indicates convergence between and within-chain."
+  } else { rhat <- "" }
+  if( any( str_ends(c_names, "ess_bulk") ) ){
+    ess_bulk <- " $\\text{ESS}_{bulk}$ indicates the effective sample size of the bulk of the distribution."
+  } else { ess_bulk <- "" }
+  if( any( str_ends(c_names, "ess_tail") ) ){
+    ess_tail <- " $\\text{ESS}_{bulk}$ indicates the effective sample size of the tails of the distribution."
+  } else { ess_tail <- "" }
+  
+  # Add empty space if some are present
+  if( !("" %in% c(er_dir, p_dir)) ){
+    post_footnote = paste0(" ", post_footnote)
+  }
+  
+  # general transformation.
+  data |>
+    cols_label(
+      "var" = "",
+      ends_with("m")    ~ md("*b*"),
+      ends_with("hdi")  ~ md("HDI"),
+      ends_with("er")   ~ md("ER~dir~"),
+      ends_with("p")    ~ md("*p*~dir~"),
+      ends_with("rhat") ~ md("$\\hat{R}$"),
+      ends_with("e")    ~ "",
+    ) |>
+    tab_footnote(
+      md(str_glue("*Note.* {pre_footnote}{er_dir}{p_dir}{rhat}{ess_bulk}{ess_tail}{post_footnote}") )
+      , placement = "left"
+    ) |>
+    tab_footnote( md("\\* *p*~dir~ > .95") ) |> # Probability notation
+    cols_align("left", var) |> # Align
+    fmt_markdown(columns = var) |> # Markdown on var
+    tab_fmt_APA()  # General table transformations
+}
 
   
