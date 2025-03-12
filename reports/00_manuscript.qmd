@@ -1,0 +1,844 @@
+---
+title: The Effects of Three Nights of Partial Sleep Deprivation on Mind Wandering, Behaviour and Mood
+shorttitle: PSD on MW, EFs and Mood
+authors:
+  - name: Steffen Rygg Aasen
+    orcid: 0000-0003-2807-7504
+    affiliation: Department of Psychology, UiT - The Arctic University of Norway
+    roles: 
+      - writing
+      - data curation
+      - investigation
+      - formal analysis
+      - resources
+      - visualization
+  - name: Samy Engebø Babiker
+    affiliation: Department of Psychology, UiT - The Arctic University of Norway
+    roles: 
+      - data curation
+      - investigation
+      - resources
+      - editing
+  - name: Ingvild Saksvik-Lehouillier
+    orcid: 0000-0002-1953-7364
+    affiliation: Norwegian University of Science and Technology
+    roles: 
+      - resources
+      - methodology
+      - editing
+  - name: Julia W. Y. Kam
+    orcid: 0000-0002-2369-2148
+    affiliation: Helen Wills Neuroscience Institute, University of California – Berkeley, Berkeley, CA, USA
+    roles: 
+      - editing
+  - name: Aurora Marie Kleivik Vangen
+    affiliation: Department of Psychology, UiT - The Arctic University of Norway
+    roles: 
+      - data curation
+      - investigation
+      - resources
+  - name: Silje Balsnes Haugan
+    affiliation: Department of Psychology, UiT - The Arctic University of Norway
+    roles: 
+      - data curation
+      - investigation
+      - resources
+  - name: Sanna Aurora Sandell
+    affiliation: Department of Psychology, UiT - The Arctic University of Norway
+    roles: 
+      - data curation
+      - investigation
+      - resources
+  - name: Gábor Csifcsák
+    orcid: 0000-0001-7719-7073
+    affiliation: Department of Psychology, UiT - The Arctic University of Norway
+    roles: 
+      - conceptualization
+      - methodology
+      - supervision
+      - validation
+      - resources
+      - editing
+  - name: Matthias Mittner
+    orcid: 0000-0003-0205-7353
+    affiliation: Department of Psychology, UiT - The Arctic University of Norway
+    roles: 
+      - conceptualization
+      - funding acquisition
+      - project administration
+      - methodology
+      - software
+      - resources
+      - supervision
+      - validation
+      - visualization
+      - editing
+    corresponding: true
+abstract: "This study investigates the effect of partial sleep deprivation (PSD) over 3 consecutive nights on our tendency to shift our attention, behaviour and mood. We used a within-subject cross-over design, where 34 healthy adults engaged in the finger-tapping random sequence generaiton task (FT-RSGT) after a period of PSD and normal sleep (NS). The participants indicated to sleep on average 1.7 hours less during the PSD period compared to the NS period. The FT-RSGT provides two objective indices of attention, behavioural variability (BV) and randomness generation (AE), and subjective reports of attention. We found that PSD increased mind wandering, mind blanking, BV, decreased positive mood and slightly increased negative mood, meanwhile AE was generally unaffected by the PSD. These findings contribute to our understanding of how even moderate sleep reduction affects attention, highlighting the possibly severe consequences of moderate sleep loss in safety-critical activities requiring sustained attention, such as driving. Additionally, these results are problematic granted the rising social trend towards less sleep duration, and suggest that only a couple of days might be sufficient to significantly impair our everyday behaviour."
+keywords: attention, sleep, mind wandering, partial sleep deprivation, executive functions, mood
+author-note:
+  disclosures:
+    conflict-of-interest: The author has no conflict of interest to declare.
+    data-sharing: "Data from this study can be accessed at the Open Science Foundation (OSF): https://osf.io/xq6wr/."
+    financial-support: "WHAT ARE WE SUPPORTED BY? "
+    gratitude: "We would like to extend our gratitude to Ragnhild Nicolaisen Drevland for helping in the data collection. Moreover, we would like to express our deep gratitude to all the participants slept less (for Science!)."
+
+# References
+bibliography: references.bib
+# Technical
+editor: source
+format:
+  pdf: default
+  docx: default
+  apaquarto-docx: default
+  apaquarto-html: default
+  apaquarto-pdf: default
+  apaquarto-typst: default
+execute:
+  echo: false
+  include: false 
+---
+
+```{r Parameters }
+#' **RELATIVE PATH**
+#' Depending on the position of the document, loading files may fail.
+#' This variable enables you to set it according to where the file is. 
+#' For main directory set it to "NULL", within a folder, use "../".
+script_relative_path <- "../"
+source( paste0(script_relative_path, "lib/load_project.R") )
+load_project(script_relative_path)
+```
+
+# Introduction
+
+Sufficient sleep is paramount for optimal functioning in our everyday lives [@alhola2007]. The far-reaching consequences of insufficient sleep are evident in various health outcomes, such as depression and obesity [@chattu2019]. Moreover, numerous studies demonstrate the negative influence of sleep restriction on sustained attention, executive functions, emotional stability, and memory consolidation [@åkerstedt2007; @alhola2007; @anderson2011; @lo2016; @poh2016; @stickgold2007]. For example, sleep deprivation increases attentional lapses and impulsivity during sustained attention tasks [@anderson2011; @lo2016; @saksvik-lehouillier2020], and decreased speed of processing during an arithmetic task [@lo2016]. Insufficient sleep impedes memory consolidation by disrupting neural plasticity that occur during sleep, particularly related to slow-wave sleep and rapid-eye-movement sleep [@stickgold2007]. Additionally, sleep loss can reduce positive [@lo2016; @saksvik-lehouillier2020] and increase negative emotions [@cárdenas-egúsquiza2022b] influencing our overall well-being in a way that might predispose individuals towards depression [@chaieb2022].
+
+Despite the clear relationship between sleep deprivation and well-being, most research typically implements total sleep deprivation (TSD) which is achieved by keeping participants awake throughout a single (or more) night(s), often in laboratory contexts. However, TSD is uncommonly experienced by most individuals compared to partial sleep deprivation (PSD), where individuals sleep less than recommended (e.g., an adult sleeping 5 hours instead of the recommended 7-8 hours), usually over multiple days [e.g., @sheehan2019; @sivertsen2019]. Research indicates that PSD might impact cognitive functions and mood more than TSD [@pilcher1996; @salfi2020]. Additionally, PSD appear to require "catch-up" sleep to recover normal cognitive functioning [@balkin2008; @belenky2003; @lo2016; @cohen2010]. Problematically, PSD may be less noticeable than TSD because people can habituate to the reduced amount of sleep [@balkin2008]. Despite this, the effects of PSD remain surprisingly underexplored [@alhola2007] considering the fact that it is more prevalent [e.g., @sheehan2019; @sivertsen2019].
+
+As insufficient sleep influences fundamental cognitive functions, it is not surprising that it also influences our attention. Research suggests that sleep deprivation influences our tendency to shift our attention away from the task at hand to internal thoughts. This shifting of attention is usually referred to as mind wandering [MW; @smallwood2015] and has been positively associated with sleep deprivation [@cárdenas-egúsquiza2022a; @cárdenas-egúsquiza2022b; @marcusson-clavertz2020]. Indeed, one study found that one night of TSD increased MW [@poh2016]. Recent evidence suggests that there might be a directional effect between MW and sleep. Two diary studies have found that self-reported sleep disturbances predicted more MW the following day [@cárdenas-egúsquiza2022b], while more MW during the day do not predict sleep problems the following night [@marcusson-clavertz2019; but see @fell2024].
+
+Granted the possible directional effect of sleep deprivation on MW, it could be that MW is the underlying consequence that reduces cognitive functioning following sleep deprivation. Indeed, similar behavioural consequences are often observed following sleep deprivation and MW episodes. For example, in a simulated driving environment, participants show greater driving speed variation, lane variation, and braking response time following sleep deprivation [@jackson2013]. Similarly, MW during a simulated driving environment increase driving speed and braking response time [@rodd2017; @yanko2014]. Furthermore, during more formal cognitive tests, sleep deprivation has been found to increase response variability [@jackson2013] and reduce random sequence generation [@heuer2005], similar to how MW episodes are related to increased response variability [@baldwin2017; @seli2013b] and reduced random sequence generation [@boayue2020; @teasdale1995].
+
+Furthermore, worse mood has also been related to both sleep deprivation and MW. Sleep deprived individuals tend to reported less positive and more negative mood, while also indicating more anxiety and depressive symptoms [@palmer2024; @short2020]. Similarly, MW tendency has also been associated with negative affect in the general population [@killingsworth2010], and is increased in a variety of psychiatric disorders, such as depression and anxiety disorder [@marchetti2012; @marchetti2016; @smallwood2007b]. Indeed, a recent meta-analysis has suggested that most forms of MW are negatively valenced, albeit for future-oriented and positive-related MW [@kam2024]. A recent proposal has suggested a vicious cycle between MW, sleep, and mood [@fell2024], where worse mood can increase MW, which can increase sleeping problems, which can further increase reduced mood and increase MW. Although the authors argue for a directional effect of MW on sleeping problems, these influences might be more contextual [e.g., @ottaviani2015; @marchetti2012] and might be highly interrelated creating a spiraling negative feedback-loop.
+
+{{{ The two paragraphs below could be shortened to one paragraph? }}}
+
+Although MW is often understood as a unitary phenomenon where attention drift away from the current task, it can vary along different dimensions. For example, MW episodes typically have a specific reportable content, like thinking about what to make for dinner or upcoming social events. Occasionally, however, we might find ourselves not focusing on the task (i.e., MW) but at the same time not think about anything. This lack of content is referred to as mind blanking (MB) and it is not clear whether it results from lacking meta-cognitive awareness or whether no content is generated [@kaufmann2024; @ward2013]. Nevertheless, research suggests that MB impedes performance more than MW during time-critical tasks [e.g., the sustained attention response task, @andrillon2021], but not during other tasks [e.g., reading; @ward2013]. This discrepancy might arise due to MB constituting a period of deeper task disengagement [i.e., stronger perceptual decoupling, @smallwood2015] that reduce information processing [@mortaheb2022; @musat2024]. For example, @ward2013 found that, when their participants reported to mind wander, their eyes seemed to continue to move across words, as if they were still reading (i.e., partial task-disengagement), whereas, when they reported to mind blank, their eyes seemed to stop at a particular word (i.e., complete task-disengagement).
+
+Another dimension of MW is related to whether MW occurs deliberately or not. For example, if the current task is boring, or we lack motivation, we might choose to deliberately mind wander. Indeed, research suggests that participants with lower motivation report more MW and engaged in more deliberate (D-MW) than spontaneous MW [@robison2018; @seli2015]. Moreover, participants engage in more S-MW than D-MW during difficult tasks, and, conversely, more D-MW than S-MW during easy tasks [@seli2016]. In a similar vein, research suggests a negative relationship between working memory capacity and S-MW [@ju2018; @robison2018]. Thus, to broaden our understanding of MW it is necessary to consider contextual factors that might impact performance.
+
+Executive functions (EFs) is often theroized to be closely related to MW [@smallwood2006; @mcvay2010]. However, the tasks implemented in MW research often do not sufficiently load EFs and therefore do not provide pivotal information about their relationship. Therefore, @boayue2020 created the finger-tapping random sequence generation task (FT-RSGT) which requires creating random sequences of responses in synchrony with a metronome. Thought probes are interleaved in the task, inquiring about participants attentional state. The FT-RSGT provides two key measures of EFs: behavioural variability (BV) and approximate entropy (AE). BV is operationalized as the variability in reaction time and is regarded as an established proxy of MW such that increased BV typically precede MW reports [@bastian2013; @cheyne2009; @seli2013b]. AE is a measure of sequence randomness which is typically considered a prototypical task to engage the central executive [@baddeley1998] and has been related to MW [@teasdale1995]. Avoiding repetitive patterns in the generated sequence requires inhibitory control, as well as mental monitoring and updating of previously generated sequences, all of which are core functions of the executive system [@miyake2000]. Thus, the FT-RSGT is more suited to investigate the link between MW and EFs, and has already been successfully used within the MW field [e.g., @aasen2024; @drevland2024; {{{ ALEXANDERSEN2024}}}; @alexandersen2022; @boayue2020; @groot2022].
+
+Altogether, the complex relationship between MW (and its various manifestations), the executive system, and sleep calls for further investigation. To elucidate on these issues, we conducted a within-subject, cross-over study that implemented a modified version of the PSD protocol by @saksvik-lehouillier2020 in combination with the FT-RSGT [@boayue2020] to investigate how PSD influence MW, EFs, and mood. We utilized a Bayesian framework implementing ordered-probit models [@boayue2019], which has already been used with the FT-RSGT [e.g., @aasen2024; {{ALEXANDERSEN}}; @alexandersen2022; @boayue2020; @drevland2024; @groot2022] due to its many benefits over frequentist analysis [@bürkner2019; @liddell2018; @wagenmakers2018]. Data collection also encompassed recording EEG, but results from the EEG analysis will not be described in this article.
+
+Our main hypothesis concerned the effect of PSD on MW and FT-RSGT performance. More specifically, we expected that PSD would (1) facilitate participants’ overall propensity to engage in MW, (2) increase the frequency of MB episodes relative to MW with reportable content, (3) lead to more S-MW relative to D-MW, (4) increase negative mood, (5) reduce self-reported positive mood, (6) increase BV and (7) reduce randomness in the FT-RSGT. Additionally, we expected that (8) reduced mood before the task would predict the amount of MW during the task. Moreover, we will also assess how PSD influence the interaction between measures of EF and different forms of MW, and that (9) PSD and changes in mood would moderate the relationship between task-focus and EF performance.
+
+# Method
+
+## Participants
+
+```{r age calculation}
+demo_text_summary <- 
+  demographics |> 
+  mutate(Age = as.numeric(Age)) |>
+  summarise(
+    m   = mean(Age, na.rm=T), 
+    sd  = sd(Age, na.rm=T), 
+    min = min(Age,na.rm=T), 
+    max = max(Age,na.rm=T)
+  ) |> 
+  mutate( across(1:2, ~fmt_APA_numbers(.x, .chr=T)),
+          across(3:4, ~round(.x, 0)) )
+```
+
+We recruited `r demographics$Age |> length()` healthy adults (`r sum(demographics$Gender==1)` females) to a within-subject cross-over design study. Although we had originally decided to exclude participants if they were not sleep deprived by 2 or more hours, we would have ended up excluding a lot of participants, which we considered concerning for the power of our analyses. We nevertheless present the results from the exclusion criterion in the Supplementary Results. Therefore, we decided to stick with the whole sample and recode the sleep deprivation variable. To do this, we conded the sleep deprivation as the difference in between the amount of sleep between the NS and the PSD period. We coded the PSD period to be related to the relative reduction in sleep amount relative to the NS (conded as 0, thus integrating it to the base model). Note that for 3 participants (019, 031 and 033) we switched the NS/PSD period because those participants reported *more* sleep during their PSD period. Data-collection took place between March 2021 and May 2022.
+
+The experiment was approved by the institutional ethics board at UiT The Arctic University of Norway. Participants were recruited via social media posts, flyers, and personal contacts in Tromsø. To be included, participants needed to be between (and including) 18 and 50 years, with no history or ongoing mental illness, as well as not taking any psychoactive drugs. Participants were also asked whether they had any hearing impairments (used to adjust the metronome sound - none reported any hearing impairments). Lastly, participants had to give written consent to participate, and they were compensated for their time with a gift card at a local shopping mall valued at 500 NOK (approximately 50 USD).
+
+## The Task
+
+The FT-RSGT [@boayue2020] was coded in PsychoPy, Standalone version 1.83.04_win32 [@peirce2007]. Participants were asked to create a random sequence of responses using two dedicated keys on a keyboard to a metronome with a 750 ms inter-stimulus interval (ISI). The metronome had a pitch of 440 Hz, and each tone was played for 75 ms on stereo speakers placed approximately 0.5 meter from the participant, with a peak volume of approximately 60 dB. Furthermore, participants were pseudo-randomly probed about their attentional focus, presented within a random interval ranging from 40 to 80 seconds. Participants were always asked three consecutive questions relating to their attention, which were answered on a 4-point Likert scale. The first question was related to their focus: “To what degree were you focused on the task just before this question?” (1: “clearly unfocused”, 4: “clearly focused”). The second question was related to the content of the MW episode: “To the degree to which you were not focusing on the task, were you thinking of something in particular or just thinking about nothing?” (1: “clearly nothing”, 4: “clearly something specific”). Lastly, we wanted to distinguish between the intentionality of the MW episode: “Were you deliberate about where you focused your attention (either on-task or elsewhere) or did it happen spontaneously?” (1: “clearly spontaneous” to “clearly deliberate”). These exact questions have been used in previous studies [@aasen2024; {{ ALEXANDERSEN }}; @drevland2024] and similar questions have been used by other studies [@alexandersen2022; @groot2022; @vékony2023]. The task lasted for approximately 25 minutes answering a total of 25 probes. All material in this study is publicly available in Norwegian at the Open Science Framework (OSF; <https://osf.io/xq6wr/>; partial English translations can be found at <https://osf.io/cv24f/> and <https://osf.io/txpu2/>).
+
+## Sleep Paradigm
+
+To investigate the effect of PSD on MW and executive functions, we needed a sleep paradigm. To this end, we opted to use a modified PSD protocol described by @saksvik-lehouillier2020 . They asked their participants to sleep 2 hours less each night for 3 consecutive nights, and their participants achieved an average of 2.23 (SD = 0.72) hours less sleep according to their actigraphy measure. Their protocol was found effective at reducing cognitive function without long-term consequences. This method provides more ecological validity to the outcomes, as participants could sleep in their homes. Thus, the protocol can provide valuable information about the consequences of the declining sleep duration in the population [e.g., @sheehan2019; @sivertsen2019]. To guarantee a solid effect of PSD [@lim2008; @saksvik-lehouillier2020; @schwarz2016], we aimed for participants to sleep 3 hours less for three consecutive nights in the PSD condition. To avoid sequence effects, we counterbalanced the order of data-collection (i.e., whether the first session was during a period of normal sleep, NS, or PSD), resulting in two groups: The early sleep deprivation (ESD; those subjects who underwent PSD before the first data-collection) and late sleep deprivation (LSD; those subjects who had a period of controlled NS before the first data collection). The testing procedure was the same for both groups and between the conditions (NS and PSD, see Figure 1). Participants were pseudo-randomly assigned to either the LSD or ESD condition but allowed flexibility to fit participants' personal schedule. Data from both groups were merged for the analysis, and group assignment will not be further tested. During participants NS nights, they were instructed to not go to sleep later than 00:30 and not wake up later than 09:00. After waking up during participants participation period, they had to fill out a sleep diary asking (1) when they went to bed, (2) when they tried to fall asleep, (3) how long it took before they fell asleep, (4) how many times they woke up before waking up in the morning, (5) how long these wake-ups were, (6) when the last wake-up occurred, (7) when they rose from the bed, (8) to rank their sleep quality from very bad to very good (5-point Likert scale), and (9) if they took off the Actiwatch (see below) at any time the day before.
+
+Participants received an Actiwatch Spectrum Pro (Philips Respironics, USA; <https://tinyurl.com/yjr2szxg>) which they wore for the full duration of the experiment. Participants were recommended to always wear the watch, but we emphasized that it was required to wear it during their sleep. The Actiwatch measures physical activity and ambient light which is used to estimate participants' sleep- and waking-time, sleep latency and total sleep using the accompanying software, Philips Actiware 6.0.2.
+
+::: {#fig-experiment-design-task layout-ncol="2"}
+![Sleep protocol](../outputs/experiment/sleep_dot.svg){width="540"}
+
+![Experimental task](../outputs/experiment/FT-RSGT_overview.svg){width="540"} *Note*. At baseline (T0) participants signed the consent, received the questionnaires, and the actigraphy device, and were scheduled for their test days. At the first test (T1) participants performed the finger-tapping random sequence generation task (FT-RSGT), and data from the actigraphy was retrieved. The second test (T2) followed the same procedure as T1 (except for collecting the actigraphy and the diary). Both groups followed the normal sleep (NS) protocol for the first 7 nights but diverged afterwards. The late sleep deprivation (LSD) group took their first test (T1) immediately after the 7 NS nights, while the early sleep deprivation (ESD) immediately proceeded to the partial sleep deprivation (PSD) nights. Since we wanted participants to sleep normally for 7 nights prior to their NS test, the ESD group ended up with three additional days compared to the LSD group. The dark-red dots represent meetings in the lab (T0 = first, T1 = second and T2 = third meeting), black dots represent non-study days between the first lab meeting (T0) and the onset of data collection represented by the light blue dots that also represents the normal sleep (NS) nights, and the purple dots represents the partial sleep deprivation (PSD) nights. The red (downward) arrows indicate experimental retrieval of data (e.g., consent as a pen). The green (upward) arrows indicate material given to the participants, and the orange circle arrow indicate retrieval of data but return of the device (i.e., actigraphy). Electroencephalography (brain with a frequency) data was also collected during the task, but is not described here.
+:::
+
+## Procedure
+
+### Baseline session (T0)
+
+At the start of the study (T0) participants were informed about the experimental protocol and had to give written consent before proceeding. Once written consent was given, participants were handed out a Phillips Actiwatch, a sleep diary (noted above), and a general questionnaire about their sleep patterns. In the general sleep questionnaire, we asked various questions related to participants’ sleep patterns. We asked whether the participants had any night shifts, if they worked, with four discrete options: (1) nothing, (2) one night or less a month, (3) 2-4 nights per month or (4) 2 nights per week or more. Furthermore, we asked about the participants’ sleep preference during the weekdays and weekends: when they preferred to fall asleep, wake up, and for how long they preferred to sleep. They were then asked about how many hours they slept in a typical 24-hour period during the weekdays and weekends. Lastly, we inquired how many caffeine-containing beverages (e.g., coffee, tea) and energy drinks they usually consume in a normal day [@saksvik-lehouillier2020].
+
+We used verified scales to measure sleep, fatigue, insomnia, and sleep quality [@saksvik-lehouillier2020]. Participants' fatigue was measured with the Fatigue Severity Scale [@krupp1989] with lower scores indicating less fatigue. To measure sleepiness, we used the Epworth Sleepiness Scale [@johns1991], where lower scores (0-5) indicate low daytime sleepiness while higher scores (16-24) indicate severe excessive daytime sleepiness. Sleeping problems were measured with the Insomnia Severity Index [@bastien2001] where lower scores (0-7) indicate no significant insomnia, while higher scores (22-28) indicate severe insomnia. Participant’s sleep quality was measured with the Pittsburgh Sleep Quality Index [@buysse1989] that inquires about participants’ sleep time, sleep delay, wake time and sleep amount, where higher scores indicating worse sleep quality. Participant’s diurnal preferences were assessed with the Diurnal Scale [@torsvall1980] where higher scores indicate a preference to wake up and go to sleep early (‘early birds’), and lower scores indicate a preference to go to sleep later and wake up late (‘night owls’). To measure the participant’s mood, we used the Positive and Negative Affect Schedule [PANAS, @watson1988] where higher scores (min 10, max 50) indicate more intensive emotional states. Lastly, we also asked participants about their alcohol consumption habit, derived from [@saksvik-lehouillier2020]. This consisted of 3 different questions with 5 answer alternatives (ranging from low to high consumption).
+
+### First Data Collection Session (T1)
+
+Data collection procedures were identical for the LSD and ESD groups. LSD participants came to the first session after 7 days of NS, while in the ESD group, the session commenced after 3 additional days of PSD. The experimenters were not blinded to whether participants were sleep-deprived or not during a session. Due to the SARS-CoV-2 pandemic in 2020-2022, we followed the safety guidelines given by our faculty. All surfaces touched by the participants were cleaned after each session, the experimenters wore disposable protective gear (e.g., gloves and facemasks), and participants were provided with a facemask if they did not already wear one. During testing, participants could take off their facemasks, but had to put it back on after the test was completed.
+
+After entering the lab, participants were asked to provide the actigraphy for charging and data collection. Thereafter, the participants had to do the PANAS to assess pre-session mood and were provided with the instructions for the FT-RSGT. Additionally, participants were provided with an explanation of the random generation and information about the thought-probes. At the same time, the experimenters started placing the 32 electroencephalography (EEG) electrodes on the scalp (data not analysed here). Subsequently, participants were seated in an isolated sound-proofed compartment and seated approximately 50 cm in front of a computer screen (Sony Trinitron CPD-E530, 21 inches) with two loudspeakers beside it. They were fitted to a chinrest, instructed to sit as still as possible and to keep their gaze at the fixation cross on the screen. Prior to starting the task, participants engaged in a 1-minute-long training round of the FT-RSGT and could repeated it as many times as they wanted. This was followed by a short quiz about the FT-RSGT to ensure a proper understanding of the experiment and the probes (see <https://osf.io/xq6wr>). If they made an error on the quiz, the question was repeated alongside an explanation of why (e.g., if they made an error on the “Watching a movie” question, it was described that such thoughts would not help them solve the task of making random sequences and respond precisely to the metronome).
+
+Thereafter, the FT-RSGT was started lasted approximately 25 minutes. After the task, participants were asked to fill out another PANAS to measure the post-task mood. Additionally, a custom-made questionnaire regarding the retrospective task motivation (7-point Likert scale ranging from “not very motivated” to “extremely motivated”), and to rate their confidence when responding to the first probe about task focus (7-point Likert scale ranging from “not at all” to “extremely”). Furthermore, participants provided open-ended feedback regarding (1) the randomness strategy they used, (2) comments relating to the task, (3) the content of their MW episodes, and (4) if they had any general remarks regarding the experiment. Subsequently, participants’ actigraphy were returned, and they were reminded of their second test (T2) and to continue to use the sleep diary and actigraphy until T2, which was always scheduled seven days after T1 at the same time (starting either at 09:00 or at 11:00).
+
+### Second Data Collection Session (T2)
+
+The second session followed the procedure in T1, but for a couple of changes. The actigraphy was not returned to the participants at the end of the session, the diary data and the completed T0 questionnaires were retrieved. Additionally, participants received their gift card, thanked for their participation and asked whether they wanted a computer-generated summary of their sleep.
+
+## Statistical analysis
+
+<!--# RCORE TEAM 2025 ??? -->
+
+The data analysis was done in R version `r str_split(R.version$version.string, " \\(")[[1]][[1]]` [@rcoreteam2024]. The sleep measures, sleep onset, wake time and duration of sleep for the two conditions (NS and PSD) were calculated based on the 3 nights before each test sessions because the PSD condition was limited to 3 nights of sleep restriction. The BV variable was calculated as the log-transformed and z-scored standard deviation of the inter-tap-intervals, extracted for the period of the last 25 stimuli preceding each thought probe, corresponding to 18.75 seconds [@boayue2020]. The AE variable [@pincus1997] was also extracted for the 25 stimuli preceding each thought-probe and was parametrized by parameter m that indicates the maximum length of subsequence’s used for the entropy-calculation. For the current analysis, we used m = 2, which has been found to provide the most stable estimates with a robust effect in relation to MW [@boayue2020]. Raw AE values were transformed using -log(log(2)-AE) and z-scored across subjects. Higher values of AE imply greater irregularities (more random responding) of the sequence [@pincus1991], associated with stronger recruitment of executive resources [@teasdale1995]. Mood was measured with the PANAS which ranges from 10 to 50, but we transformed it to start at 0 (i.e., to range from 0 to 40).
+
+To estimate the participants’ sleep onset, we used their self-reported sleep time and added their estimated sleep delay. As for their wake time, we used their self-reported last awakening, then we calculated their sleep duration by calculating their sleep duration from their sleep onset to their wake time. For the actigraphy, we used the software estimated sleep onset, wake time and sleep duration each night and averaged them. Additionally, we followed the procedure by @follesø2021 to adjust the participants' sleep/wake times due to some disrepancies between the self-reported and actigraphy estimated sleep. For the models described below, we treated the sleep deprivation as a continuous (and *not* a dicotomous, see the Supplementary Methods) variable relating to the absolute sleep difference between the NS and the PSD condition for each subject respecitvely. In relationship to mood scores, we wanted to test whether sleep condition (Normal vs. Deprived), test time (pre vs. post) and their interaction influenced mood scores. To test this relationship, we ran two separate hierarchical Bayesian linear models for each mood score, positive and negative. Additionally, we wanted to investigate whether pre-test mood (e.g., @kam2024 could influence the behavioural (BV and AE) and probe answers (MW, MB, and S-MW) and therefore included them in the models described below.
+
+Bayesian statistics has many advantages over classical frequentists methods [@wagenmakers2018]. We used the R package brms [Bayesian Regression Models using Stan; @bürkner2017] for all our Bayesian regression analyses, with the default uniform priors. The brms package relay on the Stan software [@standevelopmentteam2024] that uses Hamiltonian Mote Carlo sampling, and we decided to go with 6 chains with 6000 iterations each and a warm-up of 3000. Convergence and stability of the Bayesian sampling was assessed using R-hat, which should be below 1.05 [@gelman2019], and Effective Sample Size (ESS), which should be greater than 1000 [@bürkner2017]. When reporting Bayesian regression coefficients, we report the posterior mean *b*, 95% highest-density intervals (HDI), evidence ratio that the effect in the *b* specified direction ($\text{ER}_\text{dir}$, e.g., $b = 2$, $\text{ER}_\text{dir} = 30$, indicates that there is 30 times more evidence that the effect is *positive* rather than negative) and the probability that the effect is in the *b* specified direction [$p_\text{dir}$; e.g., $b = -1.2$, $p_\text{dir} = .967$; indicates that there is a 96.7% probability that the effect is *negative* rather than positive; @boayue2020].
+
+```{=html}
+<!--# Regarding the reporting of the bayesian evidence ratio and probability, I have been going back and forth whether to use *b* or dir: ER~*b*~ or ER~dir~. With the idea that the values would directly correspond to those in the table. The problem, though, is that the notations is more ambiguous in the sense of being immediately identifiable. 
+\
+ERb is more intuitive to understand what values are relevant for the ER (but leaves out the fact that it is the direction (not the strength of b, per se)
+
+ERdir is more intuitive in that it indicates that the ER is related to the direction, but leaves out the specific value it refers to (i.e., b).
+
+An intermediary could be ER~*b*~dir~~ which would indicate both, but would also make more clutter? -->
+```
+
+Using Bayesian statistics has many benefits over frequentist analysis [@wagenmakers2018]. To circumvent some of these problems, we used two separate Bayesian hierarchical linear regression models for the dependent behavioural variables BV and AE. We included the predictors Time (time-on-task, scaled to 0-1), pre-test positive, pre-test negative and their respective interaction with Sleep (NS and PSD), and Sleep independently. Lastly, each participant received their own random intercept included in the model.
+
+Additionally, using standard linear models on discrete answers like those provided by the thought probes can be problematic [@boayue2019; @liddell2018]. Moreover, it disregards data by completely overlooking variations within each participant, and it fails to account for influential factors like the impact of time-on-task [@thomson2014]. To avoid these issues, we used Bayesian hierarchical ordinal-probit models [@bürkner2019] which has already been used within the MW field [@aasen2024; @alexandersen2022; @boayue2019; @boayue2020; @groot2022] but also elsewhere [e.g., @filmer2019; @turi2019]. Specifically, we implemented three separate Bayesian hierarchical ordered-probit regression models for each of the dependent variable’s MW, MB and S-MW. Regarding the latter two probe responses, we only considered those that were preceded by a MW (\>2) report. The regression models had the predictors Time (scaled to 0-1), BV, AE, pre-test positive, pre-test negative and their respective interaction with the Sleep (NS vs. PSD), and Sleep independently. Lastly, all participants received a random intercept in the model.
+
+# Results
+
+```{r as.matrix bayesian data}
+mmw  <- as.matrix(mod_bay_sleep_cont$mw)
+mmb  <- as.matrix(mod_bay_sleep_cont$mb)
+msmw <- as.matrix(mod_bay_sleep_cont$smw)
+mbv  <- as.matrix(mod_bay_sleep_cont$bv)
+mae  <- as.matrix(mod_bay_sleep_cont$ae)
+```
+
+## Baseline Measures
+
+```{r general sleep questionnaire - data preparation}
+general_sleep <- 
+  sleep_quiz |>
+  mutate(
+    .before=1,
+    night_shift    = S1_Q1,
+    pref_sleep     = as.numeric(S1_Q2)/3600,
+    pref_sleep     = if_else(pref_sleep<=5, pref_sleep+24, pref_sleep),
+    pref_wake      = as.numeric(S1_Q3)/3600,
+    pref_sleep_dur = S1_Q4,
+    sleep_week     = S1_Q5,
+    sleep_week_end = S1_Q6,
+    coff_day       = S1_Q7,
+    energy_drink   = S1_Q8,
+  ) |>
+  pivot_longer(c(
+    night_shift, pref_sleep, pref_wake, pref_sleep_dur,
+    sleep_week, sleep_week_end, coff_day, energy_drink)
+  ) |>
+  summarise(
+    .by = name,
+    m   = mean(value, na.rm=T),
+    sd  = sd(value, na.rm=T),
+    min = min(value, na.rm=T),
+    max = max(value, na.rm=T),
+  ) |>
+  add_row(name = "preferential_sleep", .before=2) |>
+  add_row(name = "actual_sleep", .before=6) 
+
+# PANAS 
+panas_pos <- map(c(1, 3, 5, 9, 10, 12, 14, 16, 17, 19), \(x){
+  paste0("S6_Q",x)}) |> list_c()
+panas_neg <- map(c(2, 4, 6, 7, 8, 11, 13, 15, 18, 20), \(x){
+  paste0("S6_Q",x)}) |> list_c()
+```
+
+Data from questionnaires collected at T0 are reported in @tbl-baseline-questionnaire. The participants' in our study did not indicate significant sleeping problems and are within the normal ranges of health people [in line with @saksvik-lehouillier2020], suggesting that the sample is from a health population. Three participants reported having night shift once per month (one participant did not provide an answer to this question). Most participants (`r sum(general_sleep$coff_day>0)`) reported to drink coffee, with `r sum(general_sleep$coff_day<4)` reporting consuming less than 4 cups per day, while `r sum(general_sleep$coff_day>=4)` reported to drink 4 or more cups a day. As for the consumption of energy drinks, only `r sum(general_sleep$energy_drink>0)` participants reported drinking them, but maximum one per day.
+
+<!--#  Regarding the night shifts in the experiment: I have a high conviction that one participant reported one night shift *DURING* the experiment. This information, however, is not noted in any of our sheets. Moreover, as I remember it, this night was outside any of the 3 relevant nights (prior to a test). I guess we could try and figure this out through all reported sleep night, but it would be inferential and so it might be best to void this issue... -->
+
+```{=html}
+!!!
+!!!   Actually, when I think about it, I think it would be cool if we could add a figure for each variable beside the table !!!
+!!!
+
+
+(Additionally or instead) We could also add a column indicating the maximum "category" for each scale, such that we can easily get a grasp of the "maximum" sleeping problem in our sample (e.g., Max: some insonmia, low fatigue...)
+
+Info: (find categories for each scale)
+
+ Participants' fatigue was measured with the Fatigue Severity Scale [@krupp1989] with lower scores indicating less fatigue. To measure sleepiness, we used the Epworth Sleepiness Scale [@johns1991], where lower scores (0-5) indicate low daytime sleepiness while higher scores (16-24) indicate severe excessive daytime sleepiness. Sleeping problems were measured with the Insomnia Severity Index [@bastien2001] where lower scores (0-7) indicate no significant insomnia, while higher scores (22-28) indicate severe insomnia. Participant’s sleep quality was measured with the Pittsburgh Sleep Quality Index [@buysse1989] that inquires about participants’ sleep time, sleep delay, wake time and sleep amount, where higher scores indicating worse sleep quality. Participant’s diurnal preferences were assessed with the Diurnal Scale [@torsvall1980] where higher scores indicate a preference to wake up and go to sleep early (‘early birds’), and lower scores indicate a preference to go to sleep later and wake up late (‘night owls’). To measure the participant’s mood, we used the Positive and Negative Affect Schedule [PANAS; @watson1988] where higher scores (min 10, max 50) indicate more intensive emotional states. Lastly, we also asked participants about their alcohol consumption habit, derived from [@saksvik-lehouillier2020]. This consisted of 3 different questions with 5 answer alternatives (ranging from low to high consumption).
+```
+
+```{r TBL - baseline questionnaire, include=TRUE, warning=FALSE, message=FALSE}
+#| label: tbl-baseline-questionnaire
+#| tbl-cap: Baseline Sleep, Mood and Beverage Consumption
+#| tbl-cap-location: top
+
+test <- general_sleep |>
+  bind_rows( sleep_quiz_summary ) |>
+  mutate(
+    across(where(is.numeric), ~fmt_APA_numbers(.x, .chr=T)),
+    across(everything(), ~if_else(is.na(.x), "", .x)),
+    range = if_else(min=="", "", paste0(min, " - ", max))
+  ) |>
+  select(-min, -max) |> 
+  gt() |>
+  cols_label(
+    name  ~ "Measure",
+    m     ~ md("*M*"),
+    sd    ~ md("*SD*"),
+    range ~ "Data range",
+  ) |>
+  text_case_match(
+    "night_shift"        ~ "Night shift",
+    "preferential_sleep" ~ "Preferential sleep",
+    "pref_sleep"         ~ "Time of going to bed",
+    "pref_wake"          ~ "Time of awakening",
+    "pref_sleep_dur"     ~ "Duration of sleep",
+    "actual_sleep"       ~ "Typical sleep duration",
+    "sleep_week"         ~ "Weekday",
+    "sleep_week_end"     ~ "Weekend",
+    "coff_day"           ~ "Coffee consumption",
+    "energy_drink"       ~ "Number of energy drinks",
+    "fatigue"            ~ "Fatigue",
+    "sleepiness"         ~ "Sleepiness",
+    "insomnia"           ~ "Insomnia", 
+    "pittsburgh"         ~ "Sleep quality", 
+    "dinural_avg"        ~ "Dinural preference",
+    "PANAS"              ~ "PANAS", 
+    "panas_pos"          ~ "Positive",
+    "panas_neg"          ~ "Negative", 
+    "alcohol"            ~ "Alcohol",
+    .default="", .locations = cells_body(columns = name)
+  ) |>
+  opt_footnote_marks(marks = letters) |>
+  tab_footnote("On weekdays.", locations = cells_body(name, 2) ) |>
+  tab_footnote("On a typical day.", locations = cells_body(name, c(9,10)) ) |>
+  tab_footnote("Measured with Fatigue Severity Scale (Krupp et al., 1989).", 
+               locations = cells_body(name, c(11)) ) |>
+  tab_footnote("Measured with Epworth Sleepiness Scale (Johns, 1991).", 
+               locations = cells_body(name, c(12)) ) |> 
+  tab_footnote("Measured with Insomnia Severity Index (Bastien et al., 2001).", 
+               locations = cells_body(name, c(13)) ) |>
+  tab_footnote("Measured with Pittsburgh Sleep Quality Index, low scores indicate good sleep quality (Buysse et al., 1989).", 
+               locations = cells_body(name, c(14)) ) |>
+  tab_footnote("Measured with Diurnal Scale (calculated as mean), low scores indicate a preference to go to bed late and wake up late (Torsvall & Åkerstedt, 1980).", 
+               locations = cells_body(name, c(15)) ) |>
+  tab_footnote("Measured with the Positive and Negative Affect Schedule (Watson et al., 1988).", 
+               locations = cells_body(name, c(16)) ) |>
+  tab_footnote("Measure provided by Saksvik-Lehouillier et al. (2020).", 
+               locations = cells_body(name, c(19)) ) |>
+  tab_fmt_APA() 
+  # save_output_cnd("Baseline_sleep_questionnaire")
+```
+
+## Sleep
+
+```{r caffeine and alcohol before each test}
+demo_pre_test <- 
+  demographics |>
+  pivot_longer(c(S1_cond, S2_cond), names_to = c("Session", "_rm"), names_sep="_") |>
+  rename(condition = value) |>
+  mutate(no_caffeine = case_when( 
+    Session == "S1" & condition == "SD" ~ S1_No_coffee.tea.energy_drinks,
+    Session == "S2" & condition == "SD" ~ S2_No_coffee.tea.energy_drinks,
+    Session == "S1" & condition == "control" ~ S1_No_coffee.tea.energy_drinks,
+    Session == "S2" & condition == "control" ~ S2_No_coffee.tea.energy_drinks,
+    ),
+    no_alcohol = case_when(
+    Session == "S1" & condition == "SD" ~ S1_No_alcohol,
+    Session == "S2" & condition == "SD" ~ S2_No_alcohol,
+    Session == "S1" & condition == "control" ~ S1_No_alcohol,
+    Session == "S2" & condition == "control" ~ S2_No_alcohol,
+    )) 
+
+demo_pre_test_sum <-
+  demo_pre_test |>
+  pivot_longer(c(no_caffeine, no_alcohol)) |>
+  summarise(
+    .by = c(name, condition),
+    sum = sum(!value, na.rm=T),
+    na = sum(is.na(value), na.rm=T),
+  ) 
+```
+
+Participants self-reproted and actigraphy estimated sleep as well as sleep quality between the two conditions are presented in @tbl-sleep-times-sessions. Sleep during the PSD period was significantly reduced according to both the self-report and the actigraphy. However, there was a discrepancy between the self-reports sleep and the actigraphy estimated sleep, where the latter recorded less sleep during the NS and more sleep in the PSD (see the Supplementary Results for a comparison). Interestingly, self-reported sleep quality was not affected by PSD (see the Supplementary). Furthermore, although participants were informed not to drink any caffeine-containing beverage before either of the experimental tests, `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(na)` missing) participants drank coffee before their NS tests, and `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(na)` missing) before their PSD tests. None reported to drink alcohol before their test session, but `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "SD") |> pull(na)` are missing from the NS condition and `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "control") |> pull(na)` are missing from the sleep deprivation condition.
+
+```{r summarise - general sleep - session and modality}
+sleep_time_session_condition <-
+  sleeptimes_updated |>
+  pivot_longer(c(
+    wake_SR, onset_SR, duration_SR,
+    wake_AG, onset_AG, duration_AG,
+    wake_final, onset_final, duration_final,
+    sleep_quality,
+  )) |>
+  mutate(
+    modality = case_when(
+      str_ends(name, "_AG") ~ "Actigraphy", 
+      str_ends(name, "_SR") ~ "Self-report",
+      str_ends(name, "_final") ~ "Adjusted"),
+    name = case_when(
+      str_starts(name, "wake_") ~ "Wake time",
+      str_starts(name, "onset_") ~ "Sleep onset",
+      str_starts(name, "duration_") ~ "Sleep duration",
+      name=="sleep_quality" ~ ""),
+    sleep_cond = case_when(
+      pre_control  == 1 ~ "ns", 
+      pre_sleepdep == 1 ~ "sd",
+      T ~ NA ) ) |>
+  filter(!is.na(sleep_cond)) |>
+  summarise(
+    .by  = c(subj, sleep_cond, modality, name),
+    mean = mean(value, na.rm = T),
+    sd   = sd(value, na.rm = T),
+    min  = min(value, na.rm = T),
+    max  = max(value, na.rm = T)
+  ) |>
+  pivot_wider(names_from = sleep_cond, values_from = c(mean, sd, min, max)) |>
+  summarise(
+    .by     = c(modality, name),
+    psd_m   = mean( mean_sd, na.rm=T),
+    psd_sd  = sd(  mean_sd, na.rm=T),
+    ns_m    = mean(mean_ns, na.rm=T),
+    ns_sd   = sd( mean_ns, na.rm=T),
+    diff_m  = psd_m - ns_m,
+    diff_sd = sd(mean_sd-mean_ns, na.rm=T),
+    bf      = extractBF( ttestBF(
+      mean_sd[!is.na(mean_sd) & !is.na(mean_ns)], 
+      mean_ns[!is.na(mean_sd) & !is.na(mean_ns)], paired=T) )$bf,
+    psd_m   = if_else(psd_m > 24, psd_m - 24, psd_m),
+    ns_m    = if_else(ns_m  > 24, ns_m  - 24, ns_m),
+  ) |> 
+  pivot_longer(c(ends_with("_m"), ends_with("_sd")), 
+               names_sep = "_", names_to = c("cond", "value2")) |>
+  mutate(
+    modality = if_else(is.na(modality), "Sleep quality", modality),
+    value = case_when(
+      modality == "Sleep quality" ~ fmt_APA_numbers(value, .chr=T),
+      cond == "diff" ~ clock_h_m(value),
+      name == "Sleep duration" ~ clock_h_m(value),
+      value2 == "m" ~ clock_24(value), 
+      T ~ clock_h_m(value),
+  )) |>
+  pivot_wider(names_from = c(cond, value2)) |> 
+  mutate(bf = if_else(bf>1000, format(bf, scientific=T, digits=2), 
+                      fmt_APA_numbers(bf, .chr=T))) |>
+  select(c(everything(), -bf), bf)
+```
+
+```{r TBL - sleep over session and modality, include=TRUE, warning=FALSE, message=FALSE}
+#| label: tbl-sleep-times-sessions
+#| tbl-cap: The Difference Between Sleep and Mood Across Sessions
+#| tbl-cap-location: top
+
+sleep_time_session_condition |>
+  mutate(e1 = "", e2 = "") |>
+  gt(groupname_col = "name") |>
+  tab_spanner("Partial sleep deprivation", starts_with("PSD_")) |>
+  tab_spanner("Normal sleep", starts_with("NS_")) |>
+  # cols_hide(seq) |>
+  # cols_move(c(prepost, PANASposneg), 1) |>
+  cols_label(
+    ends_with("_m") ~ md("*M*"),
+    ends_with("_sd") ~ md("*SD*"),
+    diff_m = md("*M*~diff~"), diff_sd = md("*SD*~diff~"), 
+    bf = md("BF~10~"), 
+    modality = "Variable",
+    starts_with("e") ~ "",
+  ) |>
+  cols_move(e1, psd_sd) |>
+  cols_move(e2, ns_sd) |>
+  cols_align("center", c(everything(),-name)) |>
+  tab_footnote(
+    md("*Note.* Differences are calculated as partial sleep deprivation (PSD) -  normal sleep (NS).")
+    # PANAS = positive and negative affect scale, pre = pre-test measure, post = post-test measure, pos = positive, neg = negative. 
+  ) |> 
+  opt_footnote_marks(marks = letters) |>
+  # a
+  tab_footnote(
+    "Sleep quality was rated on a 5-point Likert scale (1 = very bad to 5 = very good).",
+    locations = cells_body(modality, modality=="Sleep quality") ) |>
+  tab_fmt_APA() |>
+  save_output_cnd("Sleep_times_between_conditions")
+```
+
+## The Effects of PSD on the Thought Probes
+
+Overall changes in probe responses between sleep conditions can be found in @fig-descriptives-probes.
+
+```{r fig create percentage change in probe responses between condition - and exclusion , warning=FALSE, message=FALSE}
+plot_data <- 
+  data.probe.mood.sleep |>  
+  mutate(
+    Condition = if_else(sleepdep == "SD", "PSD","NS") |> fct_relevel("PSD"),
+    highlight = if_else(Adjusted_Duration.diff < -1.5, T, F),
+    Condition2 = case_when( 
+      highlight == T & sleepdep == "SD" ~ "ex_PSD", 
+      highlight == T & sleepdep == "control" ~ "ex_NS",
+      T ~ NA,)
+  ) |>
+  summarise(
+    .by = c(subj, Condition),
+    MW  = 100 * mean(mw > 2),
+    MB  = 100 * mean(mb[mw > 2] > 2, na.rm=T),
+    SMW = 100 * mean(smw[mw > 2] > 2, na.rm=T),
+    sleep = unique(Adjusted_Duration.diff),
+    highlight = unique(highlight),
+    Condition2 = unique(Condition2),
+  ) |>
+  pivot_longer(c(MW,MB,SMW), names_to="name", values_to="value") |>
+  mutate(
+    name = ordered(name, levels = c("MW", "MB", "SMW")),
+    name = fct_recode(name, `% MW` = "MW", `% MB` = "MB", `% Spontaneous` = "SMW")
+  )
+
+p1 <-
+  plot_data |>
+  ggplot(aes(x = Condition |> fct_relevel("NS"), y = value, col = Condition, shape = Condition, alpha = highlight, size = highlight)) +
+  facet_wrap(~name) +
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide="none") + 
+  scale_size_manual(values = c("TRUE" = .3, "FALSE" = .18), guide="none") +
+  # all lines
+  stat_summary(aes(group = subj), col = "darkgrey", geom ="line", # line
+               position = position_jitter(.2, seed=389)) +
+  # all data points
+  stat_summary(aes(group = subj),  
+               position = position_jitter(.2, seed=389)) +
+  # Cross
+  # GRAND mean point - CONTINOUS
+  stat_summary(aes(
+    group = name), fun.data = mean_se, 
+    geom = "pointrange", position = position_nudge(.35),
+    color = "black", alpha = .65, size = .4 ,shape = 4, 
+  ) +
+  # GRAND mean line - CONTINOUS
+  stat_summary(aes(
+    group = name, shape = highlight), fun = mean, 
+    geom = "line", position = position_nudge(.35),
+    color = "black", alpha = .65, linewidth = .5,
+ ) +
+  # --- EXCLUDED DATA ---
+  # Square shape
+  # GRAND mean point
+  stat_summary(aes(
+    group = name, size = NULL, alpha = NULL, shape=NULL), plot_data |> filter(highlight), 
+    fun.data = mean_se, geom = "pointrange", position = position_nudge(-.27), 
+    color = "black", alpha = .65, size = .4, shape = 0,
+  ) +
+  # GRAND mean line
+  stat_summary(aes(
+    group = name, size = NULL, alpha = NULL, shape=NULL), plot_data |> filter(highlight), 
+    fun = mean, geom = "line", position = position_nudge(-.27),
+    color = "black", alpha = .65, linewidth = .5,
+    
+  ) +
+  labs(y = "Percentage", x = "Condition", title="a)") +
+  theme(legend.position = "none")
+p1
+# a) No need for the legends except the one coding for excluded vs. not excluded (I would use transparency, full color for not excluded, slight transparency for excluded). That would work for both the mean line and the individual points.
+# b) I would stack the two blue and the two red bars on top of each other so that the the full bar codes for NS vs. PSD and the darker shade for non-excluded vs. excluded groups.
+```
+
+```{r fig generate count plot of probe responses between conditions - and exclusion}
+
+# make relative plot ? 
+# make relative plot ? 
+# make relative plot ? 
+# make relative plot ? 
+# make relative plot ? 
+plot2_data <- 
+  data.probe.mood.sleep |>  
+  mutate(
+    Condition = if_else(sleepdep == "SD", "PSD","NS") |> fct_relevel("PSD"),
+    highlight = if_else(Adjusted_Duration.diff < -1.5, T, F),
+    Condition2 = case_when( 
+      highlight == T & sleepdep == "SD" ~ "ex_PSD", 
+      highlight == T & sleepdep == "control" ~ "ex_NS",
+      T ~ NA,),
+    across(c(mw,mb,smw), ~as.numeric(.x))
+  ) |> 
+  pivot_longer(c(mw,mb,smw), names_to="probe_type", values_to="probe_value") 
+
+plot2_data_sum <- 
+  plot2_data |>
+  summarise(
+    .by = c(Condition, probe_type, probe_value),
+    cont_n = n(),
+  ) |>
+  left_join(
+    plot2_data |>
+      summarise(
+        .by = c(Condition2, probe_type, probe_value),
+        exc_n = n(),
+      ) |> mutate(Condition = if_else(str_ends(Condition2, "PSD"), "PSD", "NS")),
+    by = c("Condition", "probe_type", "probe_value")
+  )
+
+p2 <- 
+  plot2_data_sum |>
+  pivot_longer(c(cont_n, exc_n), values_to="count", names_to="dataset") |>
+  mutate(
+    probe_type = case_when(
+      probe_type=="mw" ~ "Mind wandering",
+      probe_type=="mb" ~ "Mind blanking",
+      probe_type=="smw" ~ "Spontaneous mind wandering",
+    ) |> fct_relevel("Mind wandering"), 
+    dataset = if_else(dataset=="exc_n", "Excluded", "Continous"),
+    x_interaction = interaction(dataset, probe_value),
+    col_interaction = interaction(dataset, Condition, sep = " ")
+  ) |>
+  ggplot(aes(x = probe_value, y = count, fill = col_interaction)) + 
+  facet_wrap(~probe_type) +
+  geom_bar(stat="identity", color="black", position=position_dodge(), linewidth=0.2) +
+  labs(x = "Thought probe response", y = "Count", title = "b)", fill = "Condition") +
+  scale_fill_manual(values = c("#619CFF","#0046bc","#F8766D","#b20b00")) +
+  # Checked colours at - getOption("project_custom_ggplot_colour")[1:2]
+  theme(legend.position = "top", legend.direction = "horizontal")
+p2
+```
+
+```{r FIG - descriptive probes, warning=FALSE, message=TRUE}
+#| label: fig-descriptives-probes
+#| fig-cap: Changes in Probe Responses Between Conditions
+#| fig-cap-location: top
+#| fig-height: 8
+#| fig-width: 8
+#| fig-dpi: 300
+
+# save_output_cnd(p1 + p2 + plot_layout(nrow=2,heights = 8, widths = 7), "Descriptive statistics of the thought probes")
+
+p1 + p2 + plot_layout(nrow=2, heights = 8, widths = 7)
+```
+
+*Note*. Each subject has received their own mean connected by a grey line between the conditions. Smaller transparent squares/triangles represent cases that are excluded for the excluded dataset (see Supplementary). The darkred squares indicate the mean and standard error (SE) of the dataset with the excluded (*n* = 11), while the darkred cross represent the mean and SE for the whole sample (i.e., including the smaller transparent cases). Note that the overall mean barely change, indicating that the exclusion does not significantly change the proportion of probe responses between conditions.
+
+```{r bayes behavioural model quick access}
+mmw  <- as.matrix(mod_bay_sleep_cont$mw)
+mmb  <- as.matrix(mod_bay_sleep_cont$mb)
+msmw <- as.matrix(mod_bay_sleep_cont$smw)
+mbv  <- as.matrix(mod_bay_sleep_cont$bv)
+mae  <- as.matrix(mod_bay_sleep_cont$ae)
+```
+
+The Bayesian ordered-probit model for the dependent variable MW ( {{{ Table **SXX** }}} ), after the NS, indicated overwhelming evidence that MW increased with time (`r coef_hdi_text(mmw[,"b_probenum_prop"])`), and increased with more variable responses (`r coef_hdi_text(mmw[,"b_zlogbv"])`), but no evidence that randomness generation predicted MW (`r coef_hdi_text(mmw[,"b_zlogapen"])`). Additionally, the model revealed overwhelming evidence that pre-test positive mood predicted less MW (`r coef_hdi_text(mmw[,"b_pre_pos"])`), and weak evidence that pre-test negative mood increased MW (`r coef_hdi_text(mmw[,"b_pre_neg"])`). After the PSD, the model indicated overwhelming evidence that participants generally reported more MW (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos"])`), but PSD did not interact with time-on-task (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"])`). Furthermore, very strong evidence indicated that sleep deprivation interacted with randomness generation (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:zlogapen"])`), such that being more sleep deprived reduced the randomness generation, and strong evidence was found for an interaction between response variability and sleep deprivation (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:zlogbv"])`), where sleep deprivation reduced response variability. No substantial evidence was found for an interaction with pre-test positive (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:pre_pos"])`), but some evidence was found for an interaction with pre-test negative mood (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:pre_neg"])`), where being in a more negative mood, after being sleep deprived, attenuated the prediction on MW.
+
+The corresponding model for the dependent variable MB ( {{{ Table **SXX** }}} ), after the NS, indicated some evidence that MB increased with time-on-task (`r coef_hdi_text(mmb[,"b_probenum_prop"])`). MB was found to be positively predicted by response variability (`r coef_hdi_text(mmb[,"b_zlogbv"])`), but no evidence that either randomness generation (`r coef_hdi_text(mmb[,"b_zlogapen"])`), pre-positive (`r coef_hdi_text(mmb[,"b_pre_pos"])`) or pre-test negative mood (`r coef_hdi_text(mmb[,"b_pre_neg"])`) predicted MB. After the PSD, we found overwhelming evidence that participants generally reported more MB (`r coef_hdi_text(mmb[,"b_c.Adjusted_Duration.diff.pos"])`). On the other hand, no substantial evidence was found for either an interaction with time-on-task (`r coef_hdi_text(mmb[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"])`), response variability (`r coef_hdi_text(mmb[,"b_c.Adjusted_Duration.diff.pos:zlogbv"])`), randomness score (`r coef_hdi_text(mmb[,"b_c.Adjusted_Duration.diff.pos:zlogapen"])`), pre-test positive (`r coef_hdi_text(mmb[,"b_c.Adjusted_Duration.diff.pos:pre_pos"])`), or pre-test negative mood (`r coef_hdi_text(mmb[,"b_c.Adjusted_Duration.diff.pos:pre_neg"])`).
+
+The model for the dependent variable S-MW ( {{{ Table **SXX** }}} ), after the NS, indicated no evidence that S-MW increased with time-on-task (`r coef_hdi_text(msmw[,"b_probenum_prop"])`), randomness score (`r coef_hdi_text(msmw[,"b_zlogapen"])`), or pre-test negative mood (`r coef_hdi_text(msmw[,"b_pre_neg"])`). Although, some evidence suggested that more variable responses tended to preceed MB reports (`r coef_hdi_text(msmw[,"b_zlogbv"])`), very strong evidence suggested that pre-test positive mood decreased S-MW reports (`r coef_hdi_text(msmw[,"b_pre_pos"])`). After the PSD, no substantial evidence was found for a general change in S-MW (PSD: `r coef_hdi_text(msmw[,"b_c.Adjusted_Duration.diff.pos"])`), nor did it change with time-on-task (`r coef_hdi_text(msmw[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"])`), randomness score (`r coef_hdi_text(msmw[,"b_c.Adjusted_Duration.diff.pos:zlogapen"])`), or pre-test negative mood (`r coef_hdi_text(msmw[,"b_c.Adjusted_Duration.diff.pos:pre_neg"])`). However, some evidence suggests an interaction with response variability (`r coef_hdi_text(msmw[,"b_c.Adjusted_Duration.diff.pos:zlogbv"])`), where (even) more variable responses tended to preceed MB reports. Lastly, for the interaction with pre-test positive mood and PSD, we found overwhelming evidence pre-test positive mood no longer predicted S-MW tendency (`r coef_hdi_text(msmw[,"b_c.Adjusted_Duration.diff.pos:pre_pos"])`).
+
+## The Effects of PSD on Behaviour
+
+The Bayesian hierarchical linear regression for the dependent variable BV (@fig-behaviour-over-time), after the NS, indicated overwhelming evidence that response variability increased with time-on-task (`r coef_hdi_text(mbv[,"b_probenum_prop"])`), but no substantial evidence that either pre-positive (`r coef_hdi_text(mbv[,"b_pre_pos"])`), or pre-negative mood (`r coef_hdi_text(mbv[,"b_pre_neg"])`) predicted changes in response variability. Following the PSD, the model revealed overwhelming evidence that participants had generally increased BV (`r coef_hdi_text(mbv[,"b_c.Adjusted_Duration.diff.pos"])`), and strong evidence that variability further increased over time (PSD $\times$ Trial: `r coef_hdi_text(mbv[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"])`). Overwhelming evidence was found for an interaction with pre-positive mood (`r coef_hdi_text(mbv[,"b_c.Adjusted_Duration.diff.pos:pre_pos"])`), where more positive mood after being sleep deprived slightly reduced response variability. Similarly for pre-negative mood, a negative interact was found, but only supported by some evidence (`r coef_hdi_text(mbv[,"b_c.Adjusted_Duration.diff.pos:pre_neg"])`).
+
+The corresponding analysis for the dependent variable AE (@fig-behaviour-over-time), after the NS, indicated no evidence that randomness score changed with time (`r coef_hdi_text(mae[,"b_probenum_prop"])`), pre-positive (`r coef_hdi_text(mae[,"b_pre_pos"])`) or pre-negative mood (`r coef_hdi_text(mae[,"b_pre_neg"])`). After the PSD period, no substantial evidence was found for either an initiall change in randomness score (`r coef_hdi_text(mae[,"b_c.Adjusted_Duration.diff.pos"])`), and no evidence that PSD interacted with pre-negative mood (`r coef_hdi_text(mae[,"b_c.Adjusted_Duration.diff.pos:pre_neg"])`). On the other hand, some evidence was found for an interaction with time (`r coef_hdi_text(mae[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"])`), where randomness was reduced over time, and an interaction with pre-positive mood (`r coef_hdi_text(mae[,"b_c.Adjusted_Duration.diff.pos:pre_pos"])`), where randomness score slighly increased with more pre-positive mood.
+
+```{r FIG - behavioural over time, warning=FALSE, message=FALSE}
+#| label: fig-behaviour-over-time
+#| fig-cap: Behavioural Trend Over Time Between Sleep Condition
+#| fig-cap-location: top
+#| fig-width: 6
+#| fig-height: 4
+#| fig-dpi: 300
+
+# p1 <- 
+data.probe |> 
+  rename(`Approximate Entropy`=zlogapen, `Behavioural Variability`=zlogbv) |> 
+  pivot_longer(c(`Approximate Entropy`, `Behavioural Variability`),  
+               names_to = "Variable", values_to = "value") |>
+  mutate(Condition = if_else(sleepdep=="SD", "PSD","NS") |> fct_relevel("PSD")) |>
+  ggplot(aes(x = probenum, y = value, fill = Condition, col = Condition)) +
+  facet_wrap(~ Variable) + 
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  stat_summary(aes(col = NULL), fun.data = mean_se, geom = "ribbon", alpha = 0.175) +
+  stat_summary(fun = mean, geom = "line", linewidth = .7) +
+  geom_smooth(method = "lm", alpha = .175) +
+  scale_x_continuous(expand = c(0.02, 0.02), limits = c(1, 25), 
+                     breaks = c(1, 5, 10, 15, 20, 25)) +
+  labs(x = "Probe number (trial)", y = "Z-score") +
+  theme_bw() +
+  theme(legend.position = "top")
+
+# save_output_cnd(p1, "Behaviour over time")
+```
+
+## The Effects of PSD on Mood
+
+```{r anova models part}
+
+#' Consider here to use the continous sleep variable with the pre-post test.
+#' This analysis would be more consistent with the other analysis we report above
+
+mood <- list()
+mood$n <- as.matrix( mood_test[["neg"]][["bayes"]][["cont"]] )
+mood$p <- as.matrix( mood_test[["pos"]][["bayes"]][["cont"]] )
+```
+
+To assess the effect of the sleep protocol and experiment on mood, we ran two separate Bayesian linear models for each of the mood type: positive and negative mood ({{{ SUPPLEMENTARY FIG }}}). For the dependent variable positive mood, the analysis revealed overwhelming evidence for an effect of Sleep Deprivation (`r coef_hdi_text(mood$p[,"b_c.Adjusted_Duration.diff.pos"])`) in reducing positive mood, and overwhelming evidence that after the test positive mood was reduced (Pre-post: `r coef_hdi_text(mood$p[,"b_prepostpost"])`), but no evidence for an interaction between Sleep deprivation and Pre-post test (`r coef_hdi_text(mood$p[,"b_c.Adjusted_Duration.diff.pos:prepostpost"])`). As for the dependent variable negative mood, the analysis revealed very strong evidence for an effect of Sleep Deprivation (`r coef_hdi_text(mood$n[,"b_c.Adjusted_Duration.diff.pos"])`) indicating more negative mood after being sleep deprived, and no substantial evidence that Pre-post had an effect (`r coef_hdi_text(mood$n[,"b_prepostpost"])`), and no evidence that Sleep Deprivation and Pre-post test interacted (`r coef_hdi_text(mood$n[,"b_c.Adjusted_Duration.diff.pos:prepostpost"])`.
+
+```{r FIG - change in mood following sleep deprivation and task, warning=FALSE, message=FALSE}
+#| label: fig-simple-mood-effect
+#| fig-cap-location: top
+#| fig-cap: The Effect of Sleep Deprivation and the Task on Mood
+#| fig-width: 7
+
+p1 <- 
+  panas_session |>
+  mutate(valence = if_else(valence=="neg", "Negative mood", "Positive mood")) |>
+  left_join(
+    sleeptimes_updated_trans,
+    by = c("subj", "sleepdep")
+  ) |>
+  ggplot(aes(c.Adjusted_Duration.diff.pos, PANASsum_0, col = prepost, group=interaction(subj,prepost))) + 
+  facet_wrap(~valence, scales = "free") +
+  geom_point(alpha=.2, position = position_jitter(.1,.1)) + 
+  geom_line( alpha=.2, position = position_jitter(.1,.1)) +
+  geom_smooth(aes(group=NULL), method = "lm", alpha = .1) 
+  # stat_summary(aes(col=NULL, group=interaction(subj,prepost))) + 
+  # stat_summary(aes(col=NULL, group=subj), geom="line")
+  # geom_point(alpha = .4) + 
+  # labs(x = "Sleep deprivation", y = "Mood score") 
+  
+save_output_cnd(p1, "Changes in mood from sleep deprivation and task")
+```
+
+```{r FIG - effects on probes, warning=FALSE, message=FALSE}
+
+#' **this might need to be extended **
+
+#| label: fig-behaviour-model-interactions
+#| fig-cap-location: top
+#| fig-cap: Various Behavioural Interactions 
+#| fig-dpi: 300
+#| fig-height: 3
+#| fig-width: 7
+
+# p1 <- 
+#   data.probe.mood.sleep |>
+#   filter(probe1>2) |>
+#   # mutate(
+#   #   Condition = Condition |> fct_relevel("PSD"),
+#   #   probe3 = as.numeric(probe3)
+#   # ) |>
+#   summarise(
+#     .by = c(Condition, subj),
+#     pre_pos = mean(pre_pos),
+#     probe3  = mean(as.numeric(probe3)),
+#     bv = mean(zlogbv)
+#   )  |>
+#   filter(!is.na(Condition)) |>
+#   mutate(Condition = fct_relevel(Condition, "PSD")) |>
+#   ggplot(aes(bv, probe3, group = subj, col = Condition, shape = Condition)) +
+#   geom_line(aes(col=NULL), alpha = .2) +
+#   geom_point(alpha = .4) +
+#   geom_smooth(aes(group = NULL, fill = Condition), method="lm", alpha = .1) +
+#   labs(title = "a", y = "Spontaneous mind wandering", x = "Z-score BV") +
+#   theme_bw() + 
+#   theme(legend.position = "none")
+# 
+# p2 <- 
+#   data.probe.mood.sleep |>
+#   filter(probe1>2) |>
+#   mutate(Condition = Condition |> fct_relevel("PSD")) |>
+#   summarise(
+#     .by = c(Condition, subj),
+#     pre_pos = mean(pre_pos),
+#     probe3  = mean(as.numeric(probe3)),
+#   )  |> 
+#   filter(!is.na(Condition)) |>
+#   ggplot(aes(pre_pos, probe3, group = subj, col = Condition, shape = Condition)) +
+#   geom_line(aes(col=NULL), alpha = .2) +
+#   geom_point(alpha = .4) + 
+#   geom_smooth(aes(group=NULL, fill=Condition), method="lm", alpha = .1) +
+#   scale_y_continuous(breaks = seq(1,4,.5)) + 
+#   labs(title = "b", y = "Spontaneous mind wandering", x = "Pre-positive mood") +
+#   theme_bw() 
+# 
+```
+
+# Discussion
+
+<!--# Summary -->
+
+The current study examined how partial sleep deprivation (PSD) over three consecutive nights influenced MW, task performance and mood. The effect of PSD was pronounced, indicating a general increase in MW and MB, as well as higher BV, especially toward the end of the task. Randomness generation (AE) was not found to be related to any thought probe after the normal sleep (NS) period, but after the PSD period, worse AE predicted more MW. Furthermore, the PSD worsened mood by decreasing positive mood and slightly increasing negative mood.
+
+<!--# Generally on sleep -->
+
+Participants slept significantly less during the PSD period compared to the NS period, as confirmed by both self-reported measures and actigraphy estimates. Our original inclusion criterion required participants to show substantially reduced sleep (\>2 hours). When many participants failed to meet this threshold, we adjusted it to 1.5 hours, remaining consistent with Saksvik-Lehouillier et al. (2020). Even with this adjustment, we would need to exclude 11 participants which was undesireable because it would reduced the power for our analyses. Therefore, we modified our analytical approach, treating the sleep variable as continuous (average hours of reduced sleep compared to the baseline) rather than a dichotomous variable. To ensure transparency regarding this methodological change, we have included the analyses using the reduced sample size in the Supplementary. Importantly, our main findings remain consistent across both analytical approaches, except for some mood effects that might be influenced by the reduced sample size.
+
+<!--#  That we have  a sleep effect -->
+
+We observed notable discrepancies between the self-reported and actigraphy sleep/wake times (see Supplementary {{{ FIGURE }}}). For example, one participant {{{FIND THE CORRECT PARTICIPANT}}} self-reported going to sleep late (\~03:00) but the actigraphy indicated that the participant stopped moving and turned off all lights by midnight (\~00:00). To address these inconsistencies, we loosely followed the procedure described by @follesø2021, that aimes to bridge the gap between the two measurements. For the analyses reported here, we used the adjusted sleep measure, because it clarified some obvious discrepant cases. Overall, there was a high agreement on the adjusted sleep times between the researchers, which led to an attenuation of the sleep estimates compared to the self-report and increased the sleep estimates compared to the actigraphy.
+
+<!--# We have some discrepancies, explain how these might arise -->
+
+The observed measurement discrepancies likely stem from two sources. First, participants might have adjusted their reports to meet perceived study expectations (e.g., reporting later bedtimes or earlier wake times than actually experienced). Second, actigraphy has inherent limitations in accurately detecting sleep/wake transitions. For example, actigraphy might misinterpret motionless pre-sleep activities as sleep - such as using a mobile phone in bed, a common phenomenon in modern society [@gradisar2013; @hjetland2021; @hysing2015]. Similarly, it might fail to register actual wake times when participants remain in bed after waking. Regardless of these measurement challenges, our data clearly showed that participants generally slept less during the PSD period compared to the NS period. According to both participant's self-reported and actigraphy estimated sleep, the participants slept significantly less during the PSD period as compared to the NS period. Although both were found to be significant, there were many estimates that did not converge between the self-report and the actigraphy.
+
+<!--# Sleep quality -->
+
+Sleep quality has been found to correlate positively with time awake, subjective sleep latency and objective sleep efficiency [@elmenhorst2008; @saksvik-lehouillier2020]. Although our participant’s reported sleeping less, they generally did *not* report improved sleep quality. {{{This might suggest that the participants reported their sleep to correspond to the aim of the experiment in an attempt to "behave" according to the experimental demands [i.e., sleeping less, e.g., @mccambridge2014, but see also @mccambridge2012] }}}. Given the variation in sleep reduction between participants, it might be that sleep quality is improved only in those participants who slept even less. However, an exploratory analysis did not find support for this idea: Those who slept even less had similar sleep quality as those who slept more, indicating that the sleep quality in our sample was not influenced by more sleep deprivation. Another possibility could be that the participants phone use, before bed, might have influenced their sleep quality, as previous research has suggested [e.g., @exelmans2019; @hjetland2021; @hysing2015; @lastella2020; @nosetti2021]. Conceivably, if more time spent awake increase sleep quality, but phone use before bed reduce sleep quality, it could be that the effects cancel each other out. Although it should be noted that this is highly speculative as we do not have data on participant's phone use. Thus, future research is needed to confirm whether bedtime phone use impede improvements in sleep quality following sleep deprivation.
+
+<!--# Sleep effects on MW -->
+
+Participants reported more MW after the PSD period compared to after their NS period, in line with previous research. For instance, @poh2016 found that one night of TSD increased MW in a visual search task. Furthermore, a survey study found that poor sleep predicted more MW the following day [@cárdenas-egúsquiza2022b] and a diary study found similar results [@marcusson-clavertz2019]. Building on these findings, a recent systematic review on the relationship between sleep and MW landed on the same conclusion: insufficient sleep, poorer sleep quality, and fragmented sleep all increase disruptive MW [@cárdenas-egúsquiza2022a]. However, it's worth noting that a recent experiment using ambulatory assessment to measure objective and subjective sleep as well as MW throughout the day did not find that changes in sleep predicted changes in MW tendency [@marcusson-clavertz2023]. This contradictory finding might accurately capture the relationship between the natural occurrence of MW and sleep in an everyday situation, but there are many factors, such as hunger, light and temperature that influence our attention [@gabehart2016]. Ultimately, our data demonstrate that MW significantly increased following three nights of reduced sleep.
+
+<!--# Following the PSD, participants generally reported more MW, but indicated no changes over time beyond what is typically found (Figure %%% **SXX** %%%). This increase in MW from insufficient sleep is in line with prior studies. One study found that one night of TSD increased MW for a visual search task [@poh2016]. Furthermore, a survey study suggested that poor sleep predicts more MW the following day [@cárdenas-egúsquiza2022b] and a diary study found similar results [@marcusson-clavertz2019]. A recent meta-review of the literature landed on the same: insufficient sleep {{{ When I note insufficient sleep, I also want to include "worse sleep quality" and "fragmented sleep" (i.e., ineffective sleep) }}} increase disruptive MW [@cárdenas-egúsquiza2022a]. On the other hand, @marcusson-clavertz2023 used an ambulatory assessment method measuring participants objective sleep, subjective sleep and MW throughout a day, and they did *not* find insufficient sleep to predict increases in MW throughout a day. -->
+
+<!--# Sleep effects on MB -->
+
+MB reports were generally low, but higher after the PSD period, as we hypothesized, and some evidence that MB increases with time-on-task. Previous research has found that MB increase with time-on-task during a reading task [@ward2013], but not during a non-cognitive task [@mortaheb2022]. For our task, it might be that the demanding nature of the FT-RSGT could increase the MB reports over time. Interestingly, we found the time-on-task effect after the PSD condition to be slightly smaller compared to the NS condition. One possible explanation is that MB reached a saturation point wherein further sleep deprivation and/or time-on-task cannot further increase MB reports. That could indicate that neuronal processing reaches a point at which it is at balance with the brains' ability to clear out waste [@xie2013] and/or take a break [@vyazovskiy2013]. Indeed, some research suggest that the brain adapts to PSD by downregulating processing capacity to maintain functioning throughout a day [@belenky2003]. Moreover, this interpretation aligns with the resource-depletion account [@jubera-garcía2021a], positing that changes in resource availability could be one cause of MW and MB. More specifically, when resources are drained from certain locations/networks, these locations/networks will need a break to recuperate resources which causes a "down period", where sleep-like slow waves activity can be observed on the scalp during wakefulness [@andrillon2019, @andrillon2021; @jubera-garcía2021b]. Intriguingly, MB appears to be more common when there is a decrease in the activity in the frontal and posterior cortical regions [@andrillon2021; @boulakis2023], suggesting that these regions might be specifically required for conscious awareness of mental content.
+
+<!--# Sleep effects on S-MW -->
+
+Contrary to our hypothesis, the proportion of S-MW was not influenced by the PSD period. Despite the overall increase in MW frequency, participants did not show changes in whether their MW was intentional or not. This finding is intriguing as it suggests that participants engaged in proportionally similar amounts of D-MW even after sleep deprivation, which challenges the prevailing view that sleep loss primarily increases spontaneous attentional lapses [@poh2016; @cárdenas-egúsquiza2022b]. Previous studies have demonstrated that reduced executive functioning - which can be brought about through sleep deprivation [@saksvik-lehouillier2020; @skurvydas2020] - typically leads to more S-MW than D-MW [@seli2016]. This finding could suggest that the moderate reduction in sleep might not have been sufficient to impede executive functioning, which is in line with the finding that AE was not reduced (see below). Alternatively, participants might experience reduced motivation due to being more fatigued, which could have made them more likely to deliberately mind wander. The latter is partially supported by the fact that positive mood attenuated MW reports (see below). Overall, this finding suggests that the relationship between sleep loss and attentional control is more complex than simply increasing S-MW, which necessitates more research to untangle.
+
+<!--# Sleep effects on Behaviour -->
+
+As for the effects on the behaviour, we found the expected pattern for BV but not for AE. In line with our hypothesis, we found BV to increase following the PSD and it also increased with time-on-task. These results align with previous research demonstrating that sleep loss disrupts the stability of cognitive performance [@jackson2013; @doran2001], resulting in greater fluctuations in response timing that further increases with time-on-task [@thomson2014; @zanesco2024a; @zanesco2024b]. However, contrary to our hypothesis, PSD did not impact overall AE performance. This finding is surprising given that executive functions are typically considered vulnerable to sleep deprivation [@alhola2007] and previous research has found reduced randomness generation following TSD [@heuer2005]. It could be that the PSD of 1.7 hours was not sufficient to influence the randomness generation. Alternatively, it could be that the AE measure, in this experiment, might have been unreliable, as we did not find the typical negative relationship between AE and MW [described below; @aasen2024; @drevland2024; @alexandersen2022; @boayue2020]. Moreover, many participants (17) reported not using any particular strategy to create random sequences. However, in an exploratory analysis, comparing those who used no strategy to those who used "any" strategy, revealed that those with "any" strategy did *not* produce more random sequences (see Supplementary). Additionally, one study suggests that the link between AE and MW is not always robust, and can vary depending on contextual factors, like feeling/knowledge of being monitored \[{{{ALEXANDERSEN2024}}}\]. Moreover, this study proposed that performance feedback improves randomness generation, something future research may want to incorporate to improve the reliability of the AE score.
+
+<!--# Sleep effects on Mood -->
+
+The sleep protocol produced clear effects on the participants' affect. They reported significantly reduced positive mood and slightly increased negative mood after the PSD period compared to the NS period. The reduction in positive affect is consistent with previous research demonstrating that moderate sleep restriction can diminish positive mood [@lo2016; @saksvik-lehouillier2020; @palmer2024]. Additionally, we found some evidence for increased negative mood before the task following PSD, though this effect was relatively small and did not persist after the task. We also found a similar decline in positive mood from pre- to post-task, suggesting task engagement reduces mood similarly. This pattern indicates that while PSD lowers the baseline of positive affect, it does not necessarily accelerate mood deterioration during cognitive tasks. These findings align with the emerging view that positive and negative affect may be differentially sensitive to sleep loss, with positive emotions showing greater vulnerability [@palmer2024]. This asymmetrical effect on emotional experience could have important implications for daily functioning, as reduced positive affect might diminish motivation [@seli2015], creativity [@baas2008], and social engagement [@watson1988] even when negative emotions are not markedly increased.
+
+<!--# Discussion on various aspects related to the probes and behaviour -->
+
+In relationship to our tendency to shift our attention, we found several interesting effects. After the NS, MW was typically preceded by more variable responses, in line with previous research [@aasen2024, @boayue2020, @seli2013b], which were slightly attenuated after the PSD. The attenuated variability could stem from the general increase in BV, making BV slightly less predictive of MW. Furthermore, we did not find the expected negative relationship between AE and MW. However, after the PSD period, sequences tended to be less random before a MW episode in line with previous research [@aasen2024, @drevland2024, @alexandersen2022; @groot2022; @boayue2020]. This suggests that sleep deprivation may create conditions where declining executive control becomes more tightly coupled with attentional lapses. The interaction with AE can be interpreted as support for the executive failure view of MW [@mcvay2010], suggesting that sleep loss may impair the executive control mechanisms that typically suppress task-unrelated thoughts. This aligns with neuroimaging literature showing reduced activity in the fronto-parietal control network following sleep deprivation [@yao2023] the same network implicated in MW \[@christoff2009\]. Furthermore, we found a negative association between positive mood and MW that was present regardless of condition. This negative relationship is probably related to motivation aspects that can improve cognitive control [@locke2008] and reduce MW [@seli2015; @unsworth2013]. On the other hand, we did not observe a relationship between negative mood and MW, which is surprising given experimental evidence suggesting a positive relationship between negative mood and MW [@killingsworth2010; @smallwood2009]. Although it should be noted that the relationship between negative mood and MW might be moderated by certain cognitive thinking styles, such as preservative cognition [@ottaviani2013; @ottaviani2015] and guilty/fear-of-failure [@marcusson-clavertz2016]. Thus, only if individuals tend to think in a rigid and inflexible way, does negative mood induce increased MW. At any rate, our sample appeared to have a floor effect for negative mood, and as such, it is challenging to interpret these effects.
+
+For MB, we observed a specific relationship with behavioural performance. The results suggested that a MB report tended to be preceded by more variable responses regardless of condition, compared to a MW episode. The idea that MB constitutes a deeper degree of perceptual coupling [@smallwood2015; @ward2013; @pepin2021] and decreased cognitive processing [@mortaheb2022] is in line with our results, suggesting that MB causes greater instability in performance compared to a MW episode. Indeed, brain activity before a MB episode tends to be highly synchronized [@boulakis2023] which can be disruptive for signal interpretation [@mortaheb2022]. The additive behavioural consequences of MB are particularly worrying for tasks requiring sustained attention, like driving [@poh2016; @albert2018]. Despite the change in BV, we did not observe any changes in AE. This could reflect either a fundamental similarity in how these attentional states affect certain executive functions, or it may relate to the measurement reliability issues with AE discussed earlier. Interestingly, unlike MW, we found no effect of positive or negative mood on MB occurrence, suggesting that MB may represent a distinct attentional state that operates independently of emotional factors. This emotional independence could indicate that MB represents a more basic breakdown in conscious awareness rather than an emotionally-driven shift in attention.
+
+When it comes to MW intention, we found a relationship between mood and attentional control. Specifcally, S-MW indicated a negative relationship with positive mood, suggesting that more positive mood reduced the amount of S-MW. This relationship suggests that positive affect may enhance attentional control, potentially through improved motivation [@seli2015]. When experiencing a more positive mood, participants may have greater cognitive resources available, enabling them to maintain focus on the task or, conversely, to deliberately shift their attention when they choose to do so. This finding aligns with the theoretical framework proposing that D-MW and S-MW reflect different underlying mechanisms [@seli2016]. Positive mood might facilitate a form of cognitive flexibility that, when participants find the task subjectively easier, plausibly through enhanced resources dedicated to the task, they may more often deliberately choose to direct their attention elsewhere. The effect of positive mood on S-MW was not present after the PSD, suggesting that the PSD impeded motivational driven enhancements of cognitive flexibility [@honn2019].
+
+We also observed a relationship between response variability and S-MW after the PSD. Although we found some evidence that a S-MW tended to be related to more variable responses after the NS period, only after the PSD did we find sufficient evidence for this link. One possible explanation is that deliberate shifts of attention only occur when sufficient executive resources are available, such that stable responses could be maintained even though attention is not directly focused on the task. After the PSD, when executive functions are reduced [@palmer2024], spontaneous shifts of attention might be more detrimental for stable responses while D-MW may still require a sufficient pool of resources before being engaged.
+
+Regarding the behavioural outcomes, we observed different effects across our behavioural measures. For BV we observed that pre-task positive mood was negatively related to response variability, but only after sleep deprivation. This protective effect of positive mood might reflect improved motivational engagement with the task [@locke2008; @seli2015]. Interestingly, this relationship was only evident after partial sleep deprivation, unlike the link between positive mood and MW that was apparent in both sleep conditions. One possible explanation is that the generally increased BV following sleep deprivation created conditions where positive mood could have a more pronounced compensatory effect, helping participants with higher positive affect to maintain more stable performance despite being fatigued.
+
+In contrast, AE showed minimal relationship with mood states. The only significant finding for AE was a decrease in randomness generation over time, specifically after sleep deprivation. This time-dependent decline in executive function performance might explain why we observed a relationship between AE and mind wandering only after sleep deprivation - as both measures deteriorated simultaneously later in the task. This pattern suggests that sustained cognitive performance under sleep-deprived conditions may reveal vulnerabilities in executive function that are not apparent under normal sleep conditions. These selective effects highlight the differential sensitivity of various behavioral measures to both mood states and sleep loss, with BV appearing more responsive to emotional factors than randomness generation
+
+## Limitation
+
+This study has several limitations that should be considered. Firstly, one major limitation, is that we did not include a measure of participants’ subjective tiredness before each test. Given that the project started as a student project, this factor might have been so obvious that it managed to slip through. In essence, this means that we cannot be entirely sure whether participants felt more tired after the PSD compared to the NS period. Nevertheless, allowing ourselves to look at the data we do have, we can infer that they probably were more tired after the PSD. We observed that the pre-test mood scores were lower after the PSD compared to the NS, which is a typical effect of sleep restriction [@saksvik-lehouillier2020; @dinges1997; @vandongen2003]. Moreover, the behavioural results suggest that participants performed worse on the FT-RSGT during the PSD test compared to the NS test, suggesting that, something – probably the lack of sleep – influenced their performance.
+
+Secondly, many participants did not sleep sufficiently less. This resulted in many subjects slept below the predetermined threshold of 1.5 hours. As it was undesirable to exclude so many participants, we changed our analytical strategy. We fully acknowledge that this decision can significantly impact the results and the interpretation of the results. Therefore, to be fully transparent, we report the same models in the Supplementary pertaining to the reduced sample, along with a discussion of the changes. Thus, the effects of the mood described in the paper should be interpreted with great care. We, nevertheless, believe that the mood effects described in the model above is more accurate than the one in the reduced sample given the increased sample size.
+
+Thirdly, we did not collect information about potential compensatory strategies during the PSD period. Even though we did inform participants to not take naps during the PSD period, we did not include a measure of whether they took naps. The reason to control for naps is that it has been shown that naps can have an impressive recovering effect on performance in the short-term [i.e., within a couple of hours; @dutheil2021; @leong2022]. However, in our experiment, we find it unlikely that participants took a nap right before the task, as the experiment took place early in the morning. Although, one person reported to the experimenters that they had a nap during the PSD period, but not the test day, due to sleeping way less than the experiment required. It is worth noting that the longer-term recovering effect of naps is less researched. Some evidence suggests that the recovering effects of a nap the day after is rather slim, but nonetheless positive [@vgontzas2007]. Thus, it is plausible that some participants took naps the day(s) before the task and could have recuperated some performances. Future research is advised to include measures of naps in the diary or otherwise.
+
+While the PSD protocol employed here is more ecologically valid than TSD, it is still only a rather short-term intervention. Previous research has investigated longer-term effects of sleep restrictions, such as a week [@dinges1997] and 14 days [@vandongen2003]. However, often, chronic sleep deprivation might be related to 30 minutes less sleep each night for weeks and months at a time [e.g., @sheehan2019; @sivertsen2019]. Such long-term experiments would be more ecologically valid, but more difficult, unpractical and inconvenient for many individuals. Although, some research suggests that there are overlaps between the effects of PSD and TSD [@vandongen2003], much research suggests that these two conditions are dissociable [@belenky2003; @banks2007; @lo2016]. For instance, @belenky2003 suggests that PSD causes adaptive changes in the brain to maintain stable performance by down regulating processing capacity, but this adaptation also comes at the cost of requiring longer recovery, probably because the down regulatory adaptations need to be unwound. Future research may want to investigate how many nights of reduced sleep is sufficient to induce these adaptive changes to make PSD research more efficient, as it would be more convenient for everyone involved.
+
+Some research indicates that sleep variation has a greater influence on performance than length of sleep [@sletten2023; @ness2018]. Thus, it could be that our sample may have had relatively stable sleep times, despite sleeping less, which could be less detrimental for cognitive performance compared to more variable sleep times. The fact that an inconsistent sleep schedule might impact performance more than sleeping less could be related to shifts in the circadian rhythm [@phillips2017] that could impede sleep recovery. Future research may want to investigate how variation in sleep timing impacts performance, especially as sleep variation is a common occurrence [e.g., @phillips2017].
+
+## Summary
+
+We investigated how short-term partial sleep deprivation influences attentional states and cognitive performance. Our sample consisted of healthy adults who experienced partial sleep deprivation, averaging 1.7 hours less sleep each night for three consecutive nights. This moderate sleep reduction led to increased reports of mind wandering and mind blanking, more variable behavioural responses, decreased positive mood, and slightly increased negative mood compared to periods of normal sleep. Notably, PSD established a relationship between response variability and spontaneous MW that was not present during normal sleep, while randomness generation appeared to be unaffected. These findings are concerning when considering the societal trend toward reduced sleep duration [@sheehan2019; @sivertsen2019]. Moreover, our results contribute to the growing literature demonstrating that even modest reductions in sleep significantly impair sustained attention, which is particularly problematic for safety-critical activities such as driving [@rodd2017; @yanko2014].
+
+# References
