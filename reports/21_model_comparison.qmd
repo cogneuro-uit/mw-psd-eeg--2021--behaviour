@@ -1,0 +1,173 @@
+---
+title: "tripple compare"
+format: html
+editor: source
+---
+
+
+
+
+no point in this
+
+
+
+---
+title: "Model comparison"
+format: pdf
+editor: source
+execite:
+  echo: false
+---
+
+```{r Parameters, include=FALSE}
+#' **RELATIVE PATH**
+#' Depending on the position of the document, loading files may fail.
+#' This variable enables you to set it according to where the file is. 
+#' For main directory set it to "NULL", within a folder, use "../".
+
+script_relative_path <- "../"
+source( paste0(script_relative_path, "lib/load_project.R") )
+load_project(script_relative_path)
+```
+
+```{r create table functions}
+bayes_apply_transformation <- function(data){
+  data |>
+    mutate(    
+    var = fct_recode(var, 
+      Intercept = "Intercept",
+      Threshold1 = "Intercept[1]", 
+      Threshold2 = "Intercept[2]", 
+      Threshold3 = "Intercept[3]", 
+      Trial = "probenum",  
+      BV = "zlogbv",
+      AE = "zlogapen", 
+      `Pre-positive` = "pre_pos", 
+      `Pre-negative` = "pre_neg", 
+      
+      #DURATION variable:
+      `PSD` = "c.Duration.SD.pos", 
+      `PSD x Trial` = "c.Duration.SD.pos:probenum",
+      `PSD x AE` = "c.Duration.SD.pos:zlogapen",
+      `PSD x BV` = "c.Duration.SD.pos:zlogbv",
+      `PSD x Pre-positive` = "c.Duration.SD.pos:pre_pos", 
+      `PSD x Pre-negative` = "c.Duration.SD.pos:pre_neg", 
+      
+      # sleepdep VARIABLE:
+      `PSD` = "sleepdepSD", 
+      `PSD x Trial` = "sleepdepSD:probenum",
+      `PSD x AE` = "sleepdepSD:zlogapen",
+      `PSD x BV` = "sleepdepSD:zlogbv",
+      `PSD x Pre-positive` = "sleepdepSD:pre_pos", 
+      `PSD x Pre-negative` = "sleepdepSD:pre_neg", 
+      
+      `Sigma (subjects)` = "Sigma (subjects)",
+      
+      LOOIC = "LOOIC", R2 = "R2") |>
+      ordered(levels = c(
+      "Intercept", "Threshold1", "Threshold2", "Threshold3",
+      "Trial", "BV", "AE", "Pre-positive", "Pre-negative", 
+      "PSD", "PSD x Trial", "PSD x BV", "PSD x AE",
+      "PSD x Pre-positive", "PSD x Pre-negative",
+      "Sigma (subjects)", "LOOIC", "R2"))
+    ) |>
+    arrange(var) |>
+    mutate(m = if_else(
+    as.numeric( str_replace_all(p, "[>=]","") ) > .95 & 
+      (var=="Sigma (subjects)" | group=="Coefficients"),
+     paste0(m,"*"), m)
+  )
+}
+
+bayes_table_model <- function(model){
+  bayes_tbl_sum(
+    mod_bay_sleep_cont[[model]], 
+    apa_table = T, add_sigma = T, add_loo = T, add_R2 = T) |> 
+    bayes_apply_transformation() |>
+    rename_at(3:6, ~paste0("exc_", .x)) |>
+    left_join(
+      bayes_tbl_sum(mod_mood_full[[model]], 
+                    apa_table = T, add_sigma = T, add_loo = T, add_R2 = T) |> 
+        bayes_apply_transformation() |>
+        rename_at(3:6, ~paste0("our_",.x)),
+      by = c("group", "var")
+    ) |> 
+    mutate(
+      diff = ifelse(
+        str_detect(our_m, "\\*") == str_detect(exc_m, "\\*"), "", "DIFF")
+    ) |>
+    gt(groupname_col = "group") |>
+    tab_spanner("Duration variable ", starts_with("exc_")) |>
+    tab_spanner("Dichotomous", starts_with("our_")) |>
+    cols_label(
+      ends_with("_m")   ~ md("*b*"),
+      ends_with("_hdi") ~ md("HDI"),
+      ends_with("_er")  ~ md("ER~dir~"),
+      ends_with("_p")   ~ md("*p*~dir~"),
+    ) |>
+    cols_align("left", var) |>
+    gt::tab_header(title = model)
+}
+```
+
+
+
+# MW
+
+With the duration variable we find three interactions with sleep: BV, AE and pre-negative. Thus, with increasing sleep deprivation, BV becomes a *worse* predictor of MW, while, AE (in the sense of worse ranomdness score) becomes a better predictor of MW. 
+The negative is probably only worth mentioning as it adjust the pre-negative predictor to a null effect on MW. 
+
+Related to the mood, we find a reversal between their base effect: positive mood is negatively related to MW while positive is not related to MW. In the dichotomous model, however, negative mood positively predicts MW, but positive mood has no effect (this reversal is a bit weird, and may indicate that the measures are not that predictive of MW). 
+
+The difference between pre-pos/neg between the model probably stem from the change in sample size between them. But that points to an issue with their predictive power as well. It is probably worth being cautions about the effect of mood on attention/performance. 
+
+
+```{r , message=FALSE, warning=FALSE}
+bayes_table_model("mw")
+```
+
+
+
+
+
+# MB 
+
+With the duration variable we find that more BV predicts MB during NS (no changes in PSD). PSD still predicts increased MB (no changes with time-on-task for either model). 
+
+```{r , message=FALSE, warning=FALSE}
+bayes_table_model("mb")
+```
+
+
+
+
+# SMW
+
+With the duration variable, pre-positive significantly predict less SMW but not in the dichotomous model. This effect is attenuated with the duration variable but still negative. 
+
+```{r , message=FALSE, warning=FALSE}
+bayes_table_model("smw")
+```
+
+
+
+
+# BV
+
+For the duration variable, pre-positive mood interact with PSD, such that more pre-positive reduce BV (motivational aspect?). 
+
+```{r , message=FALSE, warning=FALSE}
+bayes_table_model("bv")
+```
+
+
+
+
+
+# AE
+
+Nothing's changed
+
+```{r , message=FALSE, warning=FALSE}
+bayes_table_model("ae")
+```
