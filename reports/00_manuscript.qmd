@@ -1,6 +1,6 @@
 ---
-title: The Effects of Three Nights of Partial Sleep Deprivation on Mind Wandering, Behaviour and Mood
-shorttitle: PSD on MW, EFs and Mood
+title: "The Effects of Three Nights of Partial Sleep Deprivation on Mind Wandering, Behaviour and Mood"
+shorttitle: "PSD on MW, EFs and Mood"
 authors:
   - name: Steffen Rygg Aasen
     orcid: 0000-0003-2807-7504
@@ -75,31 +75,30 @@ authors:
       - editing
     corresponding: true
 abstract: "This study investigates the effect of partial sleep deprivation (PSD) over 3 consecutive nights on our tendency to shift our attention, behaviour and mood. We used a within-subject cross-over design, where 34 healthy adults engaged in the finger-tapping random sequence generaiton task (FT-RSGT) after a period of PSD and normal sleep (NS). The participants indicated to sleep on average 1.7 hours less during the PSD period compared to the NS period. The FT-RSGT provides two objective indices of attention, behavioural variability (BV) and randomness generation (AE), and subjective reports of attention. We found that PSD increased mind wandering, mind blanking, BV, decreased positive mood and slightly increased negative mood, meanwhile AE was generally unaffected by the PSD. These findings contribute to our understanding of how even moderate sleep reduction affects attention, highlighting the possibly severe consequences of moderate sleep loss in safety-critical activities requiring sustained attention, such as driving. Additionally, these results are problematic granted the rising social trend towards less sleep duration, and suggest that only a couple of days might be sufficient to significantly impair our everyday behaviour."
-keywords: attention, sleep, mind wandering, partial sleep deprivation, executive functions, mood
+keywords: [attention, sleep, mind wandering, partial sleep deprivation, executive functions, mood]
 author-note:
   disclosures:
-    conflict-of-interest: The author has no conflict of interest to declare.
+    conflict-of-interest: "The author has no conflict of interest to declare."
     data-sharing: "Data from this study can be accessed at the Open Science Foundation (OSF): https://osf.io/xq6wr/."
     financial-support: "WHAT ARE WE SUPPORTED BY? "
     gratitude: "We would like to extend our gratitude to Ragnhild Nicolaisen Drevland for helping in the data collection. Moreover, we would like to express our deep gratitude to all the participants slept less (for Science!)."
-
-# References
 bibliography: references.bib
-# Technical
-editor: source
+
+# Format
 format:
-  pdf: default
-  docx: default
   apaquarto-docx: default
   apaquarto-html: default
   apaquarto-pdf: default
   apaquarto-typst: default
+
+# Code settings
+editor: source
 execute:
+  include: false
   echo: false
-  include: false 
 ---
 
-```{r Parameters }
+```{r Parameters, warning=FALSE, message=FALSE}
 #' **RELATIVE PATH**
 #' Depending on the position of the document, loading files may fail.
 #' This variable enables you to set it according to where the file is. 
