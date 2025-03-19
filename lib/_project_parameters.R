@@ -16,7 +16,7 @@ options(
   # Table related settings
   project_save_tbls_location = "outputs/tbls/",
   project_save_tbls_to_file = TRUE,
-  project_save_tbls_formats = c(".html", ".docx"),
+  project_save_tbls_formats = c(".html"),
   project_save_tbls_with_date_time = FALSE,
   
   # Aesthetics: 
