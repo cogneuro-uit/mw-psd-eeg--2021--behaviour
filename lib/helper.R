@@ -9,7 +9,7 @@ save_output_cnd <- function(data, name, suppressMessages = FALSE, relative_path 
   
   require(tidyverse)
   require(gt)
-  require(ggplot)
+  require(ggplot2)
   
   # Check whether the data has the correct data structure to be saved...
   class <- class(data) 
