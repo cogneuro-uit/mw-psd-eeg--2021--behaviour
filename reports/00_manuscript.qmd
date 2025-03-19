@@ -150,7 +150,37 @@ demo_text_summary <-
           across(3:4, ~round(.x, 0)) )
 ```
 
-We recruited `r demographics$Age |> length()` healthy adults (`r sum(demographics$Gender==1)` females) to a within-subject cross-over design study. Although we had originally decided to exclude participants if they were not sleep deprived by 2 or more hours, we would have ended up excluding a lot of participants, which we considered concerning for the power of our analyses. We nevertheless present the results from the exclusion criterion in the Supplementary Results. Therefore, we decided to stick with the whole sample and recode the sleep deprivation variable. To do this, we conded the sleep deprivation as the difference in between the amount of sleep between the NS and the PSD period. We coded the PSD period to be related to the relative reduction in sleep amount relative to the NS (conded as 0, thus integrating it to the base model). Note that for 3 participants (019, 031 and 033) we switched the NS/PSD period because those participants reported *more* sleep during their PSD period. Data-collection took place between March 2021 and May 2022.
+
+```{r age calculation for text}
+demographics_reduced <-
+  demographics |>
+  left_join(
+    sleeptimes_updated_trans |> filter(sleepdep=="SD"),
+    by = c("subj")
+  ) 
+
+subj <- list(
+  full =  list(
+    num      = demographics$subj |> length(),
+    age      = demographics$Age |> as.numeric() |> mean(na.rm=T),
+    age_sd   = demographics$Age |> sd(na.rm=T),
+    age_min  = demographics$Age |> as.numeric() |> min(na.rm=T),
+    age_max  = demographics$Age |> as.numeric() |> max(na.rm=T),
+    gender_f = sum( demographics$Gender=="1" )
+  ),
+  red = list(
+    num    = demographics_reduced |> filter(Adjusted_Duration.diff.pos > 1.5) |> pull(subj) |> length(),
+    exc    = demographics_reduced |> filter(Adjusted_Duration.diff.pos < 1.5) |> pull(subj) |> length(),
+    age      = demographics_reduced$Age |> as.numeric() |> mean(na.rm=T),
+    age_sd   = demographics_reduced$Age |> sd(na.rm=T),
+    age_min  = demographics_reduced$Age |> as.numeric() |> min(na.rm=T),
+    age_max  = demographics_reduced$Age |> as.numeric() |> max(na.rm=T),
+    gender_f = sum( demographics_reduced$Gender=="1" )
+  )
+)
+```
+
+We recruited `r subj$full$num` healthy adults with an average age of `r subj$full$age` (*SD* = `r subj$full$age_sd`, range = `r subj$full$age_min`-`r subj$full$age_max`, females = `r subj$full$gender_f`) to a within-subject cross-over design study. In the analyses reported here, no participants were excluded. In the Supplementary, however, we report analyses for a reduced sample (see below) where `r subj$red$exc` participants were excluded, leaving us with `r subj$red$num` participants with an average age of `r subj$red$age` (*SD* = `r subj$red$age_sd`, range = `r subj$red$age_min`-`r subj$red$age_max`, females = `r subj$red$gender_f`).
 
 The experiment was approved by the institutional ethics board at UiT The Arctic University of Norway. Participants were recruited via social media posts, flyers, and personal contacts in Tromsø. To be included, participants needed to be between (and including) 18 and 50 years, with no history or ongoing mental illness, as well as not taking any psychoactive drugs. Participants were also asked whether they had any hearing impairments (used to adjust the metronome sound - none reported any hearing impairments). Lastly, participants had to give written consent to participate, and they were compensated for their time with a gift card at a local shopping mall valued at 500 NOK (approximately 50 USD).
 
@@ -160,15 +190,10 @@ The FT-RSGT [@boayue2020] was coded in PsychoPy, Standalone version 1.83.04_win3
 
 ## Sleep Paradigm
 
-To investigate the effect of PSD on MW and executive functions, we needed a sleep paradigm. To this end, we opted to use a modified PSD protocol described by @saksvik-lehouillier2020 . They asked their participants to sleep 2 hours less each night for 3 consecutive nights, and their participants achieved an average of 2.23 (SD = 0.72) hours less sleep according to their actigraphy measure. Their protocol was found effective at reducing cognitive function without long-term consequences. This method provides more ecological validity to the outcomes, as participants could sleep in their homes. Thus, the protocol can provide valuable information about the consequences of the declining sleep duration in the population [e.g., @sheehan2019; @sivertsen2019]. To guarantee a solid effect of PSD [@lim2008; @saksvik-lehouillier2020; @schwarz2016], we aimed for participants to sleep 3 hours less for three consecutive nights in the PSD condition. To avoid sequence effects, we counterbalanced the order of data-collection (i.e., whether the first session was during a period of normal sleep, NS, or PSD), resulting in two groups: The early sleep deprivation (ESD; those subjects who underwent PSD before the first data-collection) and late sleep deprivation (LSD; those subjects who had a period of controlled NS before the first data collection). The testing procedure was the same for both groups and between the conditions (NS and PSD, see Figure 1). Participants were pseudo-randomly assigned to either the LSD or ESD condition but allowed flexibility to fit participants' personal schedule. Data from both groups were merged for the analysis, and group assignment will not be further tested. During participants NS nights, they were instructed to not go to sleep later than 00:30 and not wake up later than 09:00. After waking up during participants participation period, they had to fill out a sleep diary asking (1) when they went to bed, (2) when they tried to fall asleep, (3) how long it took before they fell asleep, (4) how many times they woke up before waking up in the morning, (5) how long these wake-ups were, (6) when the last wake-up occurred, (7) when they rose from the bed, (8) to rank their sleep quality from very bad to very good (5-point Likert scale), and (9) if they took off the Actiwatch (see below) at any time the day before.
+To investigate the effect of PSD on MW and executive functions, we needed a sleep paradigm. To this end, we opted to use a modified PSD protocol described by @saksvik-lehouillier2020. They asked their participants to sleep 2 hours less each night for 3 consecutive nights, and their participants achieved an average of 2.23 (SD = 0.72) hours less sleep according to their actigraphy measure. Their protocol was found effective at reducing cognitive function without long-term consequences. This method provides more ecological validity to the outcomes, as participants could sleep in their homes. Thus, the protocol can provide valuable information about the consequences of the declining sleep duration in the population [e.g., @sheehan2019; @sivertsen2019]. To guarantee a solid effect of PSD [@lim2008; @saksvik-lehouillier2020; @schwarz2016], we aimed for participants to sleep 3 hours less for three consecutive nights in the PSD condition. To avoid sequence effects, we counterbalanced the order of data-collection (i.e., whether the first session was during a period of normal sleep, NS, or PSD), resulting in two groups: The early sleep deprivation (ESD; those subjects who underwent PSD before the first data-collection) and late sleep deprivation (LSD; those subjects who had a period of controlled NS before the first data collection). The testing procedure was the same for both groups and between the conditions (NS and PSD, see Figure 1). Participants were pseudo-randomly assigned to either the LSD or ESD condition but allowed flexibility to fit participants' personal schedule. Data from both groups were merged for the analysis, and group assignment will not be further tested. During participants NS nights, they were instructed to not go to sleep later than 00:30 and not wake up later than 09:00. After waking up during participants participation period, they had to fill out a sleep diary asking (1) when they went to bed, (2) when they tried to fall asleep, (3) how long it took before they fell asleep, (4) how many times they woke up before waking up in the morning, (5) how long these wake-ups were, (6) when the last wake-up occurred, (7) when they rose from the bed, (8) to rank their sleep quality from very bad to very good (5-point Likert scale), and (9) if they took off the Actiwatch (see below) at any time the day before.
 
 Participants received an Actiwatch Spectrum Pro (Philips Respironics, USA; <https://tinyurl.com/yjr2szxg>) which they wore for the full duration of the experiment. Participants were recommended to always wear the watch, but we emphasized that it was required to wear it during their sleep. The Actiwatch measures physical activity and ambient light which is used to estimate participants' sleep- and waking-time, sleep latency and total sleep using the accompanying software, Philips Actiware 6.0.2.
 
-::: {#fig-experiment-design-task layout-ncol="2"}
-![Sleep protocol](../outputs/experiment/sleep_dot.svg){width="540"}
-
-![Experimental task](../outputs/experiment/FT-RSGT_overview.svg){width="540"} *Note*. At baseline (T0) participants signed the consent, received the questionnaires, and the actigraphy device, and were scheduled for their test days. At the first test (T1) participants performed the finger-tapping random sequence generation task (FT-RSGT), and data from the actigraphy was retrieved. The second test (T2) followed the same procedure as T1 (except for collecting the actigraphy and the diary). Both groups followed the normal sleep (NS) protocol for the first 7 nights but diverged afterwards. The late sleep deprivation (LSD) group took their first test (T1) immediately after the 7 NS nights, while the early sleep deprivation (ESD) immediately proceeded to the partial sleep deprivation (PSD) nights. Since we wanted participants to sleep normally for 7 nights prior to their NS test, the ESD group ended up with three additional days compared to the LSD group. The dark-red dots represent meetings in the lab (T0 = first, T1 = second and T2 = third meeting), black dots represent non-study days between the first lab meeting (T0) and the onset of data collection represented by the light blue dots that also represents the normal sleep (NS) nights, and the purple dots represents the partial sleep deprivation (PSD) nights. The red (downward) arrows indicate experimental retrieval of data (e.g., consent as a pen). The green (upward) arrows indicate material given to the participants, and the orange circle arrow indicate retrieval of data but return of the device (i.e., actigraphy). Electroencephalography (brain with a frequency) data was also collected during the task, but is not described here.
-:::
 
 ## Procedure
 
@@ -284,7 +309,7 @@ Info: (find categories for each scale)
 #| tbl-cap: Baseline Sleep, Mood and Beverage Consumption
 #| tbl-cap-location: top
 
-test <- general_sleep |>
+general_sleep |>
   bind_rows( sleep_quiz_summary ) |>
   mutate(
     across(where(is.numeric), ~fmt_APA_numbers(.x, .chr=T)),
@@ -372,9 +397,11 @@ demo_pre_test_sum <-
   ) 
 ```
 
-Participants self-reproted and actigraphy estimated sleep as well as sleep quality between the two conditions are presented in @tbl-sleep-times-sessions. Sleep during the PSD period was significantly reduced according to both the self-report and the actigraphy. However, there was a discrepancy between the self-reports sleep and the actigraphy estimated sleep, where the latter recorded less sleep during the NS and more sleep in the PSD (see the Supplementary Results for a comparison). Interestingly, self-reported sleep quality was not affected by PSD (see the Supplementary). Furthermore, although participants were informed not to drink any caffeine-containing beverage before either of the experimental tests, `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(na)` missing) participants drank coffee before their NS tests, and `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(na)` missing) before their PSD tests. None reported to drink alcohol before their test session, but `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "SD") |> pull(na)` are missing from the NS condition and `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "control") |> pull(na)` are missing from the sleep deprivation condition.
+Participants self-reproted and actigraphy estimated sleep as well as sleep quality between the two conditions are presented in @tbl-sleep-times-sessions. Sleep during the PSD period was significantly reduced according to both the self-report, actigraphy and the adjusted estimates. However, there was a discrepancy between the self-reports sleep and the actigraphy estimated sleep, where the latter recorded less sleep during the NS and more sleep in the PSD (see the Supplementary Results for a comparison). Interestingly, self-reported sleep quality was not affected by PSD (see the Supplementary). Furthermore, although participants were informed not to drink any caffeine-containing beverage before either of the experimental tests, `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(na)` missing) participants drank coffee before their NS tests, and `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(na)` missing) before their PSD tests. None reported to drink alcohol before their test session, but `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "SD") |> pull(na)` are missing from the NS condition and `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "control") |> pull(na)` are missing from the sleep deprivation condition.
 
-```{r summarise - general sleep - session and modality}
+```{r summarise - general sleep - session and modality,ca}
+#| cache: true
+
 sleep_time_session_condition <-
   sleeptimes_updated |>
   pivot_longer(c(
