@@ -550,33 +550,22 @@ The Bayesian hierarchical linear regression for the dependent variable BV (@fig-
 
 The corresponding analysis for the dependent variable AE (@fig-behaviour-over-time), after the NS, indicated no evidence that randomness score changed with time (`r coef_hdi_text(mae[,"b_probenum_prop"])`), pre-positive (`r coef_hdi_text(mae[,"b_pre_pos"])`) or pre-negative mood (`r coef_hdi_text(mae[,"b_pre_neg"])`). After the PSD period, no substantial evidence was found for either an initiall change in randomness score (`r coef_hdi_text(mae[,"b_c.Adjusted_Duration.diff.pos"])`), and no evidence that PSD interacted with pre-negative mood (`r coef_hdi_text(mae[,"b_c.Adjusted_Duration.diff.pos:pre_neg"])`). On the other hand, some evidence was found for an interaction with time (`r coef_hdi_text(mae[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"])`), where randomness was reduced over time, and an interaction with pre-positive mood (`r coef_hdi_text(mae[,"b_c.Adjusted_Duration.diff.pos:pre_pos"])`), where randomness score slighly increased with more pre-positive mood.
 
-```{r FIG - behavioural over time, warning=FALSE, message=FALSE}
-#| label: fig-behaviour-over-time
-#| fig-cap: Behavioural Trend Over Time Between Sleep Condition
+As for the reduced model, only weak evidence indicated that pre-task positive mood reduced the proportion of S-MW reports (`r coef_hdi_text(r$smw[,"b_pre_pos"])`), while stronger evidence was observed for an interaction between PSD and BV (`r coef_hdi_text(r$smw[,"b_sleepdepSD:zlogbv"])`), such that a S-MW tended to preceded by more variable responses.
+
+```{r FIG - changes in probes over time}
+#| label: fig-probes-over-time
+#| fig-cap: Changes in Probe Responses Over Time
 #| fig-cap-location: top
-#| fig-width: 6
+#| apa-note: "Interactions are related to the continuous model."
+#| # META
+#| include: true
+#| warning: false
+#| message: false
+#| fig-format: svg
+#| fig-width: 6.5
 #| fig-height: 4
-#| fig-dpi: 300
 
-# p1 <- 
-data.probe |> 
-  rename(`Approximate Entropy`=zlogapen, `Behavioural Variability`=zlogbv) |> 
-  pivot_longer(c(`Approximate Entropy`, `Behavioural Variability`),  
-               names_to = "Variable", values_to = "value") |>
-  mutate(Condition = if_else(sleepdep=="SD", "PSD","NS") |> fct_relevel("PSD")) |>
-  ggplot(aes(x = probenum, y = value, fill = Condition, col = Condition)) +
-  facet_wrap(~ Variable) + 
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  stat_summary(aes(col = NULL), fun.data = mean_se, geom = "ribbon", alpha = 0.175) +
-  stat_summary(fun = mean, geom = "line", linewidth = .7) +
-  geom_smooth(method = "lm", alpha = .175) +
-  scale_x_continuous(expand = c(0.02, 0.02), limits = c(1, 25), 
-                     breaks = c(1, 5, 10, 15, 20, 25)) +
-  labs(x = "Probe number (trial)", y = "Z-score") +
-  theme_bw() +
-  theme(legend.position = "top")
-
-# save_output_cnd(p1, "Behaviour over time")
+outputs[["figs"]][["probes__PSD_x_time"]]
 ```
 
 ## The Effects of PSD on Mood
