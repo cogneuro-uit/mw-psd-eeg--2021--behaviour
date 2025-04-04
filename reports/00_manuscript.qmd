@@ -512,148 +512,20 @@ sleep_time_session_condition |>
 
 Overall changes in probe responses between sleep conditions can be found in @fig-descriptives-probes.
 
-```{r fig create percentage change in probe responses between condition - and exclusion , warning=FALSE, message=FALSE}
-plot_data <- 
-  data.probe.mood.sleep |>  
-  mutate(
-    Condition = if_else(sleepdep == "SD", "PSD","NS") |> fct_relevel("PSD"),
-    highlight = if_else(Adjusted_Duration.diff < -1.5, T, F),
-    Condition2 = case_when( 
-      highlight == T & sleepdep == "SD" ~ "ex_PSD", 
-      highlight == T & sleepdep == "control" ~ "ex_NS",
-      T ~ NA,)
-  ) |>
-  summarise(
-    .by = c(subj, Condition),
-    MW  = 100 * mean(mw > 2),
-    MB  = 100 * mean(mb[mw > 2] > 2, na.rm=T),
-    SMW = 100 * mean(smw[mw > 2] > 2, na.rm=T),
-    sleep = unique(Adjusted_Duration.diff),
-    highlight = unique(highlight),
-    Condition2 = unique(Condition2),
-  ) |>
-  pivot_longer(c(MW,MB,SMW), names_to="name", values_to="value") |>
-  mutate(
-    name = ordered(name, levels = c("MW", "MB", "SMW")),
-    name = fct_recode(name, `% MW` = "MW", `% MB` = "MB", `% Spontaneous` = "SMW")
-  )
-
-p1 <-
-  plot_data |>
-  ggplot(aes(x = Condition |> fct_relevel("NS"), y = value, col = Condition, shape = Condition, alpha = highlight, size = highlight)) +
-  facet_wrap(~name) +
-  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide="none") + 
-  scale_size_manual(values = c("TRUE" = .3, "FALSE" = .18), guide="none") +
-  # all lines
-  stat_summary(aes(group = subj), col = "darkgrey", geom ="line", # line
-               position = position_jitter(.2, seed=389)) +
-  # all data points
-  stat_summary(aes(group = subj),  
-               position = position_jitter(.2, seed=389)) +
-  # Cross
-  # GRAND mean point - CONTINOUS
-  stat_summary(aes(
-    group = name), fun.data = mean_se, 
-    geom = "pointrange", position = position_nudge(.35),
-    color = "black", alpha = .65, size = .4 ,shape = 4, 
-  ) +
-  # GRAND mean line - CONTINOUS
-  stat_summary(aes(
-    group = name, shape = highlight), fun = mean, 
-    geom = "line", position = position_nudge(.35),
-    color = "black", alpha = .65, linewidth = .5,
- ) +
-  # --- EXCLUDED DATA ---
-  # Square shape
-  # GRAND mean point
-  stat_summary(aes(
-    group = name, size = NULL, alpha = NULL, shape=NULL), plot_data |> filter(highlight), 
-    fun.data = mean_se, geom = "pointrange", position = position_nudge(-.27), 
-    color = "black", alpha = .65, size = .4, shape = 0,
-  ) +
-  # GRAND mean line
-  stat_summary(aes(
-    group = name, size = NULL, alpha = NULL, shape=NULL), plot_data |> filter(highlight), 
-    fun = mean, geom = "line", position = position_nudge(-.27),
-    color = "black", alpha = .65, linewidth = .5,
-    
-  ) +
-  labs(y = "Percentage", x = "Condition", title="a)") +
-  theme(legend.position = "none")
-p1
-# a) No need for the legends except the one coding for excluded vs. not excluded (I would use transparency, full color for not excluded, slight transparency for excluded). That would work for both the mean line and the individual points.
-# b) I would stack the two blue and the two red bars on top of each other so that the the full bar codes for NS vs. PSD and the darker shade for non-excluded vs. excluded groups.
-```
-
-```{r fig generate count plot of probe responses between conditions - and exclusion}
-
-# make relative plot ? 
-# make relative plot ? 
-# make relative plot ? 
-# make relative plot ? 
-# make relative plot ? 
-plot2_data <- 
-  data.probe.mood.sleep |>  
-  mutate(
-    Condition = if_else(sleepdep == "SD", "PSD","NS") |> fct_relevel("PSD"),
-    highlight = if_else(Adjusted_Duration.diff < -1.5, T, F),
-    Condition2 = case_when( 
-      highlight == T & sleepdep == "SD" ~ "ex_PSD", 
-      highlight == T & sleepdep == "control" ~ "ex_NS",
-      T ~ NA,),
-    across(c(mw,mb,smw), ~as.numeric(.x))
-  ) |> 
-  pivot_longer(c(mw,mb,smw), names_to="probe_type", values_to="probe_value") 
-
-plot2_data_sum <- 
-  plot2_data |>
-  summarise(
-    .by = c(Condition, probe_type, probe_value),
-    cont_n = n(),
-  ) |>
-  left_join(
-    plot2_data |>
-      summarise(
-        .by = c(Condition2, probe_type, probe_value),
-        exc_n = n(),
-      ) |> mutate(Condition = if_else(str_ends(Condition2, "PSD"), "PSD", "NS")),
-    by = c("Condition", "probe_type", "probe_value")
-  )
-
-p2 <- 
-  plot2_data_sum |>
-  pivot_longer(c(cont_n, exc_n), values_to="count", names_to="dataset") |>
-  mutate(
-    probe_type = case_when(
-      probe_type=="mw" ~ "Mind wandering",
-      probe_type=="mb" ~ "Mind blanking",
-      probe_type=="smw" ~ "Spontaneous mind wandering",
-    ) |> fct_relevel("Mind wandering"), 
-    dataset = if_else(dataset=="exc_n", "Excluded", "Continous"),
-    x_interaction = interaction(dataset, probe_value),
-    col_interaction = interaction(dataset, Condition, sep = " ")
-  ) |>
-  ggplot(aes(x = probe_value, y = count, fill = col_interaction)) + 
-  facet_wrap(~probe_type) +
-  geom_bar(stat="identity", color="black", position=position_dodge(), linewidth=0.2) +
-  labs(x = "Thought probe response", y = "Count", title = "b)", fill = "Condition") +
-  scale_fill_manual(values = c("#619CFF","#0046bc","#F8766D","#b20b00")) +
-  # Checked colours at - getOption("project_custom_ggplot_colour")[1:2]
-  theme(legend.position = "top", legend.direction = "horizontal")
-p2
-```
-
-```{r FIG - descriptive probes, warning=FALSE, message=TRUE}
+```{r FIG - descriptive probes}
 #| label: fig-descriptives-probes
-#| fig-cap: Changes in Probe Responses Between Conditions
+#| fig-cap: "Changes in Probe Responses Between Conditions and Sample"
 #| fig-cap-location: top
+#| apa-note: "(a) Each subject is indicated by a triangle/circle and has a gray line connection them. Smaller transparent triangles/circles represent cases that are *excluded* form the reduced sample (see Supplementary). The black squares indicate the grand mean and standard error (SE) for the reduced sample (*n* = 23), while the black cross indicate the grand mean and SE for the whole sample (*n* = 34; i.e., including the smaller transparent cases). (b) Counts of each thought probe and their value between the samples. Note that the overall mean (a) and proportion (b) of each response barely change between sample, suggesing that the exclusion does not significantly impact the proportion of reported thought probe."
+#| # META
+#| include: true
+#| message: false
+#| warning: false
+#| fig-format: svg
 #| fig-height: 8
-#| fig-width: 8
-#| fig-dpi: 300
+#| fig-width: 7
 
-# save_output_cnd(p1 + p2 + plot_layout(nrow=2,heights = 8, widths = 7), "Descriptive statistics of the thought probes")
-
-p1 + p2 + plot_layout(nrow=2, heights = 8, widths = 7)
+outputs[["figs"]][["probes__COMBINED_descriptives"]]
 ```
 
 *Note*. Each subject has received their own mean connected by a grey line between the conditions. Smaller transparent squares/triangles represent cases that are excluded for the excluded dataset (see Supplementary). The darkred squares indicate the mean and standard error (SE) of the dataset with the excluded (*n* = 11), while the darkred cross represent the mean and SE for the whole sample (i.e., including the smaller transparent cases). Note that the overall mean barely change, indicating that the exclusion does not significantly change the proportion of probe responses between conditions.
