@@ -657,8 +657,21 @@ outputs[["figs"]][["behaviour__PSD_x_time"]]
 <!--# Summary -->
 
 The current study examined how partial sleep deprivation (PSD) over three consecutive nights influenced MW, task performance and mood. The effect of PSD was pronounced, indicating a general increase in MW and MB, as well as higher BV, especially toward the end of the task. Randomness generation (AE) was not found to be related to any thought probe after the normal sleep (NS) period, but after the PSD period, worse AE predicted more MW. Furthermore, the PSD worsened mood by decreasing positive mood and slightly increasing negative mood.
+```{r FIG - MW interactions from model coefficients}
+#| label: fig-interaction-behaviour-on-MW
+#| fig-cap: The Interaction Between Behaviour and Sleep Loss on Their Relation to Mind Wandering
+#| fig-cap-location: top
+#| apa-note: "PSD = Partial sleep deprivation, NS = normal sleep. "
+#| # META
+#| include: true
+#| warning: false
+#| message: false
+#| fig-width: 5
+#| fig-height: 3
+#| fig-format: svg
 
-<!--# Generally on sleep -->
+outputs[["figs"]][["MW__PSD_x_behaviour"]]
+```
 
 Participants slept significantly less during the PSD period compared to the NS period, as confirmed by both self-reported measures and actigraphy estimates. Our original inclusion criterion required participants to show substantially reduced sleep (\>2 hours). When many participants failed to meet this threshold, we adjusted it to 1.5 hours, remaining consistent with Saksvik-Lehouillier et al. (2020). Even with this adjustment, we would need to exclude 11 participants which was undesireable because it would reduced the power for our analyses. Therefore, we modified our analytical approach, treating the sleep variable as continuous (average hours of reduced sleep compared to the baseline) rather than a dichotomous variable. To ensure transparency regarding this methodological change, we have included the analyses using the reduced sample size in the Supplementary. Importantly, our main findings remain consistent across both analytical approaches, except for some mood effects that might be influenced by the reduced sample size.
 
