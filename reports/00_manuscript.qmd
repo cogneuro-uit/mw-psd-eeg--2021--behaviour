@@ -249,11 +249,16 @@ outputs[["tbls"]][["baseline_sleep"]]
 Participants self-reproted and actigraphy estimated sleep as well as sleep quality between the two conditions are presented in @tbl-sleep-times-sessions. Sleep during the PSD period was significantly reduced according to both the self-report, actigraphy and the adjusted estimates. However, there was a discrepancy between the self-reports sleep and the actigraphy estimated sleep, where the latter recorded less sleep during the NS and more sleep in the PSD (see the Supplementary Results for a comparison). Interestingly, self-reported sleep quality was not affected by PSD (see the Supplementary). Furthermore, although participants were informed not to drink any caffeine-containing beverage before either of the experimental tests, `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(na)` missing) participants drank coffee before their NS tests, and `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(na)` missing) before their PSD tests. None reported to drink alcohol before their test session, but `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "SD") |> pull(na)` are missing from the NS condition and `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "control") |> pull(na)` are missing from the sleep deprivation condition.
 
 
-```{r TBL - sleep over session and modality, include=TRUE, warning=FALSE, message=FALSE}
+```{r TBL - sleep over session and modality}
 #| label: tbl-sleep-times-sessions
 #| tbl-cap: The Difference Between Sleep and Mood Across Sessions
 #| tbl-cap-location: top
+#| # META
+#| include: true
+#| message: false
+#| warning: false
 
+outputs[["tbls"]][["sleep_comparison"]]
 ```
 
 ## The Effects of PSD on the Thought Probes
