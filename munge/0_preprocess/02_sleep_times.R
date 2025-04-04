@@ -1,47 +1,51 @@
-# bind self-report (SR) and actigraphy (AG) 
 #=====          Simple bind           =====
+# bind self-report (SR) and actigraphy (AG) 
 sleeptimes <- 
   sleep_diary |>
   left_join(actigraphy, by=c("subj","date"="date_end_ag"))
 
-#   Adjusted sleep      =====
 
+#   Adjusted sleep      =====
 ## Fixes for adjusted sleep       =====
 # fix empty entries & transform to character.
-p_l_wak <- map(p_l_wak, \(x){
-  if( !is.null( x ) ){
-    if( nrow( x ) != 0 ){
-      x |> mutate(wake_zone = as.character(wake_zone))
+p_l_wak <- map(p_l_wak, \(df){
+  if( !is.null( df ) ){
+    if( length( df ) != 0 ){
+      df |> mutate(wake_zone = as.character(wake_zone))
     }
-  } else { tibble() }
+  } else { 
+    tibble() 
+  }
 }) |> list_rbind()
 
-p_l_on <- map(p_l_on, \(x){
-  if( !is.null( x ) ){
-    if( nrow( x ) != 0 ){
-      x |> mutate(onset_zone = as.character(onset_zone))
+p_l_on <- map(p_l_on, \(df){
+  if( !is.null( df ) ){
+    if( nrow( df ) != 0 ){
+      df |> mutate(onset_zone = as.character(onset_zone))
     }
   } else { tibble() }
 }) |> list_rbind()
 
 # agreement 2 (collective)
-p_l_wak2 <- map(p_l_wak2, \(x){
-  if( !is.null( x ) ){
-    if( nrow( x ) != 0 ){
-      x |> mutate(wake_zone = as.character(wake_zone))
+p_l_wak2 <- map(p_l_wak2, \(df){
+  if( !is.null( df ) ){
+    if( nrow( df ) != 0 ){
+      df |> mutate(wake_zone = as.character(wake_zone))
     }
   } else { tibble() }
 }) |> list_rbind()
 
-p_l_on2 <- map(p_l_on2, \(x){
-  if( !is.null( x ) ){
-    if( nrow( x ) != 0 ){
-      x |> mutate(onset_zone = as.character(onset_zone))
+p_l_on2 <- map(p_l_on2, \(df){
+  if( !is.null( df ) ){
+    if( nrow( df ) != 0 ){
+      df |> mutate(onset_zone = as.character(onset_zone))
     }
   } else { tibble() }
 }) |> list_rbind()
 
-### R1      ======
+
+
+### Round 1      ======
 #' sleep adjustment after the first round 
 sleep_adjustment_r1 <- 
   sleeptimes |>
@@ -83,7 +87,7 @@ check_sleep_adjustment_r1 <-
   select(subj, date, cond, diff, )
 
 
-### R2   ======
+### Round 2   ======
 #' Sleep adjustment after round 2
 sleep_adjustment_r2 <- 
   sleeptimes |>
@@ -119,6 +123,7 @@ sleep_adjustment_r2 <-
       pivot_wider(names_from = cond, 
                   values_from = use_this, names_prefix = "use_"),
     by = c("subj", "date") )
+
 
 sleeptimes_updated <- 
   sleep_adjustment_r2 |>
@@ -185,6 +190,7 @@ sleeptimes_updated <-
     onset_final = if_else(subj=="017" & pre_sleepdep==1, onset_SR, onset_final),
     duration_final = if_else(subj=="017" & pre_sleepdep==1, duration_SR, duration_final),
   )
+
 
 
 ### Selected sleep times          =====
@@ -255,11 +261,13 @@ sleeptimes_updated_trans <-
   
 
 
-# Add sleep data to behavioural and mood data
+# Add sleep to the behavioural data =====
 data.probe.mood.sleep <- 
   data.probe.mood |>
   left_join(
     sleeptimes_updated_trans,
     by = c("subj", "sleepdep")
   ) 
+
+print( "PREPROCESS DONE! ")
     
