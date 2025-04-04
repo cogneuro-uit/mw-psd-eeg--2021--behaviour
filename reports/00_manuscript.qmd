@@ -25,7 +25,7 @@ authors:
     roles: 
       - resources
       - methodology
-      - editing
+      # - editing
   # - name: Julia W. Y. Kam
   #   orcid: 0000-0002-2369-2148
   #   affiliation: Helen Wills Neuroscience Institute, University of California – Berkeley, Berkeley, CA, USA
@@ -98,12 +98,10 @@ execute:
   echo: false
 ---
 
-```{r load project data munge Parameters, warning=FALSE, message=FALSE}
-source("../lib/load_project.R") )
-load_project("../")
-
-#' Set relative path.
-script_relative_path <- "../"
+```{r load project data munge Parameters, warning=FALSE}
+relative_path <- "../" # b/c quarto 
+source( paste0(relative_path, "lib/quarto_load_project.R") )
+quarto_load_project(relative_path, load_data_data = T)
 ```
 
 # Introduction
@@ -130,49 +128,8 @@ To unravel the complex relationship between MW (and its various manifestations),
 
 ## Participants
 
-```{r age calculation}
-demo_text_summary <- 
-  demographics |> 
-  mutate(Age = as.numeric(Age)) |>
-  summarise(
-    m   = mean(Age, na.rm=T), 
-    sd  = sd(Age, na.rm=T), 
-    min = min(Age,na.rm=T), 
-    max = max(Age,na.rm=T)
-  ) |> 
-  mutate( across(1:2, ~fmt_APA_numbers(.x, .chr=T)),
-          across(3:4, ~round(.x, 0)) )
-```
 
 
-```{r age calculation for text}
-demographics_reduced <-
-  demographics |>
-  left_join(
-    sleeptimes_updated_trans |> filter(sleepdep=="SD"),
-    by = c("subj")
-  ) 
-
-subj <- list(
-  full =  list(
-    num      = demographics$subj |> length(),
-    age      = demographics$Age |> as.numeric() |> mean(na.rm=T),
-    age_sd   = demographics$Age |> sd(na.rm=T),
-    age_min  = demographics$Age |> as.numeric() |> min(na.rm=T),
-    age_max  = demographics$Age |> as.numeric() |> max(na.rm=T),
-    gender_f = sum( demographics$Gender=="1" )
-  ),
-  red = list(
-    num    = demographics_reduced |> filter(Adjusted_Duration.diff.pos > 1.5) |> pull(subj) |> length(),
-    exc    = demographics_reduced |> filter(Adjusted_Duration.diff.pos < 1.5) |> pull(subj) |> length(),
-    age      = demographics_reduced$Age |> as.numeric() |> mean(na.rm=T),
-    age_sd   = demographics_reduced$Age |> sd(na.rm=T),
-    age_min  = demographics_reduced$Age |> as.numeric() |> min(na.rm=T),
-    age_max  = demographics_reduced$Age |> as.numeric() |> max(na.rm=T),
-    gender_f = sum( demographics_reduced$Gender=="1" )
-  )
-)
-```
 
 We recruited `r subj$full$num` healthy adults with an average age of `r subj$full$age` (*SD* = `r subj$full$age_sd`, range = `r subj$full$age_min`-`r subj$full$age_max`, females = `r subj$full$gender_f`) to a within-subject cross-over design study. In the analyses reported here, no participants were excluded. In the Supplementary, however, we report analyses for a reduced sample (see below) where `r subj$red$exc` participants were excluded, leaving us with `r subj$red$num` participants with an average age of `r subj$red$age` (*SD* = `r subj$red$age_sd`, range = `r subj$red$age_min`-`r subj$red$age_max`, females = `r subj$red$gender_f`).
 
@@ -249,51 +206,9 @@ Additionally, using standard linear models on discrete answers like those provid
 
 # Results
 
-```{r as.matrix bayesian data}
-mmw  <- as.matrix(mod_bay_sleep_cont$mw)
-mmb  <- as.matrix(mod_bay_sleep_cont$mb)
-msmw <- as.matrix(mod_bay_sleep_cont$smw)
-mbv  <- as.matrix(mod_bay_sleep_cont$bv)
-mae  <- as.matrix(mod_bay_sleep_cont$ae)
-```
 
 ## Baseline Measures
 
-```{r general sleep questionnaire - data preparation}
-general_sleep <- 
-  sleep_quiz |>
-  mutate(
-    .before=1,
-    night_shift    = S1_Q1,
-    pref_sleep     = as.numeric(S1_Q2)/3600,
-    pref_sleep     = if_else(pref_sleep<=5, pref_sleep+24, pref_sleep),
-    pref_wake      = as.numeric(S1_Q3)/3600,
-    pref_sleep_dur = S1_Q4,
-    sleep_week     = S1_Q5,
-    sleep_week_end = S1_Q6,
-    coff_day       = S1_Q7,
-    energy_drink   = S1_Q8,
-  ) |>
-  pivot_longer(c(
-    night_shift, pref_sleep, pref_wake, pref_sleep_dur,
-    sleep_week, sleep_week_end, coff_day, energy_drink)
-  ) |>
-  summarise(
-    .by = name,
-    m   = mean(value, na.rm=T),
-    sd  = sd(value, na.rm=T),
-    min = min(value, na.rm=T),
-    max = max(value, na.rm=T),
-  ) |>
-  add_row(name = "preferential_sleep", .before=2) |>
-  add_row(name = "actual_sleep", .before=6) 
-
-# PANAS 
-panas_pos <- map(c(1, 3, 5, 9, 10, 12, 14, 16, 17, 19), \(x){
-  paste0("S6_Q",x)}) |> list_c()
-panas_neg <- map(c(2, 4, 6, 7, 8, 11, 13, 15, 18, 20), \(x){
-  paste0("S6_Q",x)}) |> list_c()
-```
 
 Data from questionnaires collected at T0 are reported in @tbl-baseline-questionnaire. The participants' in our study did not indicate significant sleeping problems and are within the normal ranges of health people [in line with @saksvik-lehouillier2020], suggesting that the sample is from a health population. Three participants reported having night shift once per month (one participant did not provide an answer to this question). Most participants (`r sum(general_sleep$coff_day>0)`) reported to drink coffee, with `r sum(general_sleep$coff_day<4)` reporting consuming less than 4 cups per day, while `r sum(general_sleep$coff_day>=4)` reported to drink 4 or more cups a day. As for the consumption of energy drinks, only `r sum(general_sleep$energy_drink>0)` participants reported drinking them, but maximum one per day.
 
@@ -377,33 +292,6 @@ general_sleep |>
 
 ## Sleep
 
-```{r caffeine and alcohol before each test}
-demo_pre_test <- 
-  demographics |>
-  pivot_longer(c(S1_cond, S2_cond), names_to = c("Session", "_rm"), names_sep="_") |>
-  rename(condition = value) |>
-  mutate(no_caffeine = case_when( 
-    Session == "S1" & condition == "SD" ~ S1_No_coffee.tea.energy_drinks,
-    Session == "S2" & condition == "SD" ~ S2_No_coffee.tea.energy_drinks,
-    Session == "S1" & condition == "control" ~ S1_No_coffee.tea.energy_drinks,
-    Session == "S2" & condition == "control" ~ S2_No_coffee.tea.energy_drinks,
-    ),
-    no_alcohol = case_when(
-    Session == "S1" & condition == "SD" ~ S1_No_alcohol,
-    Session == "S2" & condition == "SD" ~ S2_No_alcohol,
-    Session == "S1" & condition == "control" ~ S1_No_alcohol,
-    Session == "S2" & condition == "control" ~ S2_No_alcohol,
-    )) 
-
-demo_pre_test_sum <-
-  demo_pre_test |>
-  pivot_longer(c(no_caffeine, no_alcohol)) |>
-  summarise(
-    .by = c(name, condition),
-    sum = sum(!value, na.rm=T),
-    na = sum(is.na(value), na.rm=T),
-  ) 
-```
 
 Participants self-reproted and actigraphy estimated sleep as well as sleep quality between the two conditions are presented in @tbl-sleep-times-sessions. Sleep during the PSD period was significantly reduced according to both the self-report, actigraphy and the adjusted estimates. However, there was a discrepancy between the self-reports sleep and the actigraphy estimated sleep, where the latter recorded less sleep during the NS and more sleep in the PSD (see the Supplementary Results for a comparison). Interestingly, self-reported sleep quality was not affected by PSD (see the Supplementary). Furthermore, although participants were informed not to drink any caffeine-containing beverage before either of the experimental tests, `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(na)` missing) participants drank coffee before their NS tests, and `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(na)` missing) before their PSD tests. None reported to drink alcohol before their test session, but `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "SD") |> pull(na)` are missing from the NS condition and `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "control") |> pull(na)` are missing from the sleep deprivation condition.
 
@@ -530,13 +418,6 @@ outputs[["figs"]][["probes__COMBINED_descriptives"]]
 
 *Note*. Each subject has received their own mean connected by a grey line between the conditions. Smaller transparent squares/triangles represent cases that are excluded for the excluded dataset (see Supplementary). The darkred squares indicate the mean and standard error (SE) of the dataset with the excluded (*n* = 11), while the darkred cross represent the mean and SE for the whole sample (i.e., including the smaller transparent cases). Note that the overall mean barely change, indicating that the exclusion does not significantly change the proportion of probe responses between conditions.
 
-```{r bayes behavioural model quick access}
-mmw  <- as.matrix(mod_bay_sleep_cont$mw)
-mmb  <- as.matrix(mod_bay_sleep_cont$mb)
-msmw <- as.matrix(mod_bay_sleep_cont$smw)
-mbv  <- as.matrix(mod_bay_sleep_cont$bv)
-mae  <- as.matrix(mod_bay_sleep_cont$ae)
-```
 
 The Bayesian ordered-probit model for the dependent variable MW ( {{{ Table **SXX** }}} ), after the NS, indicated overwhelming evidence that MW increased with time (`r coef_hdi_text(mmw[,"b_probenum_prop"])`), and increased with more variable responses (`r coef_hdi_text(mmw[,"b_zlogbv"])`), but no evidence that randomness generation predicted MW (`r coef_hdi_text(mmw[,"b_zlogapen"])`). Additionally, the model revealed overwhelming evidence that pre-test positive mood predicted less MW (`r coef_hdi_text(mmw[,"b_pre_pos"])`), and weak evidence that pre-test negative mood increased MW (`r coef_hdi_text(mmw[,"b_pre_neg"])`). After the PSD, the model indicated overwhelming evidence that participants generally reported more MW (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos"])`), but PSD did not interact with time-on-task (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"])`). Furthermore, very strong evidence indicated that sleep deprivation interacted with randomness generation (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:zlogapen"])`), such that being more sleep deprived reduced the randomness generation, and strong evidence was found for an interaction between response variability and sleep deprivation (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:zlogbv"])`), where sleep deprivation reduced response variability. No substantial evidence was found for an interaction with pre-test positive (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:pre_pos"])`), but some evidence was found for an interaction with pre-test negative mood (`r coef_hdi_text(mmw[,"b_c.Adjusted_Duration.diff.pos:pre_neg"])`), where being in a more negative mood, after being sleep deprived, attenuated the prediction on MW.
 
@@ -570,15 +451,10 @@ outputs[["figs"]][["probes__PSD_x_time"]]
 
 ## The Effects of PSD on Mood
 
-```{r anova models part}
 
 #' Consider here to use the continous sleep variable with the pre-post test.
 #' This analysis would be more consistent with the other analysis we report above
 
-mood <- list()
-mood$n <- as.matrix( mood_test[["neg"]][["bayes"]][["cont"]] )
-mood$p <- as.matrix( mood_test[["pos"]][["bayes"]][["cont"]] )
-```
 
 To assess the effect of the sleep protocol and experiment on mood, we ran two separate Bayesian linear models for each of the mood type: positive and negative mood ({{{ SUPPLEMENTARY FIG }}}). For the dependent variable positive mood, the analysis revealed overwhelming evidence for an effect of Sleep Deprivation (`r coef_hdi_text(mood$p[,"b_c.Adjusted_Duration.diff.pos"])`) in reducing positive mood, and overwhelming evidence that after the test positive mood was reduced (Pre-post: `r coef_hdi_text(mood$p[,"b_prepostpost"])`), but no evidence for an interaction between Sleep deprivation and Pre-post test (`r coef_hdi_text(mood$p[,"b_c.Adjusted_Duration.diff.pos:prepostpost"])`). As for the dependent variable negative mood, the analysis revealed very strong evidence for an effect of Sleep Deprivation (`r coef_hdi_text(mood$n[,"b_c.Adjusted_Duration.diff.pos"])`) indicating more negative mood after being sleep deprived, and no substantial evidence that Pre-post had an effect (`r coef_hdi_text(mood$n[,"b_prepostpost"])`), and no evidence that Sleep Deprivation and Pre-post test interacted (`r coef_hdi_text(mood$n[,"b_c.Adjusted_Duration.diff.pos:prepostpost"])`.
 
