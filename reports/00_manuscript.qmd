@@ -232,62 +232,6 @@ Info: (find categories for each scale)
 #| tbl-cap: Baseline Sleep, Mood and Beverage Consumption
 #| tbl-cap-location: top
 
-general_sleep |>
-  bind_rows( sleep_quiz_summary ) |>
-  mutate(
-    across(where(is.numeric), ~fmt_APA_numbers(.x, .chr=T)),
-    across(everything(), ~if_else(is.na(.x), "", .x)),
-    range = if_else(min=="", "", paste0(min, " - ", max))
-  ) |>
-  select(-min, -max) |> 
-  gt() |>
-  cols_label(
-    name  ~ "Measure",
-    m     ~ md("*M*"),
-    sd    ~ md("*SD*"),
-    range ~ "Data range",
-  ) |>
-  text_case_match(
-    "night_shift"        ~ "Night shift",
-    "preferential_sleep" ~ "Preferential sleep",
-    "pref_sleep"         ~ "Time of going to bed",
-    "pref_wake"          ~ "Time of awakening",
-    "pref_sleep_dur"     ~ "Duration of sleep",
-    "actual_sleep"       ~ "Typical sleep duration",
-    "sleep_week"         ~ "Weekday",
-    "sleep_week_end"     ~ "Weekend",
-    "coff_day"           ~ "Coffee consumption",
-    "energy_drink"       ~ "Number of energy drinks",
-    "fatigue"            ~ "Fatigue",
-    "sleepiness"         ~ "Sleepiness",
-    "insomnia"           ~ "Insomnia", 
-    "pittsburgh"         ~ "Sleep quality", 
-    "dinural_avg"        ~ "Dinural preference",
-    "PANAS"              ~ "PANAS", 
-    "panas_pos"          ~ "Positive",
-    "panas_neg"          ~ "Negative", 
-    "alcohol"            ~ "Alcohol",
-    .default="", .locations = cells_body(columns = name)
-  ) |>
-  opt_footnote_marks(marks = letters) |>
-  tab_footnote("On weekdays.", locations = cells_body(name, 2) ) |>
-  tab_footnote("On a typical day.", locations = cells_body(name, c(9,10)) ) |>
-  tab_footnote("Measured with Fatigue Severity Scale (Krupp et al., 1989).", 
-               locations = cells_body(name, c(11)) ) |>
-  tab_footnote("Measured with Epworth Sleepiness Scale (Johns, 1991).", 
-               locations = cells_body(name, c(12)) ) |> 
-  tab_footnote("Measured with Insomnia Severity Index (Bastien et al., 2001).", 
-               locations = cells_body(name, c(13)) ) |>
-  tab_footnote("Measured with Pittsburgh Sleep Quality Index, low scores indicate good sleep quality (Buysse et al., 1989).", 
-               locations = cells_body(name, c(14)) ) |>
-  tab_footnote("Measured with Diurnal Scale (calculated as mean), low scores indicate a preference to go to bed late and wake up late (Torsvall & Åkerstedt, 1980).", 
-               locations = cells_body(name, c(15)) ) |>
-  tab_footnote("Measured with the Positive and Negative Affect Schedule (Watson et al., 1988).", 
-               locations = cells_body(name, c(16)) ) |>
-  tab_footnote("Measure provided by Saksvik-Lehouillier et al. (2020).", 
-               locations = cells_body(name, c(19)) ) |>
-  tab_fmt_APA() 
-  # save_output_cnd("Baseline_sleep_questionnaire")
 ```
 
 ## Sleep
@@ -295,105 +239,12 @@ general_sleep |>
 
 Participants self-reproted and actigraphy estimated sleep as well as sleep quality between the two conditions are presented in @tbl-sleep-times-sessions. Sleep during the PSD period was significantly reduced according to both the self-report, actigraphy and the adjusted estimates. However, there was a discrepancy between the self-reports sleep and the actigraphy estimated sleep, where the latter recorded less sleep during the NS and more sleep in the PSD (see the Supplementary Results for a comparison). Interestingly, self-reported sleep quality was not affected by PSD (see the Supplementary). Furthermore, although participants were informed not to drink any caffeine-containing beverage before either of the experimental tests, `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="control") |> pull(na)` missing) participants drank coffee before their NS tests, and `r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(sum)` (`r demo_pre_test_sum |> filter(name=="no_caffeine" & condition=="SD") |> pull(na)` missing) before their PSD tests. None reported to drink alcohol before their test session, but `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "SD") |> pull(na)` are missing from the NS condition and `r demo_pre_test_sum |> filter(name=="no_alcohol" & condition == "control") |> pull(na)` are missing from the sleep deprivation condition.
 
-```{r summarise - general sleep - session and modality,ca}
-#| cache: true
-
-sleep_time_session_condition <-
-  sleeptimes_updated |>
-  pivot_longer(c(
-    wake_SR, onset_SR, duration_SR,
-    wake_AG, onset_AG, duration_AG,
-    wake_final, onset_final, duration_final,
-    sleep_quality,
-  )) |>
-  mutate(
-    modality = case_when(
-      str_ends(name, "_AG") ~ "Actigraphy", 
-      str_ends(name, "_SR") ~ "Self-report",
-      str_ends(name, "_final") ~ "Adjusted"),
-    name = case_when(
-      str_starts(name, "wake_") ~ "Wake time",
-      str_starts(name, "onset_") ~ "Sleep onset",
-      str_starts(name, "duration_") ~ "Sleep duration",
-      name=="sleep_quality" ~ ""),
-    sleep_cond = case_when(
-      pre_control  == 1 ~ "ns", 
-      pre_sleepdep == 1 ~ "sd",
-      T ~ NA ) ) |>
-  filter(!is.na(sleep_cond)) |>
-  summarise(
-    .by  = c(subj, sleep_cond, modality, name),
-    mean = mean(value, na.rm = T),
-    sd   = sd(value, na.rm = T),
-    min  = min(value, na.rm = T),
-    max  = max(value, na.rm = T)
-  ) |>
-  pivot_wider(names_from = sleep_cond, values_from = c(mean, sd, min, max)) |>
-  summarise(
-    .by     = c(modality, name),
-    psd_m   = mean( mean_sd, na.rm=T),
-    psd_sd  = sd(  mean_sd, na.rm=T),
-    ns_m    = mean(mean_ns, na.rm=T),
-    ns_sd   = sd( mean_ns, na.rm=T),
-    diff_m  = psd_m - ns_m,
-    diff_sd = sd(mean_sd-mean_ns, na.rm=T),
-    bf      = extractBF( ttestBF(
-      mean_sd[!is.na(mean_sd) & !is.na(mean_ns)], 
-      mean_ns[!is.na(mean_sd) & !is.na(mean_ns)], paired=T) )$bf,
-    psd_m   = if_else(psd_m > 24, psd_m - 24, psd_m),
-    ns_m    = if_else(ns_m  > 24, ns_m  - 24, ns_m),
-  ) |> 
-  pivot_longer(c(ends_with("_m"), ends_with("_sd")), 
-               names_sep = "_", names_to = c("cond", "value2")) |>
-  mutate(
-    modality = if_else(is.na(modality), "Sleep quality", modality),
-    value = case_when(
-      modality == "Sleep quality" ~ fmt_APA_numbers(value, .chr=T),
-      cond == "diff" ~ clock_h_m(value),
-      name == "Sleep duration" ~ clock_h_m(value),
-      value2 == "m" ~ clock_24(value), 
-      T ~ clock_h_m(value),
-  )) |>
-  pivot_wider(names_from = c(cond, value2)) |> 
-  mutate(bf = if_else(bf>1000, format(bf, scientific=T, digits=2), 
-                      fmt_APA_numbers(bf, .chr=T))) |>
-  select(c(everything(), -bf), bf)
-```
 
 ```{r TBL - sleep over session and modality, include=TRUE, warning=FALSE, message=FALSE}
 #| label: tbl-sleep-times-sessions
 #| tbl-cap: The Difference Between Sleep and Mood Across Sessions
 #| tbl-cap-location: top
 
-sleep_time_session_condition |>
-  mutate(e1 = "", e2 = "") |>
-  gt(groupname_col = "name") |>
-  tab_spanner("Partial sleep deprivation", starts_with("PSD_")) |>
-  tab_spanner("Normal sleep", starts_with("NS_")) |>
-  # cols_hide(seq) |>
-  # cols_move(c(prepost, PANASposneg), 1) |>
-  cols_label(
-    ends_with("_m") ~ md("*M*"),
-    ends_with("_sd") ~ md("*SD*"),
-    diff_m = md("*M*~diff~"), diff_sd = md("*SD*~diff~"), 
-    bf = md("BF~10~"), 
-    modality = "Variable",
-    starts_with("e") ~ "",
-  ) |>
-  cols_move(e1, psd_sd) |>
-  cols_move(e2, ns_sd) |>
-  cols_align("center", c(everything(),-name)) |>
-  tab_footnote(
-    md("*Note.* Differences are calculated as partial sleep deprivation (PSD) -  normal sleep (NS).")
-    # PANAS = positive and negative affect scale, pre = pre-test measure, post = post-test measure, pos = positive, neg = negative. 
-  ) |> 
-  opt_footnote_marks(marks = letters) |>
-  # a
-  tab_footnote(
-    "Sleep quality was rated on a 5-point Likert scale (1 = very bad to 5 = very good).",
-    locations = cells_body(modality, modality=="Sleep quality") ) |>
-  tab_fmt_APA() |>
-  save_output_cnd("Sleep_times_between_conditions")
 ```
 
 ## The Effects of PSD on the Thought Probes
