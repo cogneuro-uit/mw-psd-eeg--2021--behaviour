@@ -1,4 +1,5 @@
 library(ProjectTemplate)
+relative_path <- ""
 load.project()
 
 ##  ANOVA       ========

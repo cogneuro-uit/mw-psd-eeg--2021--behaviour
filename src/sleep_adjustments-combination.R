@@ -1,4 +1,5 @@
 library(ProjectTemplate)
+relative_path<-""
 load.project()
 
 # This script is used to fix the disagreement between the researchers
