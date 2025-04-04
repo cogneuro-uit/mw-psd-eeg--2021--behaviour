@@ -674,12 +674,23 @@ outputs[["figs"]][["MW__PSD_x_behaviour"]]
 ```
 
 Participants slept significantly less during the PSD period compared to the NS period, as confirmed by both self-reported measures and actigraphy estimates. Our original inclusion criterion required participants to show substantially reduced sleep (\>2 hours). When many participants failed to meet this threshold, we adjusted it to 1.5 hours, remaining consistent with Saksvik-Lehouillier et al. (2020). Even with this adjustment, we would need to exclude 11 participants which was undesireable because it would reduced the power for our analyses. Therefore, we modified our analytical approach, treating the sleep variable as continuous (average hours of reduced sleep compared to the baseline) rather than a dichotomous variable. To ensure transparency regarding this methodological change, we have included the analyses using the reduced sample size in the Supplementary. Importantly, our main findings remain consistent across both analytical approaches, except for some mood effects that might be influenced by the reduced sample size.
+```{r FIG - PSD x mood interacitons - BV + s-mw}
+#| label: fig-psd-positive-interactions-bv+smw
+#| fig-cap: The Interaction Between Behaviour and Sleep Loss on Their Relation to Mind Wandering
+#| fig-cap-location: top
+#| apa-note: "PSD = Partial sleep deprivation, NS = normal sleep. "
+#| # META
+#| include: true
+#| warning: false
+#| message: false
+#| fig-width: 5
+#| fig-height: 3
+#| fig-format: svg
 
-<!--#  That we have  a sleep effect -->
 
-We observed notable discrepancies between the self-reported and actigraphy sleep/wake times (see Supplementary {{{ FIGURE }}}). For example, one participant {{{FIND THE CORRECT PARTICIPANT}}} self-reported going to sleep late (\~03:00) but the actigraphy indicated that the participant stopped moving and turned off all lights by midnight (\~00:00). To address these inconsistencies, we loosely followed the procedure described by @follesø2021, that aimes to bridge the gap between the two measurements. For the analyses reported here, we used the adjusted sleep measure, because it clarified some obvious discrepant cases. Overall, there was a high agreement on the adjusted sleep times between the researchers, which led to an attenuation of the sleep estimates compared to the self-report and increased the sleep estimates compared to the actigraphy.
+outputs[["figs"]][["BV+SMW__PSD_x_pre_pos"]]
 
-<!--# We have some discrepancies, explain how these might arise -->
+```
 
 The observed measurement discrepancies likely stem from two sources. First, participants might have adjusted their reports to meet perceived study expectations (e.g., reporting later bedtimes or earlier wake times than actually experienced). Second, actigraphy has inherent limitations in accurately detecting sleep/wake transitions. For example, actigraphy might misinterpret motionless pre-sleep activities as sleep - such as using a mobile phone in bed, a common phenomenon in modern society [@gradisar2013; @hjetland2021; @hysing2015]. Similarly, it might fail to register actual wake times when participants remain in bed after waking. Regardless of these measurement challenges, our data clearly showed that participants generally slept less during the PSD period compared to the NS period. According to both participant's self-reported and actigraphy estimated sleep, the participants slept significantly less during the PSD period as compared to the NS period. Although both were found to be significant, there were many estimates that did not converge between the self-report and the actigraphy.
 
