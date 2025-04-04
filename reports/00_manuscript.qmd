@@ -582,30 +582,20 @@ mood$p <- as.matrix( mood_test[["pos"]][["bayes"]][["cont"]] )
 
 To assess the effect of the sleep protocol and experiment on mood, we ran two separate Bayesian linear models for each of the mood type: positive and negative mood ({{{ SUPPLEMENTARY FIG }}}). For the dependent variable positive mood, the analysis revealed overwhelming evidence for an effect of Sleep Deprivation (`r coef_hdi_text(mood$p[,"b_c.Adjusted_Duration.diff.pos"])`) in reducing positive mood, and overwhelming evidence that after the test positive mood was reduced (Pre-post: `r coef_hdi_text(mood$p[,"b_prepostpost"])`), but no evidence for an interaction between Sleep deprivation and Pre-post test (`r coef_hdi_text(mood$p[,"b_c.Adjusted_Duration.diff.pos:prepostpost"])`). As for the dependent variable negative mood, the analysis revealed very strong evidence for an effect of Sleep Deprivation (`r coef_hdi_text(mood$n[,"b_c.Adjusted_Duration.diff.pos"])`) indicating more negative mood after being sleep deprived, and no substantial evidence that Pre-post had an effect (`r coef_hdi_text(mood$n[,"b_prepostpost"])`), and no evidence that Sleep Deprivation and Pre-post test interacted (`r coef_hdi_text(mood$n[,"b_c.Adjusted_Duration.diff.pos:prepostpost"])`.
 
-```{r FIG - change in mood following sleep deprivation and task, warning=FALSE, message=FALSE}
-#| label: fig-simple-mood-effect
+```{r FIG - Changes in Behaviour over time by condition}
+#| label: fig-behaviour-over-time
+#| fig-cap: Changes in Behaviour Over Time
 #| fig-cap-location: top
-#| fig-cap: The Effect of Sleep Deprivation and the Task on Mood
-#| fig-width: 7
+#| apa-note: ""
+#| # META
+#| include: true
+#| warning: false
+#| message: false
+#| fig-width: 5
+#| fig-height: 3
+#| fig-format: svg
 
-p1 <- 
-  panas_session |>
-  mutate(valence = if_else(valence=="neg", "Negative mood", "Positive mood")) |>
-  left_join(
-    sleeptimes_updated_trans,
-    by = c("subj", "sleepdep")
-  ) |>
-  ggplot(aes(c.Adjusted_Duration.diff.pos, PANASsum_0, col = prepost, group=interaction(subj,prepost))) + 
-  facet_wrap(~valence, scales = "free") +
-  geom_point(alpha=.2, position = position_jitter(.1,.1)) + 
-  geom_line( alpha=.2, position = position_jitter(.1,.1)) +
-  geom_smooth(aes(group=NULL), method = "lm", alpha = .1) 
-  # stat_summary(aes(col=NULL, group=interaction(subj,prepost))) + 
-  # stat_summary(aes(col=NULL, group=subj), geom="line")
-  # geom_point(alpha = .4) + 
-  # labs(x = "Sleep deprivation", y = "Mood score") 
-  
-save_output_cnd(p1, "Changes in mood from sleep deprivation and task")
+outputs[["figs"]][["behaviour__PSD_x_time"]]
 ```
 
 ```{r FIG - effects on probes, warning=FALSE, message=FALSE}
