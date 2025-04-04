@@ -31,6 +31,7 @@ if( getOption("project_bayes_run_models") ){
     bayes_diag(mood_test[["pos"]][["bayes"]][["cont"]]) # general model fit and coefficients
     # bayes_tbl_sum(mood_test[["pos"]][["bayes"]][["cont"]]) # coefficients (table)
   }
+  bayes_tbl_sum(mood_test[["pos"]][["bayes"]][["cont"]] )
   ## Criterion
   mood_test[["pos"]][["bayes"]][["cont"]] <- 
     mood_test[["pos"]][["bayes"]][["cont"]] |>
