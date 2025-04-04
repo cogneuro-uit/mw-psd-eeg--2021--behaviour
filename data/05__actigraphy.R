@@ -1,4 +1,5 @@
-fnames = list.files("data/actigraphy", pattern="*.csv", full.names = T) 
+fnames = list.files(
+  paste0(relative_path, "data/actigraphy"), pattern="*.csv", full.names = T) 
 subjs = map_chr(fnames, ~str_split(.x, "[/_]")[[1]][[3]]) |> unique() 
 
 as_hour_time <- function(stime){
@@ -66,7 +67,9 @@ h_wk_19 <- function(stime){ # wake
 
 ##' combine files per subj because some files have duplicate days
 actigraphy <- map(subjs, \(subj){
-  fnames=list.files("data/actigraphy", pattern=sprintf("%s_.*.csv",subj), full.names = T) 
+  fnames=list.files(
+    paste0(relative_path, "data/actigraphy"),
+    pattern=sprintf("%s_.*.csv",subj), full.names = T)
 
   map_df(fnames, \(fname){
     print(fname)
