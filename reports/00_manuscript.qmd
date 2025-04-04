@@ -212,6 +212,20 @@ The second session followed the procedure in T1, but for a couple of changes. Th
 ## Statistical analysis
 
 <!--# RCORE TEAM 2025 ??? -->
+```{r FIG - sleep deprivation between source type}
+#| label: fig-SD-between-modalities
+#| fig-cap: Difference in Sleep Duration Between Sources 
+#| fig-cap-location: top
+#| apa-note: "Sleep deprivation compared to the normal sleep (NS). Sleep duration is averaged for the three nights preceding each test, and the difference is caluclated as partial sleep deprivation (PSD) - NS. Black solid line indicate the original acceptance threshold, while the red dashed line indicated the adjusted sleep threshold (the criterion used for the reduced sample). Cases above the 1.5 threshold are highlighted by their associated participant code."
+#| # META
+#| include: true
+#| warning: false
+#| message: false
+#| fig-format: svg
+#| fig-width: 10
+
+outputs[["figs"]][["PSD__report_type"]]
+```
 
 The data analysis was done in R version `r str_split(R.version$version.string, " \\(")[[1]][[1]]` [@rcoreteam2024]. The sleep measures, sleep onset, wake time and duration of sleep for the two conditions (NS and PSD) were calculated based on the 3 nights before each test sessions because the PSD condition was limited to 3 nights of sleep restriction. The BV variable was calculated as the log-transformed and z-scored standard deviation of the inter-tap-intervals, extracted for the period of the last 25 stimuli preceding each thought probe, corresponding to 18.75 seconds [@boayue2020]. The AE variable [@pincus1997] was also extracted for the 25 stimuli preceding each thought-probe and was parametrized by parameter m that indicates the maximum length of subsequence’s used for the entropy-calculation. For the current analysis, we used m = 2, which has been found to provide the most stable estimates with a robust effect in relation to MW [@boayue2020]. Raw AE values were transformed using -log(log(2)-AE) and z-scored across subjects. Higher values of AE imply greater irregularities (more random responding) of the sequence [@pincus1991], associated with stronger recruitment of executive resources [@teasdale1995]. Mood was measured with the PANAS which ranges from 10 to 50, but we transformed it to start at 0 (i.e., to range from 0 to 40).
 
