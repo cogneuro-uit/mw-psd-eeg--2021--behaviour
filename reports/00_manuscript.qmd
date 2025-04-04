@@ -227,11 +227,20 @@ Info: (find categories for each scale)
  Participants' fatigue was measured with the Fatigue Severity Scale [@krupp1989] with lower scores indicating less fatigue. To measure sleepiness, we used the Epworth Sleepiness Scale [@johns1991], where lower scores (0-5) indicate low daytime sleepiness while higher scores (16-24) indicate severe excessive daytime sleepiness. Sleeping problems were measured with the Insomnia Severity Index [@bastien2001] where lower scores (0-7) indicate no significant insomnia, while higher scores (22-28) indicate severe insomnia. Participant’s sleep quality was measured with the Pittsburgh Sleep Quality Index [@buysse1989] that inquires about participants’ sleep time, sleep delay, wake time and sleep amount, where higher scores indicating worse sleep quality. Participant’s diurnal preferences were assessed with the Diurnal Scale [@torsvall1980] where higher scores indicate a preference to wake up and go to sleep early (‘early birds’), and lower scores indicate a preference to go to sleep later and wake up late (‘night owls’). To measure the participant’s mood, we used the Positive and Negative Affect Schedule [PANAS; @watson1988] where higher scores (min 10, max 50) indicate more intensive emotional states. Lastly, we also asked participants about their alcohol consumption habit, derived from [@saksvik-lehouillier2020]. This consisted of 3 different questions with 5 answer alternatives (ranging from low to high consumption).
 ```
 
-```{r TBL - baseline questionnaire, include=TRUE, warning=FALSE, message=FALSE}
+```{r TBL - baseline questionnaire}
 #| label: tbl-baseline-questionnaire
 #| tbl-cap: Baseline Sleep, Mood and Beverage Consumption
 #| tbl-cap-location: top
+#| # Maybe add citations in apa-notes`? `
+#| apa-note: ""
+#| # META
+#| include: TRUE
+#| warning: FALSE
+#| message: FALSE
 
+outputs[["tbls"]][["baseline_sleep"]]
+# citations
+# [@krupp1989; jogns1991; @bastien2001; @buysse1989; @torsvall1980; @watson1988; @saksvik-lehouillier2020]
 ```
 
 ## Sleep
