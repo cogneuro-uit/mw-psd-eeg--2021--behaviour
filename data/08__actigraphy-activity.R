@@ -1,4 +1,5 @@
-fnames = list.files("data/actigraphy", pattern="*.csv", full.names = T) 
+fnames = list.files(
+  paste0(relative_path, "data/actigraphy"), pattern="*.csv", full.names = T) 
 
 subjs <- map_chr(fnames, ~str_split(.x, "[/_]")[[1]][[3]]) |> unique() 
 subjs <- subjs[!subjs=="030"]
@@ -8,7 +9,8 @@ subjs <- subjs[!subjs=="030"]
 ##' combine files per subj because some files have duplicate days
 actigraphy_activity <- 
   map_df(subjs, \(l_subj){
-    fnames = list.files("data/actigraphy", pattern = sprintf("%s_.*.csv", l_subj), full.names = T) 
+    fnames = list.files(
+      paste0(relative_path, "data/actigraphy"), pattern = sprintf("%s_.*.csv", l_subj), full.names = T) 
     
     #' Get data from sleep diary, that contain the relevant sleep nights. 
     #' This is restricted to the three (four) nights before each respective test

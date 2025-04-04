@@ -1,4 +1,5 @@
-fnames = list.files("data/baseline+diary", pattern="*.xlsx", full.names = T)
+fnames = list.files(
+  paste0(relative_path, "data/baseline+diary"), pattern="*.xlsx", full.names = T)
 fnames = fnames[!str_detect(fnames, "~")] 
 
 

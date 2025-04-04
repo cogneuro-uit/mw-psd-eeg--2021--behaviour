@@ -1,7 +1,9 @@
-# fix norwegian letters
+#' If you have problems loading the data, it might be because of the locale.
+#' The code below changes the locale to Norwegian-
 # Sys.setlocale("LC_ALL", "no_NO.UTF-8")     # ALL
 
-fnames <- list.files("data/baseline+diary", pattern = ".xlsx", full.names = T)
+fnames <- list.files(
+  paste0(relative_path, "data/baseline+diary"), pattern = ".xlsx", full.names = T)
 #' filter out open xlsx files:
 fnames <- fnames[!str_detect(fnames, "~")]
 

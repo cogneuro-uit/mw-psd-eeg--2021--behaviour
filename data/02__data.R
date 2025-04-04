@@ -1,4 +1,5 @@
-fnames=list.files("data/behaviour", pattern="*.csv", full.names = T) 
+fnames=list.files(
+  paste0(relative_path, "data/behaviour"), pattern="*.csv", full.names = T) 
 fnames=fnames[str_detect(fnames, "day")]
 
 data <- map_df(fnames, \(fname){
