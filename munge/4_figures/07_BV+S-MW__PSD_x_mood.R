@@ -1,3 +1,4 @@
+# model
 
 # mood -1 <-> 1
 # PSD -1 <-> 1
@@ -11,46 +12,36 @@ outputs[["figs"]][["BV+SMW__PSD_x_pre_pos"]] <-
     sleep = summarised_vals$sleep_m + (summarised_vals$sleep_sd * sleep_deviation),
     mood  = summarised_vals$mood_pos_m + (summarised_vals$mood_pos_sd * mood_deviation),
     
-    smw_pos     = mean(c$smw[,"b_pre_pos"]), 
-    smw_posXpsd = mean(c$smw[,"b_c.Adjusted_Duration.diff.pos:pre_pos"]), 
-    smw_psd     = mean(c$smw[,"b_c.Adjusted_Duration.diff.pos"]),
+    # PSD x positive on smw 
+    , smw_ns = -(mean(c$smw[,"b_Intercept[1]"]) + mean(c$smw[,"b_Intercept[2]"]) + mean(c$smw[,"b_Intercept[3]"]))
+    + mean(c$smw[,"b_pre_pos"]) * mood
+    , smw_psd = smw_ns
+    + mean(c$smw[,"b_c.Adjusted_Duration.diff.pos"]) * sleep 
+    + mean(c$smw[,"b_c.Adjusted_Duration.diff.pos:pre_pos"]) * sleep * mood
     
-    bv_pos      = mean(c$mw[,"b_pre_pos"]),
-    bv_posXpsd  = mean(c$mw[,"b_c.Adjusted_Duration.diff.pos:pre_pos"]),
-    bv_psd      = mean(c$mw[,"b_c.Adjusted_Duration.diff.pos:zlogbv"]),
-    
-    smw1 = smw_pos * mood_deviation, 
-    smw2 = smw_posXpsd * sleep * mood ,
-    bv1  = bv_pos  * mood_deviation,
-    bv2  = bv_posXpsd  * sleep * mood,
-    bv = bv1 + bv2,
-    smw = smw1 + smw2,
-    # sleep = NULL,
-    sleep_deviation = factor(sleep_deviation),
-  ) |> 
-  add_row(
-    expand_grid(
-      mood_deviation = c(-1,0,1), 
-      sleep_deviation = "NS", 
-    ) |> mutate(
-      smw = mean(c$smw[,"b_pre_pos"]) * mood_deviation,
-      bv  = mean(c$bv[,"b_pre_pos"])  * mood_deviation
-    )
+    # psd x positive on BV
+    , bv_ns = mean(c$bv[,"b_Intercept"])
+    + mean(c$bv[,"b_pre_pos"]) * mood
+    , bv_psd = bv_ns
+    + mean(c$bv[,"b_c.Adjusted_Duration.diff.pos"]) * sleep 
+    + mean(c$bv[,"b_c.Adjusted_Duration.diff.pos:pre_pos"]) * sleep * mood
   ) |>
-  pivot_longer(c(smw, bv), names_to="outcome") |>
-  mutate(
-    probe = if_else(outcome == "bv", "Behavioural Variability", "Spontaneous mind wandering"), 
-    PSD = case_when(
-      sleep_deviation == "-1" ~ "PSD -1 SD",
-      sleep_deviation == "0"  ~ "PSD Mean",
-      sleep_deviation == "1"  ~ "PSD +1 SD",
-      sleep_deviation == "NS" ~ "NS",
-    ) |> fct_relevel(c("PSD +1 SD", "PSD Mean", "PSD -1 SD"))
-  )  |>
-  ggplot(aes(mood_deviation, value, col = PSD, linetype = PSD)) + 
-  facet_wrap(~probe, scales="free") +
+  pivot_longer(c(ends_with("psd"), ends_with("ns")), names_to="names") |>
+  separate_wider_delim(names, "_", names_sep = "_", names = c("out", "cond")) |>
+  mutate(cond = case_when(
+    names_cond=="ns" ~ "NS"
+    , sleep_deviation==-1 ~ "PSD -1 SD"
+    , sleep_deviation==0 ~ "PSD Mean"
+    , sleep_deviation==+1 ~ "PSD +1 SD"
+  ) |> factor(levels = c("PSD +1 SD", "PSD Mean", "PSD -1 SD", "NS"))
+  , out = case_when(
+    names_out=="smw" ~ "Spontaneous mind wandering"
+    , names_out=="bv" ~ "Behavioural variability"
+  )) |>
+  ggplot(aes(mood_deviation, value, col = cond, linetype = cond)) + 
+  facet_wrap(~out, scales="free") +
   geom_line(linewidth = 1) +
-  labs( y = "Change in outcome", x = "Positive mood (z-scored)", 
+  labs( y = "Change in outcome", x = "Z-scored positive mood", 
         col = "Condition", linetype="Condition") +
   scale_color_manual(   values = name_colour_interactions ) +
   scale_linetype_manual(values = name_line_interactions ) +
@@ -58,6 +49,6 @@ outputs[["figs"]][["BV+SMW__PSD_x_pre_pos"]] <-
 
 
 condition_save_figure(
-  outputs[["figs"]][["BV+SMW__PSD_x_pre_pos"]],
-  "Interaction - Behaviour on MW",
+  outputs[["figs"]][["BV+SMW__PSD_x_pre_pos"]]
+  , "Interaction - Behaviour on MW"
 )

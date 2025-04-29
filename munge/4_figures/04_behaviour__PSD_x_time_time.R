@@ -1,4 +1,20 @@
+# Data:
+outputs[["figs"]][["behaviour__PSD_x_time--data"]] <-
+  data.probe.mood.sleep |>
+  pivot_longer(c(zlogbv, zlogapen)) |>
+  ggplot(aes(probenum_prop, value, col = sleepdep)) +
+  facet_wrap(~name) +
+  stat_summary(geom = "line") +
+  geom_smooth(method="lm") +
+  scale_color_manual(values=gen_col("br")) +
+  theme(legend.position = "top")
 
+condition_save_figure(
+  outputs[["figs"]][["behaviour__PSD_x_time--data"]]
+  , "Behaviour - Changes Over Time Across Sleep Loss -- data"
+)
+
+# model
 outputs[["figs"]][["behaviour__PSD_x_time"]] <- 
   expand_grid(
     sleep_deviation = c(-1,0,1),
@@ -7,48 +23,45 @@ outputs[["figs"]][["behaviour__PSD_x_time"]] <-
   ) |>
   mutate(
     sleep = summarised_vals$sleep_m + (summarised_vals$sleep_sd * sleep_deviation),
-    # Estimates
-    bv_time   = mean(c$bv[,"b_probenum_prop"]), 
-    bv_time.psd = mean(c$bv[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"]),
-    ae_time   = mean(c$ae[,"b_probenum_prop"]),
-    ae_time.psd = mean(c$ae[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"]),
-    bv = bv_time * z_score + bv_time.psd * sleep * z_score,
-    ae = ae_time * z_score + ae_time.psd * sleep * z_score,
-    # sleep = NULL,
-    sleep_deviation = factor(sleep_deviation),
+    
+    # BV
+    , bv_ns = mean(c$bv[,"b_Intercept"])
+    + mean(c$bv[,"b_probenum_prop"]) * z_score
+    , bv_psd = bv_ns
+    + mean(c$bv[,"b_c.Adjusted_Duration.diff.pos"]) * sleep 
+    + mean(c$bv[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"]) * z_score * sleep
+    
+    # AE
+    , ae_ns = mean(c$ae[,"b_Intercept"])
+    + mean(c$ae[,"b_probenum_prop"]) * z_score
+    , ae_psd = ae_ns
+    + mean(c$ae[,"b_c.Adjusted_Duration.diff.pos"]) * sleep 
+    + mean(c$ae[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"]) * z_score * sleep
   )  |>
-  add_row(
-    expand_grid(
-      z_score = c(0,1), 
-      sleep_deviation = "NS", 
-    ) |> mutate(
-      bv = mean(c$bv[,"b_probenum_prop"]) * z_score,
-      ae = mean(c$ae[,"b_probenum_prop"]) * z_score
-    )
-  ) |>
-  pivot_longer(c(bv,ae), names_to="probe") |>
-  mutate(
-    probe = if_else(probe=="bv", "Behavioural Variability", "Approximate Entropy") |>
-      fct_relevel("Behavioural Variability"), 
-    Condition = case_when(
-      sleep_deviation == "-1" ~ "PSD -1 SD",
-      sleep_deviation == "0"  ~ "PSD Mean",
-      sleep_deviation == "1"  ~ "PSD +1 SD",
-      sleep_deviation == "NS" ~ "NS",
-    ) |> fct_relevel(c("PSD +1 SD", "PSD Mean", "PSD -1 SD"))
-  )  |>
-  ggplot(aes(z_score, value, col = Condition, linetype = Condition)) + 
-  facet_wrap(~ probe) +
+  pivot_longer(c(ends_with("psd"), ends_with("ns")), names_to="names") |>
+  separate_wider_delim(names, "_", names_sep = "_", names = c("probe", "cond")) |>
+  mutate(cond = case_when(
+    names_cond=="ns" ~ "NS"
+    , sleep_deviation==-1 ~ "PSD -1 SD"
+    , sleep_deviation==0 ~ "PSD Mean"
+    , sleep_deviation==+1 ~ "PSD +1 SD"
+  ) |> factor(levels = c("PSD +1 SD", "PSD Mean", "PSD -1 SD", "NS"))
+  , probes = case_when(
+    names_probe=="bv" ~ "Behavioural variability"
+    , names_probe=="ae" ~ "Approximate entropy"
+  )) |>
+  ggplot(aes(z_score, value, col = cond, linetype = cond)) + 
+  facet_wrap(~ probes) +
   geom_line(linewidth = 1) +
   labs( y = "Z-Scored Behaviour", x = "Probe number (Time-on-task)", 
         col = "Condition", linetype = "Condition") +
-  scale_x_continuous(breaks = seq(0,1,1/(25/5)), labels = seq(0,25,5)) + 
+  scale_x_continuous(breaks = seq(0,1,1/(25/5)), labels = c(1, seq(5,25,5))) + 
   scale_color_manual(   values = name_colour_interactions ) +
   scale_linetype_manual(values = name_line_interactions ) +
   theme(legend.position = "top", legend.direction = "horizontal")
 
 
 condition_save_figure(
-  outputs[["figs"]][["behaviour__PSD_x_time"]], 
-  "Behaviour - Changes Over Time Across Sleep Loss",
+  outputs[["figs"]][["behaviour__PSD_x_time"]]
+  , "Behaviour - Changes Over Time Across Sleep Loss"
 )

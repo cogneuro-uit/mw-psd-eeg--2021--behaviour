@@ -106,7 +106,7 @@ plot2_data_sum <-
       probe_type=="mb" ~ "Mind blanking",
       probe_type=="smw" ~ "Spontaneous mind wandering",
     ) |> fct_relevel("Mind wandering"), 
-    dataset = if_else(dataset=="exc_n", "Reduced", "Full"),
+    dataset = if_else(dataset=="exc_n", "Dichotomous", "Continuous"),
     x_interaction = interaction(dataset, probe_value),
     col_interaction = interaction(dataset, Condition, sep = " "),
     Condition2 = NULL
