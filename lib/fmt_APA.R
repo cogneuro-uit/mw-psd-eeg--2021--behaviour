@@ -1,101 +1,104 @@
 # Format numbers to APA standard
-fmt_APA_numbers <- function(x, .p = FALSE, .psym = FALSE, .low_val = FALSE, .chr = FALSE){
+fmt_APA_numbers <- function(x, .p = FALSE, .psym = FALSE, .low_val = FALSE, .chr = FALSE, .rm_leading_0 = FALSE){
   require(purrr)
   
   purrr::map(x, \(num){
-    o_num <- num
     # Store original value
-    num <- as.numeric(num)
+    o_num <- num
     
-    # Transform to numeric (if possible)
-    if(is.na(num)){
+    # Force to numeric, otherwise return original
+    num <- as.numeric(num)
+    if( is.na(num) ){
+      # if is not numeric after transformation, return the original 
       return(o_num)
-      # if is not numeric after transformation, return original
     }
     
-    # p with symbol
+    # Frequentist PROBABILITY (p) with SYMBOLS
     # = symbol:
     if(.psym & !.p){
-      if(num == 1){
-        return("= 1.00")
-      }
-      if(num < .001){
-        return("< .001")
-      } 
-      if( num > .999 ){
+      if( num > .999 ){ # for some reason we do not have "1"
         return("> .999")
       }
+      if( num < .001 ){
+        return("< .001")
+      } 
       return( round(num, 3) |> as.character() |> str_replace("0.", "= .") )
     }
     
-    # < than symbol
+    # Frequentist PROBABILITY (p) 
     if(.p){
-      if( num == 1 ){
-        return( "1.00" )
-      }
-      if( num > .999 ){
-        return( ".999")
-      }
-      if(num < .001){ 
-        return( ".001" )
-      } else {
-        num <- num |> round(digits = 3) |> as.character() |> str_replace("0.", ".")
-        if(str_length(num) <= 3){
-          for(x in 1:(4 - str_length( num)) ){
-            num <- paste0(num, "0")
-          }
+      if( num > .999 ) return( ".999")
+      if( num < .001 ) return( ".001") 
+      
+      # else...
+      num <- 
+        num |> 
+        round(digits = 3) |> 
+        as.character() |> 
+        str_replace("0.", ".")
+      
+      if( str_length(num) <= 3){
+        for(x in 1:(4 - str_length( num )) ){
+          num <- paste0(num, "0")
         }
       }
       return( num ) 
     }
     
-    # > 100
-    if(num >= 100 | num <= -100){
-      num <- round(num, 0)
+    # At 100, no preceding 0 (e.g., 153 instead of 153.382)
+    if( num >= 100 | num <= -100 ){
+      num <- round( num, 0 ) 
       if(.chr){
-        return( as.character( num) ) 
-      }
+        num <- as.character( num )
+        if(.rm_leading_0) num <- str_remove(num, "^0")
+      } 
       return( num )
     }
     
-    # > 10
-    if(num >= 10 | num <= -10){
+    # At 10 or more, one preceeding 0 (e.g., 12.1 instead of 12.132)
+    if( num >= 10 | num <= -10 ){
       num <- round(num, 1)
+      
       # Add an extra 0 using strings to return tidy APA numbers 
       if(.chr){
         if(str_length( as.character( abs(num) ) ) == 2){
           num <- paste0(num, ".0") # if exactly two, always add .0)
         }
+        if(.rm_leading_0) num <- str_remove(num, "^0")
         return( as.character(num) )
       }
     }
     
-    # > 1  | > 1 & .low_val
-    if(num >= 1 | num <= -1 | num < 1 & !.low_val | num > -1 & !.low_val){
+    # At 1 or more 1, two preceding 0's (e.g., 4.29 instead of 4.293125)
+    # *Also with low-val 
+    if( num >= 1 | num <= -1 | 
+        num < 1 & !.low_val | num > -1 & !.low_val){
       num <- round(num, 2)
       
       if(.chr){
-        if(str_length( as.character( abs(num) ) ) <= 3){
+        if( str_length( as.character( abs(num) ) ) <= 3 ){
+          
           # Add an extra 0 using strings to return tidy APA numbers 
           for(x in 1:(4 - str_length( as.character( abs(num) ) )) ){
-            if(str_detect(num,"\\.", negate = TRUE)){
+            if( str_detect(num,"\\.", negate = TRUE) ){
               num <- paste0(num, ".")
             } else{
               num <- paste0(num, "0")
             }
           }
         }
+        if(.rm_leading_0) num <- str_remove(num, "^0")
         return( as.character(num) )
       }
     }
     
     
-    # Low values 
+    # At values below 1, 3 preceding 0's (e.g., 0.234, instead of 0.234423)
     if(num < 1 & .low_val | num > -1 & .low_val){
       num <- round(num, 3)
       if(.chr){
         if(str_length( as.character( abs(num) ) ) <= 4){
-        # Add an extra 0 using strings to return tidy APA numbers 
+          # Add an extra 0 using strings to return tidy APA numbers 
           for(x in 1:(5 - str_length( as.character( abs(num) ) )) ){
             if(str_detect(num,"\\.", negate = TRUE)){
               num <- paste0(num, ".")
@@ -104,6 +107,7 @@ fmt_APA_numbers <- function(x, .p = FALSE, .psym = FALSE, .low_val = FALSE, .chr
             }
           }
         }
+        if(.rm_leading_0) num <- str_remove(num, "^0")
         return( as.character(num) )
       }
     }
