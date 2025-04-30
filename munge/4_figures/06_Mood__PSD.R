@@ -1,4 +1,5 @@
-outputs[["figs"]][["Mood__PSD"]] <-
+# Model
+figs[["Mood__PSD"]] <-
   expand_grid(
     # SD can vary from -1 to 1 (z score)
     sleep_deviation = c(-1, 0, 1),
@@ -46,8 +47,8 @@ outputs[["figs"]][["Mood__PSD"]] <-
   theme(legend.position = "top", legend.direction = "horizontal") + 
   coord_cartesian(xlim = c(-.2,1.2))
 
-condition_save_figure(
-  outputs[["figs"]][["Mood__PSD"]]
+conditional_save(
+  figs[["Mood__PSD"]]
   , "Effect of sleep deprivation on mood"
 )
 

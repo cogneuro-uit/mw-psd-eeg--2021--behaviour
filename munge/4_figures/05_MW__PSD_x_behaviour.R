@@ -1,6 +1,5 @@
-
 # Model
-outputs[["figs"]][["MW__PSD_x_behaviour"]] <-
+figs[["MW__PSD_x_behaviour"]] <-
   expand_grid(
     sleep_deviation = c(-1,0,1),
     z_score = c(-1,0,1),
@@ -45,7 +44,7 @@ outputs[["figs"]][["MW__PSD_x_behaviour"]] <-
   theme(legend.position = "top")
 
   
-condition_save_figure(
-  outputs[["figs"]][["MW__PSD_x_behaviour"]]
+conditional_save(
+  figs[["MW__PSD_x_behaviour"]]
   , "Interaction - Behaviour on MW"
 )

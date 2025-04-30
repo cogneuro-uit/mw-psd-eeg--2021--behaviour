@@ -2,7 +2,7 @@
 
 # mood -1 <-> 1
 # PSD -1 <-> 1
-outputs[["figs"]][["BV+SMW__PSD_x_pre_pos"]] <-
+figs[["BV+SMW__PSD_x_pre_pos"]] <-
   expand_grid(
     sleep_deviation = c(-1,0,1),
     mood_deviation  = c(-1,0,1),
@@ -48,7 +48,7 @@ outputs[["figs"]][["BV+SMW__PSD_x_pre_pos"]] <-
   theme(legend.position = "top")
 
 
-condition_save_figure(
-  outputs[["figs"]][["BV+SMW__PSD_x_pre_pos"]]
+conditional_save(
+  figs[["BV+SMW__PSD_x_pre_pos"]]
   , "Interaction - Behaviour on MW"
 )

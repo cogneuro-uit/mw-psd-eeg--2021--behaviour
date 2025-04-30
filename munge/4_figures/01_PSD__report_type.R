@@ -1,6 +1,6 @@
 
 # How the sleep deprivation changed as a function of the sleep adjustment:
-outputs[["figs"]][["PSD__report_type"]] <-
+figs[["PSD__report_type"]] <-
   sleeptimes_updated_trans |>
   select(subj, sleepdep, Self.report_Duration.diff, Actigraphy_Duration.diff, Adjusted_Duration.diff) |> 
   pivot_longer(contains("_Duration")) |>
@@ -19,7 +19,8 @@ outputs[["figs"]][["PSD__report_type"]] <-
   scale_y_continuous(breaks = seq(-3,3,1)) + 
   theme(legend.position = "top")
 
-condition_save_figure(
-  outputs[["figs"]][["PSD__report_type"]],
-  "Sleep deprivation",
+conditional_save(
+  figs[["PSD__report_type"]]
+  , "Sleep deprivation"
+  , width = 10
 )

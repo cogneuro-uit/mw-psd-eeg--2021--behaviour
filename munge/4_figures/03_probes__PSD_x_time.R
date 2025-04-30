@@ -1,23 +1,25 @@
 # Data:
-outputs[["figs"]][["probes__PS_x_time--data"]] <-
+figs[["probes__PS_x_time--data"]] <-
   data.probe.mood.sleep |>
   pivot_longer(c(mw, mb, smw)) |>
-  ggplot(aes(probenum_prop, as.numeric(value), col = sleepdep)) +
+  ggplot(aes(probenum_prop, as.numeric(value), col = sleepdep, fill = sleepdep)) +
   facet_wrap(~name) +
   stat_summary(geom = "line") +
-  geom_smooth(method="lm") +
+  stat_summary(aes(col=NULL), geom = "ribbon", alpha = .3) +
+  geom_smooth(method="lm", alpha=.2) +
   scale_color_manual(values=gen_col("br")) +
+  scale_fill_manual( values=gen_col("br")) +
   coord_cartesian(ylim=c(1,4)) +
   theme(legend.position = "top")
 
-condition_save_figure(
-  outputs[["figs"]][["probes__PS_x_time--data"]]
-  , "Probes - Changes over time across sleep loss"
+conditional_save(
+  figs[["probes__PS_x_time--data"]]
+  , "Probes - Changes over time across sleep loss--data"
 )
 
 
 # Model:
-outputs[["figs"]][["probes__PS_x_time"]] <-
+figs[["probes__PSD_x_time"]] <-
   # estimate the growth 
   expand_grid(
     sleep_deviation = c(-1,0,1),
@@ -58,7 +60,7 @@ outputs[["figs"]][["probes__PS_x_time"]] <-
     names_probe=="mw" ~ "Mind wandering"
     , names_probe=="mb" ~ "Mind blanking"
     , names_probe=="smw" ~ "Spontaneous mind wandering"
-  )) |> 
+  ) |> fct_relevel("Mind wandering")) |> 
   ggplot(aes(z_score, value, col = cond, linetype=cond)) +
   facet_wrap(~probes) +
   geom_line(linewidth = 1) +
@@ -70,8 +72,8 @@ outputs[["figs"]][["probes__PS_x_time"]] <-
   coord_cartesian(ylim = c(1, 4)) + 
   theme(legend.position = "top", legend.direction = "horizontal")
 
-  
-condition_save_figure(
-  outputs[["figs"]][["probes__PSD_x_time"]] 
+
+conditional_save(
+  figs[["probes__PSD_x_time"]] 
   , "Probes - Changes over time across sleep loss"
 )
