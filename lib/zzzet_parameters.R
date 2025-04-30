@@ -4,11 +4,8 @@ nback=25
 which.apen=2
 
 # Outputs         ======
-# The produced figure/tables 
-outputs <- list(
-  figs = list(),
-  tbls = list()
-)
+figs <- list()
+tbls <- list()
 
 # Set ggplot colours        =====
 if( getOption("project_custom_ggplot") ){
