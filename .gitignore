@@ -19,3 +19,6 @@ tables/*.docx
 reports/*.docx
 reports/*.pdf
 
+# Ignore sub-folder in the reports
+reports/**/*_cache/
+reports/**/*_files/
