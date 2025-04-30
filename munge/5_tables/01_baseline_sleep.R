@@ -1,12 +1,12 @@
 
-outputs[["tbls"]][["baseline_sleep"]] <-
+tbls[["baseline_sleep"]] <-
   general_sleep |>
   bind_rows( sleep_quiz_summary ) |>
   mutate(
-    across(where(is.numeric), ~fmt_APA_numbers(.x, .chr=T)),
-    across(everything(), ~if_else(is.na(.x), "", .x)),
+    across(c(where(is.numeric), -alpha), ~fmt_APA_numbers(.x, .chr=T)),
+    across(everything(), ~if_else(is.na(.x), "", as.character(.x))),
     range = if_else(min=="", "", paste0(min, " - ", max))
-  ) |>
+  )  |>
   select(-min, -max) |> 
   gt() |>
   cols_label(
@@ -14,6 +14,7 @@ outputs[["tbls"]][["baseline_sleep"]] <-
     m     ~ md("*M*"),
     sd    ~ md("*SD*"),
     range ~ "Data range",
+    alpha ~ md("$\\alpha$")
   ) |>
   text_case_match(
     "night_shift"        ~ "Night shift",
@@ -57,8 +58,7 @@ outputs[["tbls"]][["baseline_sleep"]] <-
   tab_fmt_APA()
 
 
-condition_save_table(
-  outputs[["tbls"]][["baseline_sleep"]],
-  "Baseline - sleep",
-  .suppress_print = T
+conditional_save(
+  tbls[["baseline_sleep"]]
+  , "Baseline - sleep"
 )

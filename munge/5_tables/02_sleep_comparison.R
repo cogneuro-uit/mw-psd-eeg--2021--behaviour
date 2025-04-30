@@ -1,5 +1,5 @@
 
-outputs[["tbls"]][["sleep_comparison"]] <- 
+tbls[["sleep_comparison"]] <- 
   sleep_time_session_condition |>
   mutate(e1 = "", e2 = "") |>
   gt(groupname_col = "name") |>
@@ -30,8 +30,7 @@ outputs[["tbls"]][["sleep_comparison"]] <-
   tab_fmt_APA()
 
 
-condition_save_figure(
-  outputs[["tbls"]][["sleep_comparison"]],
-  "Sleep - comparison",
-  .suppress_print = T
+conditional_save(
+  tbls[["sleep_comparison"]]
+  , "Sleep - comparison"
 )
