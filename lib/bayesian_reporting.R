@@ -1,7 +1,6 @@
 #' A diverse set of function related to bayesian diagnostics and reporting. 
 
 
-
 bayes_hdi <- function(bayes_vector, ...){
   #' Get the highest density interval for a posterior vector. 
   #' 
@@ -23,7 +22,7 @@ bayes_er <- function(bayes_vector, ...){
   mean <- mean(bayes_vector)
   
   ifelse(mean > 0, sum(bayes_vector > 0) / sum(bayes_vector <= 0), 
-                   sum(bayes_vector < 0) / sum(bayes_vector >= 0) ) |>
+         sum(bayes_vector < 0) / sum(bayes_vector >= 0) ) |>
     fmt_APA_numbers(...)
 } 
 
@@ -34,7 +33,7 @@ bayes_p <- function(bayes_vector, ...){
   mean <- mean(bayes_vector)
   
   ifelse(mean > 0, sum(bayes_vector > 0) / length(bayes_vector), 
-                   sum(bayes_vector < 0) / length(bayes_vector) ) |>
+         sum(bayes_vector < 0) / length(bayes_vector) ) |>
     fmt_APA_numbers(...)
 }
 
@@ -45,7 +44,7 @@ coef_hdi_s_text <- function(x, ...){
   mean                     <- mean(x) |> fmt_APA_numbers(...)
   hdi                      <- bayes_hdi(x, ...)
   evidence_ratio_direction <- bayes_er(x,...)
-  probability_direction    <- bayes_p(x,...)
+  probability_direction    <- bayes_p(x, .psym = T)
   
   sprintf(
     "b = %s, %s, ER = %s, p %s", 
@@ -117,7 +116,7 @@ bayes_coef_plot <- function( bayes_model, add_label = TRUE, offset = 0){
         calc_offset[coefficient] >= 0, 
         calc_offset[coefficient] + offset, 
         calc_offset[coefficient] - offset)
-        
+      
       # Add text to plot
       p <- p + 
         ggplot2::geom_text(
@@ -156,25 +155,41 @@ bayes_diag <- function( bayes_model, convergence = TRUE, offset = 0){
   tidybayes::summarise_draws(bayes_model) |>
     dplyr::summarise(
       rhat  = dplyr::if_else( any(rhat >= 1.05, na.rm=T), 
-                     paste("CHECK (", round(max(rhat, na.rm=T), 0), ")"),
-                     paste("OK    (", round(max(rhat, na.rm=T), 0), ")")), 
+                              paste("CHECK (", round(max(rhat, na.rm=T), 0), ")"),
+                              paste("OK    (", round(max(rhat, na.rm=T), 0), ")")), 
       ESS_Bulk = dplyr::if_else( any(ess_bulk <= 1000, na.rm=T),
-                     paste("CHECK (", round(min(ess_bulk, na.rm=T), 0), ")"),
-                     paste("OK    (", round(min(ess_bulk, na.rm=T), 0), ")")),
+                                 paste("CHECK (", round(min(ess_bulk, na.rm=T), 0), ")"),
+                                 paste("OK    (", round(min(ess_bulk, na.rm=T), 0), ")")),
       ESS_Tail = dplyr::if_else( any(ess_tail <= 1000, na.rm=T),
-                     paste("CHECK (", round(min(ess_tail, na.rm=T), 0), ")"),
-                     paste("OK    (", round(min(ess_tail, na.rm=T), 0), ")")) 
+                                 paste("CHECK (", round(min(ess_tail, na.rm=T), 0), ")"),
+                                 paste("OK    (", round(min(ess_tail, na.rm=T), 0), ")")) 
     ) |> print()
   
   bayes_coef_plot( bayes_model, offset = offset )
 }
 
-bayes_tbl_sum <- function( bayes_model, add_sigma = FALSE, add_loo = FALSE, add_R2 = FALSE, add_convergence = FALSE, apa_table = FALSE, .low_val=FALSE, fmt_md = FALSE){
+bayes_tbl_sum <- function(
+    bayes_model
+    , add_sigma = FALSE 
+    , add_loo = FALSE 
+    , add_R2 = FALSE
+    , add_loo_R2 = FALSE
+    , add_convergence = FALSE
+    , apa_table = FALSE 
+    , .low_val = FALSE 
+    , fmt_md = FALSE){
   #' Generate a table for the Bayesian posterior statistics.
   #' 
   
   require(tidyverse)
   require(tidybayes)
+  
+  if(apa_table){
+    add_sigma  = T
+    add_loo    = T
+    add_R2     = T
+    add_loo_R2 = T
+  }
   
   # Get model data:
   mod_data <- as.matrix(bayes_model)
@@ -190,102 +205,129 @@ bayes_tbl_sum <- function( bayes_model, add_sigma = FALSE, add_loo = FALSE, add_
   
   tbl <- map(mod_variables_names, \(coefficient){
     tibble::tibble(
-      var = stringr::str_replace(coefficient, "b_", ""),
-      m   = mean( as.numeric( mod_data[, coefficient] ) ) |> fmt_APA_numbers(.chr=T, .low_val=.low_val),
-      hdi = bayes_hdi( mod_data[, coefficient] ),
-      er  = bayes_er(  mod_data[, coefficient], .chr=T ), 
-      p   = bayes_p(   mod_data[, coefficient], .chr=T, .p=T) ) 
-    }) |> purrr::list_rbind()
+      var = stringr::str_replace(coefficient, "b_", "")
+      , m   = mean( as.numeric( mod_data[, coefficient] ) ) |> fmt_APA_numbers(.chr=T, .low_val=.low_val)
+      , hdi = bayes_hdi( mod_data[, coefficient] )
+      , er  = bayes_er(  mod_data[, coefficient], .chr=T ) 
+      , p   = bayes_p(   mod_data[, coefficient], .chr=T, .p=T) ) 
+  }) |> purrr::list_rbind()
   
   if(add_convergence){
-    tbl <- tbl |> 
-      dplyr::left_join(
-        mod_sum |> 
-          dplyr::filter( variable %in% mod_variables_names ) |>
-          dplyr::select( variable, rhat, ess_bulk, ess_tail ) |> 
-          dplyr::mutate( variable = stringr::str_remove_all(variable, "b_") )
-        , by = c( "var"="variable")
-      )
+    tbl <- tbl |> dplyr::left_join(
+      mod_sum |> 
+        dplyr::filter( variable %in% mod_variables_names ) |>
+        dplyr::select( variable, rhat, ess_bulk, ess_tail ) |> 
+        dplyr::mutate( variable = stringr::str_remove_all(variable, "b_") )
+      , by = c( "var"="variable")
+    )
   }
   
-  if(apa_table){
-    tbl <- tbl |> dplyr::mutate(.before=1, group="Coefficients")
-  }
-
+  if(apa_table) tbl <- tbl |> dplyr::mutate(.before=1, group="Coefficients")
+  
   # Determine the sigma name:  
-  sigma_name <- if_else(fmt_md, "$\\sigma$ (subjects)", "Sigma (subjects)")
+  sigma_name <- ifelse(fmt_md, "$\\sigma\\,\\text{(subjects)}$", "Sigma (subjects)")
   if(add_sigma){
     sigma <- tibble::tibble(
-      var = sigma_name,
-      m   = mean( as.numeric( mod_data[, "sd_subj__Intercept"] ) ) |> fmt_APA_numbers(.chr=T, .low_val=.low_val),
-      hdi = bayes_hdi(mod_data[, "sd_subj__Intercept"]),
-      er  = bayes_er( mod_data[, "sd_subj__Intercept"], .chr=T), 
-      p   = bayes_p(  mod_data[, "sd_subj__Intercept"], .chr=T, .p=T)
+      var   = sigma_name
+      , m   = mean( as.numeric( mod_data[, "sd_subj__Intercept"] ) ) |> fmt_APA_numbers(.chr=T, .low_val=.low_val)
+      , hdi = bayes_hdi(mod_data[, "sd_subj__Intercept"])
+      , er  = bayes_er( mod_data[, "sd_subj__Intercept"], .chr=T)
+      , p   = bayes_p(  mod_data[, "sd_subj__Intercept"], .chr=T, .p=T)
     )
     if(add_convergence){
-      sigma <- sigma |>
-        dplyr::left_join(
-          mod_sum |> 
-            dplyr::filter( variable %in% "sd_subj__Intercept" ) |>
-            dplyr::select( variable, rhat, ess_bulk, ess_tail ) |> 
-            dplyr::mutate( variable = sigma_name )
-          , by = c("var"="variable")
-        )
+      sigma <- sigma |> dplyr::left_join(
+        mod_sum |> 
+          dplyr::filter( variable %in% "sd_subj__Intercept" ) |>
+          dplyr::select( variable, rhat, ess_bulk, ess_tail ) |> 
+          dplyr::mutate( variable = sigma_name )
+        , by = c("var"="variable")
+      )
     }
+    
     if(apa_table) sigma <- sigma |> dplyr::mutate(group="Model fit") 
+    
     tbl <- tbl |> dplyr::bind_rows(sigma)
   }
   
   if(add_loo){
     message("Adding LOOIC...")
     
-     if( !is.null(bayes_model[["criteria"]][["loo"]]) ){
-        looic <-  tibble::tibble(
-            var = "LOOIC", 
-            m = bayes_model[["criteria"]][["loo"]][["estimates"]]["looic", "Estimate"] |> 
-              fmt_APA_numbers(.chr=T),
-            hdi = bayes_model[["criteria"]][["loo"]][["estimates"]]["looic", "SE"] |>
-              fmt_APA_numbers(.chr=T) |>
-              stringr::str_glue("SE = {.}", .=_),
-            er="",p=""
-          )
-        
-        if(apa_table) looic <- looic |> dplyr::mutate(group="Model fit")
-        
-        tbl <- tbl |> dplyr::bind_rows(looic)
-        
-       message("Added LOOIC.")
-     } else {
-       message("No LOOIC added to the model, skipping...")
-     }
+    if( !is.null(bayes_model[["criteria"]][["loo"]]) ){
+      looic_name <- ifelse(fmt_md, "$\\text{LOOIC}$", "LOOIC")
+      looic <-  tibble::tibble(
+        var = looic_name
+        , m   = bayes_model[["criteria"]][["loo"]][["estimates"]]["looic", "Estimate"] |> fmt_APA_numbers(.chr=T)
+        , hdi = sprintf("SE = %s", bayes_model[["criteria"]][["loo"]][["estimates"]]["looic", "SE"] |>
+                          fmt_APA_numbers(.chr=T) )
+        , er = ""
+        , p  = ""
+      )
+      
+      if(apa_table) looic <- looic |> dplyr::mutate(group="Model fit")
+      
+      tbl <- tbl |> dplyr::bind_rows(looic)
+      
+      message("Added LOOIC.")
+    } else {
+      warning("NO LOOIC criterion found! Skipping... \n   Did you forget to `add_loo()`?")
+    }
   } 
+  
+  if(add_loo_R2){
+    message("Adding loo adjusted R2...")
+    
+    if( !is.null(bayes_model[["criteria"]][["loo_R2"]]) ){
+      loo_R2_name <- if_else(fmt_md, "$\\text{LOO}\\,\\text{R}^2$", "LOO R2")
+      
+      loo_r2 <- tidybayes::mean_hdi( bayes_model[["criteria"]][["loo_R2"]] ) |> 
+        fmt_APA_numbers(.chr=T, .low_val=T, .rm_leading_0 = T)
+      
+      loo_r2_df <- tibble::tibble(
+        var   = loo_R2_name
+        , m   = loo_r2[["y"]]
+        , hdi = sprintf( "[%s, %s]", loo_r2[["ymin"]], loo_r2[["ymax"]] )
+        , er  = ""
+        , p   = "")
+      
+      if(apa_table) loo_r2_df <- loo_r2_df |> mutate(group="Model fit")
+      
+      tbl <- tbl |> dplyr::bind_rows(loo_r2_df)
+      
+      message("Added LOO adjusted R2.")
+    } else {
+      warning("NO LOO R2 criterion found! Skipping... \n   Did you forget to `add_criterion()`?")
+    }
+  }
   
   if(add_R2){
     message("Adding R2...")
-    R2_name <- if_else(fmt_md, "$\\text{R}^2$", "R2")
+    
     if( !is.null(bayes_model[["criteria"]][["loo"]]) ){
-      # Determine the R squared name (if not empty)
+      R2_name <- ifelse(fmt_md, "$\\text{R}^2$", "R2")
       
       r2 <- tidybayes::mean_hdi( bayes_model[["criteria"]][["bayes_R2"]] ) |> 
-        fmt_APA_numbers(.chr=T, .low_val=T)
+        fmt_APA_numbers(.chr=T, .low_val=T, .rm_leading_0 = T)
       
-      r2_df <- tibble(
-          var = R2_name, 
-          m = r2[["y"]],
-          hdi = paste0("[", r2[["ymin"]],", ", r2[["ymax"]], "]"),
-          er="", p="")
+      r2_df <- tibble::tibble(
+        var   = R2_name
+        , m   = r2[["y"]]
+        , hdi = sprintf("[%s, %s]", r2[["ymin"]], r2[["ymax"]])
+        , er  = ""
+        , p   = "")
       
       if(apa_table) r2_df <- r2_df |> mutate(group="Model fit")
-      tbl <- tbl |>
-        bind_rows(r2_df)
-        
+      
+      tbl <- tbl |> dplyr::bind_rows(r2_df)
+      
       message("Added R2.")
     } else {
-       message("No R2 added to the model, skipping...")
+      warning("NO R2 criterion found! Skipping... \n   Did you forget to `add_criterion()`?")
     }
   }
+  
   tbl
 }
+
 
 bayes_tbl_add_sig <- function(data, sig = .95, na.rm = T){
   #' Function to add significance marker to tables produced from @bayes_tbl_sum.
@@ -303,7 +345,7 @@ bayes_tbl_add_sig <- function(data, sig = .95, na.rm = T){
 }
 
 
-tab_bayes_generics <- function(data, pre_footnote="", post_footnote=""){
+tab_bayes_generics <- function(data, fmt_md_var = F, pre_footnote="", post_footnote=""){
   c_names <- names(data$`_data`)
   vars <- data$`_data`$var
   
@@ -336,7 +378,8 @@ tab_bayes_generics <- function(data, pre_footnote="", post_footnote=""){
   }
   
   # general transformation.
-  data |>
+  data <- 
+    data |>
     cols_label(
       "var" = "",
       ends_with("m")    ~ md("*b*"),
@@ -351,9 +394,16 @@ tab_bayes_generics <- function(data, pre_footnote="", post_footnote=""){
       , placement = "left"
     ) |>
     tab_footnote( md("\\* *p*~dir~ > .95") ) |> # Probability notation
+    cols_align("center", -var) |>
     cols_align("left", var) |> # Align
-    fmt_markdown(columns = var) |> # Markdown on var
     tab_fmt_APA()  # General table transformations
+  
+  if(fmt_md_var){
+    data <- data |>
+      fmt_markdown(columns = var)
+  }
+  
+  data
 }
 
-  
+
