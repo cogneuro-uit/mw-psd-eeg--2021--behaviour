@@ -24,7 +24,7 @@ plot_data <-
     name = fct_recode(name, `% MW` = "MW", `% MB` = "MB", `% Spontaneous` = "SMW")
   )
 
-outputs[["figs"]][["probes__descriptives_percentage"]] <- 
+figs[["probes__descriptives_percentage"]] <- 
   plot_data |>
   ggplot(aes(x = Condition |> fct_relevel("NS"), y = value, col = Condition, shape = Condition, alpha = highlight, size = highlight)) +
   facet_wrap(~name) +
@@ -113,13 +113,13 @@ plot2_data_sum <-
   ) 
 
 # Diff geom
-outputs[["figs"]][["probes__descriptives_count"]] <- 
+figs[["probes__descriptives_count"]] <- 
   plot2_data_sum |> 
-  filter(dataset=="Full") |>
+  filter(dataset=="Continuous") |>
   ggplot(aes(x = probe_value, y = count, fill = col_interaction, group = Condition)) + 
   facet_wrap(~probe_type) +
   geom_bar(stat = "identity", color="black", position = position_dodge(), linewidth=0.2) +
-  geom_bar(data = plot2_data_sum |> filter(dataset=="Reduced"), 
+  geom_bar(data = plot2_data_sum |> filter(dataset=="Dichotomous"), 
            stat = "identity", color="black", position = position_dodge(.9), linewidth=0.2,
            width = .45) +
   scale_fill_manual(values = gen_col("bBrR") ) + 
@@ -128,17 +128,17 @@ outputs[["figs"]][["probes__descriptives_count"]] <-
 
 
 # COMBINE       ======
-outputs[["figs"]][["probes__COMBINED_descriptives"]] <- 
-  outputs[["figs"]][["probes__descriptives_percentage"]] +
-  outputs[["figs"]][["probes__descriptives_count"]] +
+figs[["probes__COMBINED_descriptives"]] <- 
+  figs[["probes__descriptives_percentage"]] +
+  figs[["probes__descriptives_count"]] +
   plot_layout(nrow=2,heights = 8, widths = 7)
 
 
 ## SAVE    =====
-condition_save_figure(
-  outputs[["figs"]][["probes_descriptives_COMBINED"]],
-  "Descriptive statistics of the thought probes",
-  width = 7, height = 8,
+conditional_save(
+  figs[["probes__COMBINED_descriptives"]]
+  , "Descriptive statistics of the thought probes"
+  , width = 7, height = 8,
 )
 
 

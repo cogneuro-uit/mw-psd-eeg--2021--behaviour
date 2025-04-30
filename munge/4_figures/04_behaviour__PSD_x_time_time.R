@@ -1,21 +1,23 @@
 # Data:
-outputs[["figs"]][["behaviour__PSD_x_time--data"]] <-
+figs[["behaviour__PSD_x_time--data"]] <-
   data.probe.mood.sleep |>
   pivot_longer(c(zlogbv, zlogapen)) |>
-  ggplot(aes(probenum_prop, value, col = sleepdep)) +
+  ggplot(aes(probenum_prop, value, col = sleepdep, fill = sleepdep)) +
   facet_wrap(~name) +
   stat_summary(geom = "line") +
-  geom_smooth(method="lm") +
+  stat_summary(aes(col=NULL), geom = "ribbon", alpha = .2) +
+  geom_smooth(method="lm", alpha =.2) +
   scale_color_manual(values=gen_col("br")) +
+  scale_fill_manual( values=gen_col("br")) +
   theme(legend.position = "top")
 
-condition_save_figure(
-  outputs[["figs"]][["behaviour__PSD_x_time--data"]]
+conditional_save(
+  figs[["behaviour__PSD_x_time--data"]]
   , "Behaviour - Changes Over Time Across Sleep Loss -- data"
 )
 
 # model
-outputs[["figs"]][["behaviour__PSD_x_time"]] <- 
+figs[["behaviour__PSD_x_time"]] <- 
   expand_grid(
     sleep_deviation = c(-1,0,1),
     z_score = c(0,1),
@@ -61,7 +63,7 @@ outputs[["figs"]][["behaviour__PSD_x_time"]] <-
   theme(legend.position = "top", legend.direction = "horizontal")
 
 
-condition_save_figure(
-  outputs[["figs"]][["behaviour__PSD_x_time"]]
+conditional_save(
+  figs[["behaviour__PSD_x_time"]]
   , "Behaviour - Changes Over Time Across Sleep Loss"
 )
