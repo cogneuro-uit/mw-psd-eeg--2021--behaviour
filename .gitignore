@@ -9,3 +9,13 @@
 # Ignore cache
 cache/*.[rR][dD][aA][tT][aA]
 cache/*.hash
+# Ignore figure outputs
+figures/*.svg
+figures/*.jpeg
+# Ignore table outputs
+tables/*.html
+tables/*.docx
+# Ignore reports documents
+reports/*.docx
+reports/*.pdf
+
