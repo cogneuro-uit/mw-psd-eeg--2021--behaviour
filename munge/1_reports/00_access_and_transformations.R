@@ -166,24 +166,25 @@ panas_neg <- map(c(2, 4, 6, 7, 8, 11, 13, 15, 18, 20), \(x){
 # Model access     =======
 ## Continuous model     =====
 c <- list( 
-  mw  = as.matrix(mod_bay_sleep_cont$mw),
-  mb  = as.matrix(mod_bay_sleep_cont$mb),
-  smw = as.matrix(mod_bay_sleep_cont$smw),
-  bv  = as.matrix(mod_bay_sleep_cont$bv),
-  ae  = as.matrix(mod_bay_sleep_cont$ae)
+  mw  = as.matrix(mod.cont$mw),
+  mb  = as.matrix(mod.cont$mb),
+  smw = as.matrix(mod.cont$smw),
+  bv  = as.matrix(mod.cont$bv),
+  ae  = as.matrix(mod.cont$ae)
 )
+
 ## Reduced model        ======
 r <- list( 
-  mw = as.matrix(mod_bay_split_sleep$mw),
-  mb = as.matrix(mod_bay_split_sleep$mb),
-  smw = as.matrix(mod_bay_split_sleep$smw),
-  bv = as.matrix(mod_bay_split_sleep$bv),
-  ae = as.matrix(mod_bay_split_sleep$ae)
+  mw  = as.matrix(mod.dich$mw),
+  mb  = as.matrix(mod.dich$mb),
+  smw = as.matrix(mod.dich$smw),
+  bv  = as.matrix(mod.dich$bv),
+  ae  = as.matrix(mod.dich$ae)
 )
 
 
 ##  Mood        =======
 mood <- list()
-mood$n <- as.matrix( mood_test[["neg"]][["bayes"]][["cont"]] )
-mood$p <- as.matrix( mood_test[["pos"]][["bayes"]][["cont"]] )
+mood$n <- as.matrix( mod.mood.cont[["bayes"]][["pos"]] )
+mood$p <- as.matrix( mod.mood.cont[["bayes"]][["neg"]] )
 
