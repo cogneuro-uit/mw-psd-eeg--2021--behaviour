@@ -51,7 +51,8 @@ figs[["behaviour__PSD_x_time"]] <-
   , probes = case_when(
     names_probe=="bv" ~ "Behavioural variability"
     , names_probe=="ae" ~ "Approximate entropy"
-  )) |>
+    ) |> fct_relevel("Behavioural variability")
+  ) |>
   ggplot(aes(z_score, value, col = cond, linetype = cond)) + 
   facet_wrap(~ probes) +
   geom_line(linewidth = 1) +
