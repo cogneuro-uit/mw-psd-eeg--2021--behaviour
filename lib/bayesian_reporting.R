@@ -21,9 +21,11 @@ bayes_er <- function(bayes_vector, ...){
   
   mean <- mean(bayes_vector)
   
-  ifelse(mean > 0, sum(bayes_vector > 0) / sum(bayes_vector <= 0), 
-         sum(bayes_vector < 0) / sum(bayes_vector >= 0) ) |>
-    fmt_APA_numbers(...)
+  fmt_APA_numbers( ifelse(
+    mean > 0
+    , sum(bayes_vector > 0) / sum(bayes_vector <= 0)
+    , sum(bayes_vector < 0) / sum(bayes_vector >= 0) 
+    ), ... )
 } 
 
 bayes_p <- function(bayes_vector, ...){
@@ -32,9 +34,12 @@ bayes_p <- function(bayes_vector, ...){
   
   mean <- mean(bayes_vector)
   
-  ifelse(mean > 0, sum(bayes_vector > 0) / length(bayes_vector), 
-         sum(bayes_vector < 0) / length(bayes_vector) ) |>
-    fmt_APA_numbers(...)
+  fmt_APA_numbers( ifelse(
+    mean > 0
+    , sum(bayes_vector > 0) / length(bayes_vector)
+    , sum(bayes_vector < 0) / length(bayes_vector) 
+    ), ...)
+    
 }
 
 coef_hdi_s_text <- function(x, ...){
