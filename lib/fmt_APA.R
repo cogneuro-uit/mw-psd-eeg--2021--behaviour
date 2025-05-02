@@ -27,8 +27,10 @@ fmt_APA_numbers <- function(x, .p = FALSE, .psym = FALSE, .low_val = FALSE, .chr
     
     # Frequentist PROBABILITY (p) 
     if(.p){
-      if( num > .999 ) return( ".999")
-      if( num < .001 ) return( ".001") 
+      if( num > .999 )  return( "> .999" )
+      if( num == .999 ) return( ".999" )
+      if( num == .001 )  return( ".001" ) 
+      if( num < .001 )  return( "< .001" ) 
       
       # else...
       num <- 
