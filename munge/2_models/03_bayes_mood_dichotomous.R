@@ -1,23 +1,4 @@
 
-# Data transformations 
-test_panas <- 
-  panas_session |>
-  mutate(
-    sleepdep = factor(sleepdep),
-    prepost = factor(prepost) |> fct_relevel("pre"),
-    subj = factor(subj)
-  ) |>
-  left_join(
-    sleeptimes_updated_trans,
-    by = c("subj", "sleepdep")
-  ) 
-
-
-# EXCLUDE
-test_panas_dict <- test_panas |>
-  filter( Adjusted_Duration.diff <= -1.5 )
-
-
 if( getOption("project_bayes_run_models") ){
   
   # List
