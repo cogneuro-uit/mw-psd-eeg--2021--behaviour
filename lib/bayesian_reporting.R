@@ -59,7 +59,7 @@ rep_bayes_coef <- function(x, .rep = "simple", ..., .preserve_negative = TRUE){
   
   .rep2 <- str_to_lower(.rep)
   
-  if( .rep2 %in% c("text", "txt", "tx", "long" ) ){
+  if( .rep2 %in% c("text", "txt", "tx", "long", "lng") ){
     .rep2 <- "long"
   } 
   if( .rep2 %in% c("df","data", "frm", "dataframe", "data.frame", "tibble", "frame") ){
@@ -100,6 +100,11 @@ rep_bayes_coef <- function(x, .rep = "simple", ..., .preserve_negative = TRUE){
     )
     , mean_fix, hdi, evidence_ratio_direction, probability_direction
   )
+}
+
+#' Shorthand wrapper for `rep_bayes_coef()` text reports. 
+rbc <- function(x){
+  rep_bayes_coef(x, "text")
 }
 
 
