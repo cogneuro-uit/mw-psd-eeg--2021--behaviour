@@ -114,7 +114,7 @@ conditional_save <- function(data, name, ...
   
   # Add datetime suffix if configured
   if (save_with_datetime) {
-    datetime_suffix <- getOption("project_date_time", default = format(Sys.time(), "_%Y%m%d_%H%M%S"))
+    datetime_suffix <- getOption("project_date_time")
   }
   
   # Process the save operation
