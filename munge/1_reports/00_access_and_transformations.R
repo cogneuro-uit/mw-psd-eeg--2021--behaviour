@@ -166,25 +166,28 @@ panas_neg <- map(c(2, 4, 6, 7, 8, 11, 13, 15, 18, 20), \(x){
 # Model access     =======
 ## Continuous model     =====
 c <- list( 
-  mw  = as.matrix(mod.cont$mw),
-  mb  = as.matrix(mod.cont$mb),
-  smw = as.matrix(mod.cont$smw),
-  bv  = as.matrix(mod.cont$bv),
-  ae  = as.matrix(mod.cont$ae)
+  mw  = as_tibble(mod.cont$mw)
+  , mb  = as_tibble(mod.cont$mb)
+  , smw = as_tibble(mod.cont$smw)
+  , bv  = as_tibble(mod.cont$bv)
+  , ae  = as_tibble(mod.cont$ae)
 )
 
 ## Reduced model        ======
 r <- list( 
-  mw  = as.matrix(mod.dich$mw),
-  mb  = as.matrix(mod.dich$mb),
-  smw = as.matrix(mod.dich$smw),
-  bv  = as.matrix(mod.dich$bv),
-  ae  = as.matrix(mod.dich$ae)
+  mw  = as_tibble(mod.dich$mw)
+  , mb  = as_tibble(mod.dich$mb)
+  , smw = as_tibble(mod.dich$smw)
+  , bv  = as_tibble(mod.dich$bv)
+  , ae  = as_tibble(mod.dich$ae)
 )
 
 
 ##  Mood        =======
-mood <- list()
-mood$n <- as.matrix( mod.mood.cont[["bayes"]][["pos"]] )
-mood$p <- as.matrix( mod.mood.cont[["bayes"]][["neg"]] )
+mood <- list(
+  po_p     = as_tibble( mod.mood.cont$pos$psd )
+  , po_p.m = as_tibble( mod.mood.cont$pos$psdXmw )
+  , ne_p   = as_tibble( mod.mood.cont$neg$psd )
+  , ne_p.m = as_tibble( mod.mood.cont$neg$psdXmw )
+)
 
