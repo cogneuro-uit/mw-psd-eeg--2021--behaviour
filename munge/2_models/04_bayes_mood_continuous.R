@@ -47,5 +47,5 @@ if( getOption("project_bayes_run_models") ){
   
   
   # Save  =====
-  conditional_save(mod.mood.cont, "PSD-on-Mood_Continuous")  
+  conditional_save(mod.mood.cont, "Mod-Bayes--Mood--PSDxMW")  
 }
