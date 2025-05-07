@@ -1,9 +1,8 @@
 # Model
-figs[["Mood__PSD"]] <-
+figs[["Mood__PSD"]] <-""
   expand_grid(
     # SD can vary from -1 to 1 (z score)
     sleep_deviation = c(-1, 0, 1),
-    when = c(0, 1), # before/after
     name = c("Outcome")
   ) |> 
   mutate(
@@ -11,10 +10,10 @@ figs[["Mood__PSD"]] <-
     sleep = summarised_vals$sleep_m + (summarised_vals$sleep_sd * sleep_deviation),
     
     # positive mood
-    , pos_ns = mean(mood$p[,"b_Intercept"])
-    + mean(mood$p[,"b_prepostpost"]) * when
-    , pos_psd = pos_ns
-    + mean(mood$p[,"b_c.Adjusted_Duration.diff.pos"]) * sleep 
+    , pos_ns = mean(mood$po_p[["b_Intercept"]])
+    , pos_psd = pos_ns + mean(mood$po_p[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
+    )
+  
     + mean(mood$p[,"b_c.Adjusted_Duration.diff.pos:prepostpost"]) * when * sleep
     
     # negative mood

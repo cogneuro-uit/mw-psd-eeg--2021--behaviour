@@ -27,18 +27,18 @@ figs[["behaviour__PSD_x_time"]] <-
     sleep = summarised_vals$sleep_m + (summarised_vals$sleep_sd * sleep_deviation),
     
     # BV
-    , bv_ns = mean(c$bv[,"b_Intercept"])
-    + mean(c$bv[,"b_probenum_prop"]) * z_score
+    , bv_ns = mean(c$bv[["b_Intercept"]])
+    + mean(c$bv[["b_probenum_prop"]]) * z_score
     , bv_psd = bv_ns
-    + mean(c$bv[,"b_c.Adjusted_Duration.diff.pos"]) * sleep 
-    + mean(c$bv[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"]) * z_score * sleep
+    + mean(c$bv[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
+    + mean(c$bv[["b_c.Adjusted_Duration.diff.pos:probenum_prop"]]) * z_score * sleep
     
     # AE
-    , ae_ns = mean(c$ae[,"b_Intercept"])
-    + mean(c$ae[,"b_probenum_prop"]) * z_score
+    , ae_ns = mean(c$ae[["b_Intercept"]])
+    + mean(c$ae[["b_probenum_prop"]]) * z_score
     , ae_psd = ae_ns
-    + mean(c$ae[,"b_c.Adjusted_Duration.diff.pos"]) * sleep 
-    + mean(c$ae[,"b_c.Adjusted_Duration.diff.pos:probenum_prop"]) * z_score * sleep
+    + mean(c$ae[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
+    + mean(c$ae[["b_c.Adjusted_Duration.diff.pos:probenum_prop"]]) * z_score * sleep
   )  |>
   pivot_longer(c(ends_with("psd"), ends_with("ns")), names_to="names") |>
   separate_wider_delim(names, "_", names_sep = "_", names = c("probe", "cond")) |>
