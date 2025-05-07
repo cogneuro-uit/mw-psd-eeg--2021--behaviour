@@ -9,18 +9,18 @@ figs[["MW__PSD_x_behaviour"]] <-
     sleep = summarised_vals$sleep_m + (summarised_vals$sleep_sd * sleep_deviation),
     
     # BV effect on MW 
-    , bv_ns = (mean(c$mw[,"b_Intercept[1]"]) + mean(c$mw[,"b_Intercept[2]"]) + mean(c$mw[,"b_Intercept[3]"]))
-    + mean(c$mw[,"b_zlogbv"]) * z_score
+    , bv_ns = (mean(c$mw[["b_Intercept[1]"]]) + mean(c$mw[["b_Intercept[2]"]]) + mean(c$mw[["b_Intercept[3]"]]))
+    + mean(c$mw[["b_zlogbv"]]) * z_score
     , bv_psd = bv_ns
-    + mean(c$mw[,"b_c.Adjusted_Duration.diff.pos"]) * sleep 
-    + mean(c$mw[,"b_c.Adjusted_Duration.diff.pos:zlogbv"]) * z_score * sleep
+    + mean(c$mw[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
+    + mean(c$mw[["b_c.Adjusted_Duration.diff.pos:zlogbv"]]) * z_score * sleep
     
     # AE
-    , ae_ns = (mean(c$mw[,"b_Intercept[1]"]) + mean(c$mw[,"b_Intercept[2]"]) + mean(c$mw[,"b_Intercept[3]"]))
-    + mean(c$mw[,"b_zlogapen"]) * z_score
+    , ae_ns = (mean(c$mw[["b_Intercept[1]"]]) + mean(c$mw[["b_Intercept[2]"]]) + mean(c$mw[["b_Intercept[3]"]]))
+    + mean(c$mw[["b_zlogapen"]]) * z_score
     , ae_psd = ae_ns
-    + mean(c$mw[,"b_c.Adjusted_Duration.diff.pos"]) * sleep 
-    + mean(c$mw[,"b_c.Adjusted_Duration.diff.pos:zlogapen"]) * z_score * sleep
+    + mean(c$mw[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
+    + mean(c$mw[["b_c.Adjusted_Duration.diff.pos:zlogapen"]]) * z_score * sleep
   ) |>
   pivot_longer(c(ends_with("psd"), ends_with("ns")), names_to="names") |>
   separate_wider_delim(names, "_", names_sep = "_", names = c("probe", "cond")) |>
