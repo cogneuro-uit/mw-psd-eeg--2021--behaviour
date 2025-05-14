@@ -8,91 +8,55 @@ execute:
   include: false
 ---
 
-```{r Parameters}
-#' **RELATIVE PATH**
-#' Depending on the position of the document, loading files may fail.
-#' This variable enables you to set it according to where the file is. 
-#' For main directory set it to "NULL", within a folder, use "../".
-
-script_relative_path <- "../"
-source( paste0(script_relative_path, "lib/load_project.R") )
-load_project(script_relative_path)
+```{r Parameters, warning=FALSE, message=FALSE}
+relative_path <- "../" # b/c quarto 
+source( paste0(relative_path, "lib/quarto_load_project.R") )
+quarto_load_project(relative_path, load_data_data = T)
 ```
 
 # Supplementary Materials
 
-
 ## Sleep adjustment
 
-```{r sleep adjustment round 1}
-sleep_adjustment_round1_df <- 
-  sleep_adjustment_r1 |>
-  pivot_longer( c(wake_gc, onset_gc, wake_sa, onset_sa) ) |>
-  separate_wider_delim(name, "_", names = c("cond", "eval"), too_many = "drop") |>
-  mutate(eval = if_else(eval=="gc", "GC", "SA")) |>
-  filter(!is.na(value)) |>
-  pivot_wider(names_from = eval, values_from = value) |>
-  filter(!is.na(GC) & !is.na(SA)) |>
-  summarise(
-    .by = cond, 
-    cor = cor(GC, SA)
-  )
-```
+<!-- ```{r sleep adjustment round 1} -->
+<!-- sleep_adjustment_round1_df <-  -->
+<!--   sleep_adjustment_r1 |> -->
+<!--   pivot_longer( c(wake_gc, onset_gc, wake_sa, onset_sa) ) |> -->
+<!--   separate_wider_delim(name, "_", names = c("cond", "eval"), too_many = "drop") |> -->
+<!--   mutate(eval = if_else(eval=="gc", "GC", "SA")) |> -->
+<!--   filter(!is.na(value)) |> -->
+<!--   pivot_wider(names_from = eval, values_from = value) |> -->
+<!--   filter(!is.na(GC) & !is.na(SA)) |> -->
+<!--   summarise( -->
+<!--     .by = cond,  -->
+<!--     cor = cor(GC, SA) -->
+<!--   ) -->
+<!-- ``` -->
 
-```{r calc new agreement}
-sleep_adjustment_round2_df <- 
-  sleep_adjustment_r2 |>
-  mutate(
-    use_wake = if_else(is.na(use_wake), FALSE, use_wake),
-    use_onset = if_else(is.na(use_onset), FALSE, use_onset),
-    SA_wake = wake_sa_MORE,
-    SA_onset = onset_sa_MORE,
-    GC_wake = if_else(use_wake, wake_sa_MORE, wake_GC),
-    GC_onset = if_else(use_onset, onset_sa_MORE, onset_GC),
-    wake_diff = SA_wake - GC_wake,
-    wake_cond = abs(wake_diff) > .25,
-    onset_diff = SA_onset - GC_onset,
-    onset_cond = abs(onset_diff) > .25,
-  ) |>
-  pivot_longer(c(SA_wake,SA_onset,GC_wake, GC_onset)) |>
-  separate_wider_delim(cols=name, "_", names_sep="_") |>
-  filter(!is.na(value)) |>
-  pivot_wider(names_from=name_1, values_from=value) |>
-  filter(!is.na(GC) & !is.na(SA)) |>
-  summarise(.by = name_2, cor = cor(GC,SA))
-```
+<!-- ```{r calc new agreement} -->
+<!-- sleep_adjustment_round2_df <-  -->
+<!--   sleep_adjustment_r2 |> -->
+<!--   mutate( -->
+<!--     use_wake = if_else(is.na(use_wake), FALSE, use_wake), -->
+<!--     use_onset = if_else(is.na(use_onset), FALSE, use_onset), -->
+<!--     SA_wake = wake_sa_MORE, -->
+<!--     SA_onset = onset_sa_MORE, -->
+<!--     GC_wake = if_else(use_wake, wake_sa_MORE, wake_GC), -->
+<!--     GC_onset = if_else(use_onset, onset_sa_MORE, onset_GC), -->
+<!--     wake_diff = SA_wake - GC_wake, -->
+<!--     wake_cond = abs(wake_diff) > .25, -->
+<!--     onset_diff = SA_onset - GC_onset, -->
+<!--     onset_cond = abs(onset_diff) > .25, -->
+<!--   ) |> -->
+<!--   pivot_longer(c(SA_wake,SA_onset,GC_wake, GC_onset)) |> -->
+<!--   separate_wider_delim(cols=name, "_", names_sep="_") |> -->
+<!--   filter(!is.na(value)) |> -->
+<!--   pivot_wider(names_from=name_1, values_from=value) |> -->
+<!--   filter(!is.na(GC) & !is.na(SA)) |> -->
+<!--   summarise(.by = name_2, cor = cor(GC,SA)) -->
+<!-- ``` -->
 
 Due to some (great) discrepancies between participants self-reported and actigraphy estimated sleep, we manually assessed the wake/onset of the discrepant cases. To do this, we loosely followed the procedure set forth by @follesø2021, which provides a systematic way of adjusting participants sleep onset and wake time using actigraphy information (i.e., activity and light) and self-reported sleep information. We created a simple software visualizing participants sleep onset and wake times in relationship to the activity and light levels measured by the participants' actigraphy. The visualization always presented participants self-reported sleep onset/wake time and the actigraphy estimated sleep wake/onset time (estimated from the Philips Actiware 6.0.2 software). We had two researchers (SA, GC) individually evaluate whether the sleep estimates (self-report and actigraphy wake/onset times) corresponded to the change in activity and light levels (i.e., more activity when waking, and less activity when falling asleep). After the independent evaluations, the researchers reached a high level of agreement (*r* \> `r sleep_adjustment_round1_df |> pull(cor) |> min() |> fmt_APA_numbers(.low_val = T)`). To reach full agreement, the researchers collectively came to an agreement for cases that differed between them by more than 15 minutes. For cases within 15 minutes of each other, we calculated the average and used that as the estimated wake/onset their average as the estimated sleep. After the collective agreement, there was full agreement for the new sleep estimates (*r* \> `r sleep_adjustment_round2_df |> pull(cor) |> min() |> fmt_APA_numbers(.low_val = T)`; see @tbl-sleep-times-sessions for a summary, see Supplementary for details).
-
-<!---  STATISTICAL ANALYSIS   -->
-To test whether participants’ slept less during the PSD nights, we compared their sleep onset, wake time and sleep duration using independent Bayesian t-tests provided by the BayesFactor package in R [@morey2024].
-
-```{r FIG - sleep deprivation between source type, warning=FALSE, message=FALSE}
-#| label: fig-sleep-duration-difference-across-source-type
-#| fig-cap: Difference in Sleep Duration Between Sources 
-#| fig-cap-location: top
-#| fig-width: 10
-
-p1 <- sleeptimes_updated_trans |>
-  select(subj, sleepdep, Self.report_Duration.diff, Actigraphy_Duration.diff, Adjusted_Duration.diff) |> 
-  pivot_longer(contains("_Duration")) |>
-  pivot_wider(names_from = sleepdep, values_from = value) |>
-  mutate(name = case_when(
-    str_starts(name, "Acti") ~ "Actigraphy", 
-    str_starts(name, "Adjust") ~ "Adjusted", 
-    str_starts(name, "Self") ~ "Self report") |> 
-      fct_relevel(c("Self report", "Actigraphy"))) |>
-  ggplot(aes(subj, SD, col = name)) + 
-  stat_summary(position=position_dodge(.05)) +
-  labs(y = "Sleep deprivation", col = "Source", x = "Subjects") + 
-  geom_hline(yintercept = -2) +
-  geom_hline(yintercept = -1.5, col="red", linetype="dashed") +
-  ggrepel::geom_text_repel(aes(label = if_else(SD > -1.5, subj, NA)), box.padding = .4) +
-  scale_y_continuous(breaks = seq(-3,3,1))
-
-save_output_cnd(p1, "Sleep_sources_divergence")
-```
-*Note*. Sleep deprivation is calculated as the partial sleep deprivation (PSD) period - the normal sleep (NS) period. Estimated as the average for the three nights pertaining to each respective period. 
 
 
 ```{r FIG - sleep deprivation across sleep source, include=TRUE, warning=FALSE, message=FALSE}
@@ -115,16 +79,46 @@ data.probe.mood.sleep |>
     str_detect(name, "Adjusted") ~ "Adjusted") |> fct_relevel(c("Self report", "Actigraphy")),
     Condition = if_else(sleepdep=="SD", "PSD", "NS") |> fct_relevel("PSD")
   ) |>
-  ggplot(aes(sleep, mw, col = interaction(Condition, name), group = interaction(subj, name) )) +
+  ggplot(aes(sleep, mw, col = interaction(Condition, name), group = interaction(subj, name), 
+             alpha = Condition)) +
   # facet_wrap(~ name, nrow=3) +
-  geom_point(alpha = .5)  +
-  geom_line(aes(col = NULL), alpha = .2) +
+  geom_point(alpha = .5) +
+  geom_line(aes(col = NULL), alpha = .1) +
+  scale_alpha_manual(values = c("PSD"=.2, "NS"=0.01)) +
   geom_smooth(aes(group = name, col = name), method = "lm", alpha = .08) +
-  ggrepel::geom_text_repel(aes(label = if_else(sleep == 0, NA, subj))) +
+  ggrepel::geom_text_repel(aes(label = if_else(sleep == 0, NA, subj)), alpha = .6)  +
+  scale_colour_manual(values = c(
+    "#F8766D","#F8A290",  # Self report (bright red; muted red)
+    "#619CFF","#8EBEFF",  # Actigraphy  (bright blue; muted blue)
+    "#00BA38","#7AD686",  # Adjusted    (bright green; muted green)
+    "#b20b00",            # Self report (dark red)
+    "#00348C",            # Actigraphy  (dark blue)
+    "#006400"             # Adjusted    (dark green) 
+  )) +
   labs(x = "Average sleep deprivation", y = "Mind wandering", col = "Condition")
 ```
 
+Actigraphy overestimate effects? 
+
 ## Sleep 
+
+The estimated sleep loss during the partial sleep deprivation (PSD) compared to the normal sleep (NS) is indicated in @fig-SD-between-modalities.
+
+```{r FIG - sleep deprivation between source type}
+#| label: fig-SD-between-modalities
+#| fig-cap: Difference in Sleep Duration Between Sources 
+#| fig-cap-location: top
+#| apa-note: "Sleep deprivation compared to the normal sleep (NS). Sleep duration is averaged for the three nights preceding each test, and the difference is caluclated as partial sleep deprivation (PSD) - NS. Black solid line indicate the original acceptance threshold, while the red dashed line indicated the adjusted sleep threshold (the criterion used for the reduced sample). Cases above the 1.5 threshold are highlighted by their associated participant code."
+#| # META
+#| include: true
+#| warning: false
+#| message: false
+#| fig-format: svg
+#| fig-width: 10
+
+figs[["PSD__report_type"]]
+```
+
 
 ### Test of Differences Between Sleep Estimates Between Modality
 
@@ -194,13 +188,13 @@ sleeptimes_updated_trans |>
   cols_move(e1, SR_sd) |>
   cols_move(e2, AG_sd) |>
   cols_align("center", c(everything(),-Sleep, -sleepdep)) |>
-  tab_footnote(md("*Note.* Differences are calculated as self-report - actigraphy. Participant 31 forgot to report their sleep before their NS test. We therefore decided to use this participants latest reported sleep times as a proxy for their self-reported sleep.")) |>
+  tab_footnote(md("*Note.* Differences are calculated as self-report - actigraphy. Participant 31 has not self-reported their sleep before their normal sleep test and we therefore decided to use this participants last self-reported sleep times as a proxy for their sleep.")) |>
   opt_footnote_marks(marks = letters) |>
   tab_footnote(md(
     "Actigraphy has two less *n*, as two actigraphies malfunctioned during the data collection."), 
     locations = cells_column_spanners("Actigraphy") ) |>
   tab_fmt_APA() |>
-  save_output_cnd("sleep_estimates_between_SR_AG")
+  save_output_cnd("Difference Between Self-report and Actigraphy sleep estimates")
 ```
 
 ### Sleep/wake delay
@@ -223,7 +217,14 @@ sleeptimes_updated |>
 
 <!--# The below plot needs to be contrast with the Actigraphy bed vs. sleep and wake vs. rise diff -->
 
+@fig-delay-to-sleep-and-wake indicate the amount of delay from sleep attempt to sleep onset and wake time to rise time. 
 ```{r}
+#| label: fig-delay-to-sleep-and-wake
+#| include: true
+#| message: false
+#| warning: false
+
+
 sleeptimes_updated |>
   mutate(
     Condition = case_when(
@@ -285,27 +286,25 @@ sleeptimes_updated |>
 #| fig-cap-location: top
 
 sleeptimes_updated |>
-  mutate(
-    sleepdep = case_when(
-      pre_control == 1 ~ "NS",
-      pre_sleepdep == 1 ~ "PSD", 
-    )
+  filter(pre_control==1 | pre_sleepdep==1) |>
+  mutate(psd = case_when(
+    pre_control == 1 ~ "control"
+    , pre_sleepdep == 1 ~ "SD"
+  )) |>
+  left_join(
+    sleeptimes_updated_trans
+    , by = join_by("subj", "psd"=="sleepdep")
   ) |>
-  filter( !is.na(sleepdep) ) |>
   summarise(
-    .by = c(subj, sleepdep), 
-    sleep_quality = mean(sleep_quality),
-    sleep = mean(duration_final),
+    .by = c(subj, psd), 
+    , sleep_quality = mean(sleep_quality, na.rm=T)
+    , sleep = unique(c.Adjusted_Duration.diff.pos)
   ) |>
-  pivot_wider(names_from = sleepdep, values_from = c(sleep_quality, sleep)) |>
-  mutate(
-    sq_diff    = sleep_quality_NS - sleep_quality_PSD,
-    sleep_diff = sleep_NS - sleep_PSD,
-  ) |>
-  ggplot(aes(sleep_diff,sq_diff)) +
+  pivot_wider(names_from = psd, values_from = c(sleep_quality, sleep)) |>
+  mutate(sq_diff    = sleep_quality_control - sleep_quality_SD) |>
+  ggplot(aes(sleep, sleep_quality, col = psd)) +
   geom_point() + 
-  geom_smooth(method="lm")
-  stat_summary()
+  geom_smooth(method="lm") 
   # summarise(
   #   cor = cor(sq_diff, sleep_diff)
   # )
@@ -464,40 +463,7 @@ bayes_tbl_sum(mod_bay_sleep_cont$mw, add_sigma = T, fmt_md = T,
 
 @fig-probes-over-time indicate the change in thought pobes over time.
 
-```{r probe responses over time, message=FALSE, warning=FALSE}
-#| label: fig-continuous-probes-over-time
-#| fig-width: 10
-#| fig-height: 4
-#| fig-dpi: 300
-
-plot_data <- 
- data.probe.mood.sleep |>
-  mutate(
-    `Mind wandering`             = scale(as.numeric(mw)),
-    `Mind blanking`              = scale(if_else(mw>2, as.numeric(mb), NA)),
-    `Spontaneous mind wandering` = scale(if_else(mw>2, as.numeric(smw), NA)),
-    condition_exc  = if_else(Adjusted_Duration.diff <= -1.5, TRUE, FALSE),
-    Block    = probenum,
-    Condition = if_else(sleepdep=="SD", "PSD", "NS") |> 
-      fct_relevel("PSD", after = 0),
-  )  |>
-  pivot_longer(c( `Mind wandering`,`Mind blanking`, `Spontaneous mind wandering`), values_to = "val") |>
-  mutate(name = fct_relevel(name, "Mind wandering"))
-
-p1 <- 
-  plot_data |>
-  mutate(name = fct_relevel(name, "Mind wandering", after = 0)) |>
-  ggplot(aes(Block, val, fill = Condition, col = Condition )) + 
-  facet_wrap(~name) + 
-  geom_hline(yintercept = 0, linetype = "dashed") +
-    # ALL DATA
-  stat_summary(aes(col = NULL), geom = "ribbon", alpha = .25) +
-  stat_summary(geom = "line", alpha = .7) +
-  geom_smooth(method = "lm", alpha = .15, linewidth=.4) +
-  labs(y = "Centered probe response", x = "Probe number (trial)") 
-
-save_output_cnd(p1, "Thought_probe_over_time")
-```
+<!-- FIG probes over time -->
 
 @fig-sleep-on-bv-ae-on-mw indicates difference in AE and BV in predicting MW for both conditions.
 %% HERER %%
@@ -505,30 +471,8 @@ save_output_cnd(p1, "Thought_probe_over_time")
 %% HERER %%
 %% HERER %%
 %% HERER %%
-```{r differential effect of ae and bv on mw following psd, warning=FALSE, message=FALSE}
-#| label: fig-sleep-on-bv-ae-on-mw
-#| fig-cap-location: top
 
-data.probe |> 
-  mutate(
-    Condition = if_else(sleepdep=="SD", "PSD","NS") |> fct_relevel("PSD"),
-    mw = as.numeric(mw)) |>
-  summarise(
-    .by = c(subj, Condition, mw),
-    mw = unique(mw),
-    ae = mean(zlogapen),
-    bv = mean(zlogbv) 
-  ) |>
-  pivot_longer(c(ae, bv)) |>
-  mutate(name = if_else(name=="ae","Approximate Entropy", "Behavioural Variability")) |>
-  ggplot(aes(x = value, y = mw, fill = Condition, col = Condition)) +
-  theme_bw() +
-  labs(x="Score", y = "Mind Wandering") +
-  facet_wrap(~name, scales="free") + 
-  geom_smooth(method="lm", alpha = .1) +
-  stat_summary(alpha = .1, position = position_jitter(,.1)) +
-  coord_cartesian(ylim=c(1,4))
-```
+
 
 #### Behaviour
 
@@ -589,6 +533,38 @@ bayes_tbl_sum(mod_bay_sleep_cont$bv, add_sigma = T, fmt_md = T,
   save_output_cnd("Bayesian Continuous Behaviour Models")
 ```
 
+<!-- ```{r} -->
+<!-- #| label: fig-behaviour-over-time -->
+<!-- #| message: false -->
+<!-- #| warning: false -->
+<!-- #| fig-dpi: 300 -->
+<!-- #| fig-height: 4 -->
+<!-- #| fig-width: 10 -->
+<!-- #| include: true -->
+<!-- #| tbl-cap: Thought Probes Over Time Between Conditions -->
+<!-- #| tbl-cap-location: top -->
+
+<!-- p1 <- -->
+<!--  data.probe.mood.sleep |> -->
+<!--   pivot_longer(c(zlogbv, zlogapen)) |> -->
+<!--   mutate( -->
+<!--     name = if_else(name == "zlogbv", "Behavioural Variability", "Approximate Entropy") |>  -->
+<!--       fct_relevel("Behavioural Variability"), -->
+<!--     Block    = probenum, -->
+<!--     Condition = if_else(sleepdep=="SD", "PSD", "NS") |>  -->
+<!--       fct_relevel("PSD", after = 0), -->
+<!--   ) |> -->
+<!--   ggplot(aes(Block, value, fill = Condition, col = Condition )) +  -->
+<!--   facet_wrap(~name) +  -->
+<!--   geom_hline(yintercept = 0, linetype = "dashed") + -->
+<!--     # ALL DATA -->
+<!--   stat_summary(geom = "ribbon", alpha = .25) + -->
+<!--   stat_summary(geom = "line", alpha = .7) + -->
+<!--   geom_smooth(method = "lm", alpha = .15, linewidth=.4) + -->
+<!--   labs(y = "Centred probe response", x = "Probe number (trial)")  -->
+
+<!-- save_output_cnd(p1, "Behaviour over time") -->
+<!-- ``` -->
 
 ## Mood
 
@@ -720,12 +696,10 @@ Participants slept significantly less according to both participants own self-re
 
 While the Bayesian ordered-probit model for each respective probe is presented in @tbl-probe-model
 
-```{r TBL - thought probe model summary, include=TRUE}
-#| label: tbl-excluded-probe-models
-#| tbl-cap: Bayesian Thought Probes Models for the Reduced Sample
-#| tbl-cap-location: top
+```{r tabel preparation for the thought probes}
 
-bayes_tbl_sum(mod_bay_sleep_cont$mw, add_sigma = T, fmt_md = T,
+probe_tbl_reduced <- 
+  bayes_tbl_sum(mod_bay_sleep_cont$mw, add_sigma = T, fmt_md = T,
               add_loo = T, add_R2 = T, apa_table = T)  |>
   bayes_tbl_add_sig() |>
   mutate_bayes_mod_probe() |> 
@@ -782,7 +756,15 @@ bayes_tbl_sum(mod_bay_sleep_cont$mw, add_sigma = T, fmt_md = T,
     diff_smw  = if_else(c_smw_p != e_smw_p, TRUE, FALSE),
     across(c(starts_with("c_"), starts_with("e_")), ~NULL),
     mw_e="", mb_e="",smw_e=""
-  ) |>
+  )
+```
+
+```{r TBL - thought probe model summary, include=TRUE}
+#| label: tbl-excluded-probe-models
+#| tbl-cap: Bayesian Thought Probes Models for the Reduced Sample
+#| tbl-cap-location: top
+
+probe_tbl_reduced |>
   gt(groupname_col = "group") |>
   tab_spanner("Mind wandering", starts_with("exc_mw_")) |>
   tab_spanner("Mind blanking", starts_with("exc_mb_")) |>
@@ -805,14 +787,119 @@ bayes_tbl_sum(mod_bay_sleep_cont$mw, add_sigma = T, fmt_md = T,
   ) |>
   tab_style(
     cell_text(weight="bold"),
-    cells_body(matches("exc_snw"),diff_smw)
+    cells_body(matches("exc_smw"),diff_smw)
   ) |>
   tab_bayes_generics(pre_footnote = "Bold rows indicate a difference to the continuous Bayesian model", 
                      post_footnote = "BV = behavioural variability, AE = approximate entropy, Pre-positive = Pre-test positive mood, Pre-negative = Pre-test negative mood, PSD = partial sleep deprivation.") |>
   save_output_cnd("Bayesian Reduced-sample Probe Models+highlight")
 ```
 
+```{r TBL - probe models, include=TRUE, warning=FALSE, message=FALSE}
+#| label: tbl-continuous-probe-models
+#| tbl-cap: Bayesian Models for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering
+#| tbl-cap-location: top
+
+probe_tbl_cont |>
+  gt(groupname_col = "group") |>
+  tab_spanner("Mind wandering", starts_with("cont_mw_")) |>
+  tab_spanner("Mind blanking", starts_with("cont_mb_")) |>
+  tab_spanner("Spontaneous mind wandering", starts_with("cont_smw_")) |>
+  cols_hide(
+    c(starts_with("exc_"), starts_with("diff_"))
+  ) |>
+  cols_move(starts_with("smw_"), exc_mb_p) |>
+  cols_move(starts_with("mb_"),  exc_mw_p) |>
+  cols_move(mw_e,  exc_mw_p) |>
+  cols_move(mb_e,  exc_mb_p) |>
+  cols_move(smw_e, exc_smw_p) |>
+  tab_style(
+    cell_text(weight="bold"),
+    cells_body(matches("cont_mw"), diff_mw)
+  ) |>
+  tab_style(
+    cell_text(weight="bold"),
+    cells_body(matches("cont_mb"), diff_mb)
+  ) |>
+  tab_style(
+    cell_text(weight="bold"),
+    cells_body(matches("cont_smw"), diff_smw)
+  ) |>
+  tab_bayes_generics(
+    pre_footnote = "Bold rows indicate a change in the coefficient (*p*~dir~ > .95) between the continuous and reduced models.", 
+    post_footnote = "BV = behavioural variability, AE = approximate entropy, Pre-positive = Pre-test positive mood, Pre-negative = Pre-test negative mood, PSD = partial sleep deprivation.") |>
+  save_output_cnd("Bayesian continuous probe models +highlight")
+```
+
+<!-- OLD PROBE OVER TIME PLOT -->
+<!-- ```{r FIG - probe responses over time} -->
+<!-- #| label: fig-continuous-probes-over-time -->
+<!-- #| tbl-cap: "Thought Probes Over Time Between Conditions" -->
+<!-- #| tbl-cap-location: top -->
+<!-- #| # settings -->
+<!-- #| include: true -->
+<!-- #| warning: false -->
+<!-- #| message: false -->
+<!-- #| fig-width: 10  -->
+<!-- #| fig-height: 4 -->
+<!-- #| fig-dpi: 300 -->
+
+<!-- plot_data <-  -->
+<!--  data.probe.mood.sleep |> -->
+<!--   mutate( -->
+<!--     `Mind wandering`             = scale(as.numeric(mw)), -->
+<!--     `Mind blanking`              = scale(if_else(mw>2, as.numeric(mb), NA)), -->
+<!--     `Spontaneous mind wandering` = scale(if_else(mw>2, as.numeric(smw), NA)), -->
+<!--     condition_exc  = if_else(Adjusted_Duration.diff <= -1.5, TRUE, FALSE), -->
+<!--     Block    = probenum, -->
+<!--     Condition = if_else(sleepdep=="SD", "PSD", "NS") |>  -->
+<!--       fct_relevel("PSD", after = 0), -->
+<!--   )  |> -->
+<!--   pivot_longer(c( `Mind wandering`,`Mind blanking`, `Spontaneous mind wandering`), values_to = "val") |> -->
+<!--   mutate(name = fct_relevel(name, "Mind wandering")) -->
+
+<!-- p1 <-  -->
+<!--   plot_data |> -->
+<!--   mutate(name = fct_relevel(name, "Mind wandering", after = 0)) |> -->
+<!--   ggplot(aes(Block, val, fill = Condition, col = Condition )) +  -->
+<!--   facet_wrap(~name) +  -->
+<!--   geom_hline(yintercept = 0, linetype = "dashed") + -->
+<!--     # ALL DATA -->
+<!--   stat_summary(aes(col = NULL), geom = "ribbon", alpha = .25) + -->
+<!--   stat_summary(geom = "line", alpha = .7) + -->
+<!--   geom_smooth(method = "lm", alpha = .15, linewidth=.4) + -->
+<!--   labs(y = "Centered probe response", x = "Probe number (trial)")  -->
+
+<!-- save_output_cnd(p1, "Thought probes over time") -->
+<!-- ``` -->
+
 #### Behaviour
+
+
+```{r TBL - ae+bv continuous models, include=TRUE, warning=FALSE, message=FALSE}
+#| label: tbl-continuous-behaviour-models
+#| tbl-cap: Bayesian Models for Behavioural Variability and Approximate Entropy
+#| tbl-cap-location: top
+
+behav_tbl |>
+  gt(groupname_col = "group") |>
+  tab_spanner("Behavioural variability", matches("_bv_")) |>
+  tab_spanner("Approximate Entropy", matches("_ae_")) |>
+  cols_hide(c(starts_with("exc"), starts_with("c_"), starts_with("e_"))) |>
+  cols_move(e, exc_bv_p) |>
+  tab_style(
+    cell_text(weight="bold"),
+    cells_body(matches("cont_bv"),diff_bv)
+  ) |>
+  tab_style(
+    cell_text(weight="bold"),
+    cells_body(matches("cont_ae"),diff_ae)
+  ) |>
+  cols_hide(starts_with("diff")) |>
+  tab_bayes_generics(pre_footnote = "Bold rows indicate a change in the coefficient (*p*~dir~ > .95) between the continuous and reduced sample models.", 
+                     post_footnote = "Pre-positive = Pre-test positive mood, Pre-negative = Pre-test negative mood, PSD = partial sleep deprivation.") |>
+  save_output_cnd("Bayesian continuous behaviour models +highlight")
+```
+
 
 ```{r TBL - BV compared between datasets }
 #| label: tbl-excluded-behaviour-models
@@ -838,8 +925,8 @@ bayes_tbl_sum(mod_bay_sleep_cont$bv, add_sigma = T, fmt_md=T,
                 add_loo = T,add_R2 = T, apa_table = T) |>
     bayes_tbl_add_sig() |>
     mutate_bayes_mod_beh() |>
-    rename_with(~paste0("exc_bv_", .x), 3:6)
     bayes_tbl_add_sig() |>
+    rename_with(~paste0("exc_bv_", .x), 3:6)
   ) |>
   left_join(
     bayes_tbl_sum(mod_bay_split_sleep$ae, add_sigma = T,fmt_md=T,
@@ -878,7 +965,7 @@ bayes_tbl_sum(mod_bay_sleep_cont$bv, add_sigma = T, fmt_md=T,
 
 #### Mood
 
-```{r simple mood figure, warning=FALSE, message=FALSE}
+```{r simple mood figure, include=TRUE, warning=FALSE, message=FALSE}
 #| label: fig-simple-mood-test
 #| fig-cap: Mood Change Over Test-Time and Sleep Condition
 #| fig-cap-location: top
@@ -943,6 +1030,104 @@ mood_test[["pos"]][["bayes"]][["aov"]] |>
 ```
 
 
+<!-- MOOD INTERACITONS  -->
+
+<!-- USING THE MODEL INTERACTIONS -->
+```{r FIG - positive mood on BV and S-MW}
+#| label: fig-behaviour-interaction-on-mw
+#| fig-cap-location: top
+#| fig-cap: Various Behavioural Interactions 
+#| apa-note: ""
+#| # META
+#| include: true
+#| message: false
+#| warning: false
+#| fig-dpi: 300
+#| fig-height: 5
+#| fig-width: 7
+
+p1 <- 
+  interactions$smw_pos[[1]] |> 
+  as_tibble() |> 
+  mutate(
+    type = "Pre-Task Positive Mood",
+    z_score = case_when(effect2__=="6.98" ~ "-1 SD", effect2__=="13.13"~"Mean", T~"+1 SD") |>
+      fct_relevel("+1 SD", "Mean")
+  ) |>
+  ggplot(aes(effect1__, estimate__, col = z_score)) +
+  facet_wrap(~type) +
+  geom_ribbon(aes(ymin = lower__, ymax = upper__, fill = z_score), alpha = .15) +
+  geom_line(linewidth = 1.2) +
+  labs(x = "Sleep Deprivation", y = "Association to S-MW", fill = "Z-score", col = "Z-score") +
+  theme(legend.position = "none", legend.direction = "horizontal")
+  
+p2 <- 
+  interactions$bv_pos[[1]] |> 
+  as_tibble() |> 
+  mutate(
+    type = "Pre-Task Positive Mood", 
+    z_score = case_when(effect2__=="7.26" ~ "-1 SD", effect2__=="14.79"~"Mean", T~"+1 SD") |>
+      fct_relevel("+1 SD", "Mean")
+  ) |>
+  ggplot(aes(effect1__, estimate__, col = z_score)) +
+  facet_wrap(~type) + 
+  geom_ribbon(aes(ymin = lower__, ymax = upper__, fill = z_score), alpha = .15) +
+  geom_line(linewidth = 1.2) +
+  labs(x = "Sleep Deprivation", y = "Association to BV", fill = "Z-score", col = "Z-score") 
+
+patchwork::guide_area() + p1 + p2 + plot_layout(guides="collect", design="11
+                                                23") + theme(legend.direction = "horizontal")
+```
+
+```{r}
+expand_grid(
+  sleep_deviation = c(-1,0,1),
+  z_score = c(-1,0,1),
+  name = c("Mind wandering"), 
+  ) |>
+  mutate(
+    sleep = summarised_vals$sleep_m + (summarised_vals$sleep_sd * sleep_deviation),
+    mood  = summarised_vals$mood_m + (summarised_vals$mood_sd * sleep_deviation),
+    smw_m     = mean(c$smw[,"b_pre_pos"]), 
+    smw_x_psd = mean(c$smw[,"b_c.Adjusted_Duration.diff.pos:pre_pos"]),
+    bv_m      = mean(c$bv[,"b_pre_pos"]),
+    bv_x_psd  = mean(c$bv[,"b_c.Adjusted_Duration.diff.pos:pre_pos"]),
+    bv  = bv_m* z_score + bv_x_psd * sleep * z_score,
+    smw = smw_m* z_score + smw_x_psd * sleep * z_score,
+    # sleep = NULL,
+    sleep_deviation = factor(sleep_deviation),
+  )  |>
+  add_row(
+    expand_grid(
+      z_score = c(-1,0,1),
+      sleep_deviation = "NS",
+    ) |> mutate(
+      smw = mean(c$smw[,"b_pre_pos"]) * z_score,
+      bv  = mean(c$bv[,"b_pre_pos"]) * z_score
+    )
+  ) |>
+  pivot_longer(c(bv, smw), names_to="outcome") |>
+  mutate(
+    outcome = if_else(outcome=="bv", "Behavioural Variability", "Spontaneous mind wandering"), 
+    PSD = case_when(
+      sleep_deviation == "-1" ~ "PSD -1 SD",
+      sleep_deviation == "0"  ~ "PSD Mean",
+      sleep_deviation == "1"  ~ "PSD +1 SD",
+      sleep_deviation == "NS" ~ "NS",
+    ) |> fct_relevel(c("PSD +1 SD", "PSD Mean", "PSD -1 SD"))
+  )  |>
+  ggplot(aes(z_score, value, col = PSD, linetype = PSD)) + 
+  facet_wrap(~outcome) +
+  geom_line(linewidth = 1) +
+  labs( y = "Association to outcome", x = "Pre-task positive mood (Z-scored)", col = "Condition", linetype="Condition") +
+  # getOption("project_custom_ggplot_colours2")  #
+  scale_color_manual(   values = c("NS" = "#78ADFF", "PSD -1 SD" = "#ffd6d2", "PSD Mean" = "#F8766D", "PSD +1 SD" = "#8c0000" )) +
+  scale_linetype_manual(values = c("NS" = "dotted",  "PSD -1 SD" = "dashed",  "PSD Mean" = "solid",   "PSD +1 SD" = "longdash")) 
+```
+
+
+
+
 ## Others
 
 ```{r}
@@ -975,3 +1160,71 @@ lackluster sample sleeping sufficiently less ( < 1.5 hours on average). By lower
 [\[SRA50\]](#_msoanchor_50)Diff of -.103, not necessary to comment perhaps?
 
 [\[GC51\]](#_msoanchor_51)no
+
+
+
+# OTHER FIGURES
+```{r}
+#| label: fig-behaviour-over-time
+#| message: false
+#| warning: false
+#| apa-note: PSD = Partial sleep deprivation, NS = normal sleep.
+#| fig-cap: Changes in Behaviour Over Time
+#| fig-cap-location: top
+#| fig-format: svg
+#| fig-height: 3
+#| fig-width: 5
+#| include: true
+
+figs[["behaviour__PSD_x_time"]]
+```
+
+```{r FIG - Changes in Behaviour over time by condition}
+#| label: fig-psd-on-mood
+#| fig-cap: Changes in Mood Over Sleep Loss and Pre-Post Task
+#| fig-cap-location: top
+#| apa-note: "PSD = Partial sleep deprivation, NS = normal sleep."
+#| # META
+#| include: true
+#| warning: false
+#| message: false
+#| fig-width: 5
+#| fig-height: 3
+#| fig-format: svg
+
+figs[["Mood__PSD"]] 
+```
+
+```{r FIG - MW interactions from model coefficients}
+#| label: fig-interaction-behaviour-on-MW
+#| fig-cap: The Interaction Between Behaviour and Sleep Loss on Their Relation to Mind Wandering
+#| fig-cap-location: top
+#| apa-note: "PSD = Partial sleep deprivation, NS = normal sleep. "
+#| # META
+#| include: true
+#| warning: false
+#| message: false
+#| fig-width: 5
+#| fig-height: 3
+#| fig-format: svg
+
+figs[["MW__PSD_x_behaviour"]]
+```
+
+
+```{r FIG - PSD x mood interacitons - BV + s-mw}
+#| label: fig-psd-positive-interactions-bv--smw
+#| fig-cap: The Interaction Between Behaviour and Sleep Loss on Their Relation to Mind Wandering
+#| fig-cap-location: top
+#| apa-note: "PSD = Partial sleep deprivation, NS = normal sleep."
+#| # META
+#| include: true
+#| warning: false
+#| message: false
+#| fig-width: 5
+#| fig-height: 3
+#| fig-format: svg
+
+figs[["BV+SMW__PSD_x_pre_pos"]]
+```
+
