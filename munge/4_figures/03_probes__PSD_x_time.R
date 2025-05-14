@@ -57,10 +57,10 @@ figs[["probes__PSD_x_time"]] <-
     , sleep_deviation==+1 ~ "PSD +1 SD"
   ) |> factor(levels = c("PSD +1 SD", "PSD Mean", "PSD -1 SD", "NS"))
   , probes = case_when(
-    names_probe=="mw" ~ "Mind wandering"
+    names_probe=="mw" ~ "Mind wandering (MW)"
     , names_probe=="mb" ~ "Mind blanking"
-    , names_probe=="smw" ~ "Spontaneous mind wandering"
-  ) |> fct_relevel("Mind wandering")) |> 
+    , names_probe=="smw" ~ "Spontaneous MW"
+  ) |> fct_relevel("Mind wandering (MW)")) |> 
   ggplot(aes(z_score, value, col = cond, linetype=cond)) +
   facet_wrap(~probes) +
   geom_line(linewidth = 1) +
