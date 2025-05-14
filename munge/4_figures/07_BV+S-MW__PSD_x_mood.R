@@ -6,7 +6,6 @@ figs[["BV+SMW__PSD_x_pre_pos"]] <-
   expand_grid(
     sleep_deviation = c(-1,0,1),
     mood_deviation  = c(-1,0,1),
-    name = c("Mind wandering"), 
   ) |>
   mutate(
     sleep = summarised_vals$sleep_m + (summarised_vals$sleep_sd * sleep_deviation),
