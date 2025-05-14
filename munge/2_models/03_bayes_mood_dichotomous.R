@@ -63,5 +63,5 @@ if( getOption("project_bayes_run_models") ){
   }
   
   # Save
-  conditional_save( mod.mood.dich, "Mod-Bayes-PSD-on-Mood_Dichotomous")
+  conditional_save( mod.mood.dich, "Mod-Bayes--Mood--Dichotomous")
 }
