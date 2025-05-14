@@ -1,13 +1,22 @@
 
 tbls[["baseline_sleep"]] <-
   general_sleep |>
-  bind_rows( sleep_quiz_summary ) |>
+  mutate(
+    max = if_else(max > 24, max - 24, max)
+    , min = case_when( 
+      str_starts(name, "pref_sleep") | str_starts(name, "pref_wake") ~ clock_24(min)
+      , T ~ as.character(min))
+    , max = case_when(
+      str_starts(name, "pref_sleep") | str_starts(name, "pref_wake") ~ clock_24(max)
+      , T ~ as.character(max))
+  ) |>
+  bind_rows( sleep_quiz_summary |> mutate(across(c(min,max),  ~fmt_APA_numbers(.x, .chr=T))) ) |>
   mutate(
     across(c(where(is.numeric), -alpha), ~fmt_APA_numbers(.x, .chr=T)),
     across(everything(), ~if_else(is.na(.x), "", as.character(.x))),
     range = if_else(min=="", "", paste0(min, " - ", max))
-  )  |>
-  select(-min, -max) |> 
+  ) |>
+  select(-min, -max) |>
   gt() |>
   cols_label(
     name  ~ "Measure",
