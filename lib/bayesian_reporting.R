@@ -11,7 +11,7 @@ rep_bayes <- function(bayes_vec, calc = "m"){
 }
 
 rep_bayes_m <- function(bayes_vec, ...){
-  mean(bayes_vec) |> fmt_APA_numbers(.chr=T, ...)
+  fmt_APA_numbers( mean(bayes_vec), .chr=T, ...)
 }
 
 rep_bayes_hdi <- function(bayes_vec, ...){
@@ -103,8 +103,8 @@ rep_bayes_coef <- function(x, .rep = "simple", ..., .preserve_negative = TRUE){
 }
 
 #' Shorthand wrapper for `rep_bayes_coef()` text reports. 
-rbc <- function(x){
-  rep_bayes_coef(x, "text")
+rbc <- function(x, ...){
+  rep_bayes_coef(x, .rep = "text", ...)
 }
 
 
@@ -255,12 +255,14 @@ bayes_diag <- function( bayes_model, convergence = TRUE, offset = 0){
 #' custom_func <- function(x) x^2 + 1
 #' bayes_coefficient_estimate_switch(values, custom_func)
 #'
-#' @export
+#' @export 
 bayes_estimate_transformation <- function(data, transformation, coefficient = NULL) {
   # If transformation is already a function, use it directly
   transform_func <- if( is.function(transformation) ) {
     transformation
-  } else {
+  } 
+  if( transformation %in% c("mean", "m", "M") ) return( data )
+  else {
     # Otherwise, get the function based on the name
     transform_func <- switch(
       transformation,
@@ -401,11 +403,9 @@ bayes_tbl_sum <- function(bayes_model
     #' If the coefficient name starts with "Threshold" or "Intercept" (or
     #' additional - also ignore case, then we do not want to estimate the
     #' coefficient differently (i.e., follow est_formula).
-    except_coefficient_switch <- purrr::map(est_except, \(except){
-      stringr::str_starts(coefficient, stringr::regex(paste0("^", execpt), ignore_case = T ))
+    except_coefficient_switch <- purrr::map(coef_except, \(except){
+      stringr::str_starts(coefficient, stringr::regex(paste0("^", except), ignore_case = T ))
     }) |> list_c()
-    
-    print(paste0(" coef switch:", except_coefficient_switch))
     
     # If coefficient is except, then mean transformation, otherwise, as specified
     if( any(except_coefficient_switch) ){
