@@ -34,12 +34,14 @@ options(
   
   #' Generally, leave the below alone.
   , project_custom_colours = list(
-    `-r` = "#ffd6d2", r = "#F8766D", R = "#b20b00", `+R` = "#8c0000",
-    `-b` = "#d6e9ff", b = "#78ADFF", B = "#00348C", `+B` = "#00246D",
-    `-g` = "#c9ffd6", g = "#00BA38", G = "#006400", `+G` = "#004B00",
-    `-o` = "#ffe0c2", o = "#FF9E4A", O = "#B25000", `+O` = "#8C3D00",
-    `-y` = "#fffbd6", y = "#FFE359", Y = "#D1B000", `+Y` = "#AA8F00",
-    `-p` = "#e9d6ff", p = "#B476FF", P = "#7436B3", `+P` = "#5A1A99"
+    B = "#000000", W = "#ffffff"
+    , `/G` = "#F5F5F5", `-k` = "#D3D3D3", k = "#808080", `+K` = "#404040", `*K` = "#1A1A1A"
+    , `/r` = "#ffd6d2", `-r` = "#F8A290", r = "#F8766D", `+r` = "#b20b00", `*r` = "#8c0000"
+    , `/b` = "#d6e9ff", `-b` = "#8EBEFF", b = "#78ADFF", `+b` = "#00348C", `*b` = "#00246D"
+    , `/g` = "#c9ffd6", `-g` = "#7AD686", g = "#00BA38", `+g` = "#006400", `*g` = "#004B00"
+    , `/o` = "#ffe0c2", `-o` = "#FFC490", o = "#FF9E4A", `+o` = "#B25000", `*o` = "#8C3D00"
+    , `/y` = "#fffbd6", `-y` = "#FFF090", y = "#FFE359", `+y` = "#D1B000", `*y` = "#AA8F00"
+    , `/p` = "#e9d6ff", `-p` = "#D0B6FF", p = "#B476FF", `+p` = "#7436B3", `*p` = "#5A1A99"
   )
   # project_custom_colours_rrR      = c("#ffd6d2", "#F8766D", ),
   # project_custom_colours_rgy      = c("#F8766D", "#619CFF", "#f8ea6d"),
