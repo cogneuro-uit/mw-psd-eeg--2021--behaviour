@@ -7,8 +7,8 @@ figs[["probes__PS_x_time--data"]] <-
   stat_summary(geom = "line") +
   stat_summary(aes(col=NULL), geom = "ribbon", alpha = .3) +
   geom_smooth(method="lm", alpha=.2) +
-  scale_color_manual(values=gen_col("br")) +
-  scale_fill_manual( values=gen_col("br")) +
+  scale_color_manual(values = gen_col("br")) +
+  scale_fill_manual( values = gen_col("br")) +
   coord_cartesian(ylim=c(1,4)) +
   theme(legend.position = "top")
 

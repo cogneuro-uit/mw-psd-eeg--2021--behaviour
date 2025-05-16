@@ -1,4 +1,5 @@
-# NO VIS NECESSARY?!
+#
+# Not included because it is based on an earlier analysis, that we dropped.
 #
 #
 # # Model
