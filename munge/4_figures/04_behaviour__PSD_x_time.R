@@ -7,8 +7,8 @@ figs[["behaviour__PSD_x_time--data"]] <-
   stat_summary(geom = "line") +
   stat_summary(aes(col=NULL), geom = "ribbon", alpha = .2) +
   geom_smooth(method="lm", alpha =.2) +
-  scale_color_manual(values=gen_col("br")) +
-  scale_fill_manual( values=gen_col("br")) +
+  scale_color_manual(values = gen_col("br")) +
+  scale_fill_manual( values = gen_col("br")) +
   theme(legend.position = "top")
 
 conditional_save(
