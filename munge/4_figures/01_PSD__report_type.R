@@ -10,9 +10,9 @@ figs[["PSD__report_type"]] <-
     str_starts(name, "Adjust") ~ "Adjusted", 
     str_starts(name, "Self") ~ "Self report") |> 
       fct_relevel(c("Self report", "Actigraphy"))) |>
-  ggplot(aes(subj, SD, col = name)) + 
-  stat_summary(position=position_dodge(.05)) +
-  labs(y = "Sleep deprivation", col = "Source", x = "Participant") + 
+  ggplot(aes(subj, SD, col = name)) +
+  stat_summary(position = position_dodge(.05)) +
+  labs(y = "Sleep deprivation", col = "Source", x = "Participant") +
   geom_hline(yintercept = -2) +
   geom_hline(yintercept = -1.5, col="red", linetype="dashed") +
   ggrepel::geom_text_repel(aes(label = if_else(SD > -1.5, subj, NA)), box.padding = .4) +
