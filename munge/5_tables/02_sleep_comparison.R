@@ -19,7 +19,8 @@ tbls[["sleep_comparison"]] <-
   cols_move(e2, ns_sd) |>
   cols_align("center", c(everything(),-name)) |>
   tab_footnote(
-    md("*Note.* Differences are calculated as partial sleep deprivation (PSD) -  normal sleep (NS).")
+    md("*Note.* Differences are calculated as partial sleep deprivation (PSD) -  normal sleep (NS). 
+       BF~10~ > 1 indicate the evidence in favour of the alternative hypothesis, while a BF~10~ < 1 indicate evidence for the null hypothesis.")
     # PANAS = positive and negative affect scale, pre = pre-task measure, post = post-task measure, pos = positive, neg = negative. 
   ) |> 
   opt_footnote_marks(marks = letters) |>

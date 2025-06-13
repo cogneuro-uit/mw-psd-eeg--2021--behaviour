@@ -71,7 +71,8 @@ mutate_bayes_mod_probe <- function(data){
         Threshold1 = "Intercept[1]", 
         Threshold2 = "Intercept[2]", 
         Threshold3 = "Intercept[3]", 
-        Trial = "probenum_prop",  
+        Trial = "probenum_prop", 
+        Trial = "probenum",
         BV = "zlogbv",
         AE = "zlogapen", 
         `Pre-positive` = "pre_pos", 
@@ -79,6 +80,7 @@ mutate_bayes_mod_probe <- function(data){
         
         # Continuous
         `PSD` = "c.Adjusted_Duration.diff.pos", 
+        `PSD x Trial` = "c.Adjusted_Duration.diff.pos:probenum",
         `PSD x Trial` = "c.Adjusted_Duration.diff.pos:probenum_prop",
         `PSD x AE`    = "c.Adjusted_Duration.diff.pos:zlogapen",
         `PSD x BV`    = "c.Adjusted_Duration.diff.pos:zlogbv",
@@ -87,6 +89,7 @@ mutate_bayes_mod_probe <- function(data){
         # Excluded
         #' This part is used below
         `PSD` = "sleepdepSD", 
+        `PSD x Trial` = "sleepdepSD:probenum",
         `PSD x Trial` = "sleepdepSD:probenum_prop",
         `PSD x AE`    = "sleepdepSD:zlogapen",
         `PSD x BV`    = "sleepdepSD:zlogbv",
@@ -97,9 +100,9 @@ mutate_bayes_mod_probe <- function(data){
         "Trial", "BV", "AE", "Pre-positive", "Pre-negative", 
         "PSD", "PSD x Trial", "PSD x BV", "PSD x AE",
         "PSD x Pre-positive", "PSD x Pre-negative",
-        "$\\sigma$ (subjects)", # "Sigma (subjects)", 
+        "Sigma (subj)", # "Sigma (subjects)", 
         "LOOIC",
-        "$\\text{R}^2$" #"R2"
+        "R2"
       ))
     )  |>
     arrange(var)
@@ -170,63 +173,27 @@ mutate_bayes_mod_beh <- function(data){
     mutate(var = fct_recode(
       var, 
       Intercept            = "Intercept", 
-      Trial                = "probenum_prop",  
+      Trial                = "probenum_prop",
+      Trial                = "probenum",
       `Pre-positive`       = "pre_pos", 
       `Pre-negative`       = "pre_neg", 
       # continuous
-      PSD                  = "c.Adjusted_Duration.diff.pos", 
-      `PSD x Trial`        = "c.Adjusted_Duration.diff.pos:probenum_prop",  
-      `PSD x Pre-positive` = "c.Adjusted_Duration.diff.pos:pre_pos", 
+      PSD                  = "c.Adjusted_Duration.diff.pos",
+      `PSD x Trial`        = "c.Adjusted_Duration.diff.pos:probenum_prop",
+      `PSD x Trial`        = "c.Adjusted_Duration.diff.pos:probenum",
+      `PSD x Pre-positive` = "c.Adjusted_Duration.diff.pos:pre_pos",
       `PSD x Pre-negative` = "c.Adjusted_Duration.diff.pos:pre_neg",
       # Dichotomous
       PSD                  = "sleepdepSD",
-      `PSD x Trial`        = "sleepdepSD:probenum_prop",  
-      `PSD x Pre-positive` = "sleepdepSD:pre_pos", 
+      `PSD x Trial`        = "sleepdepSD:probenum_prop",
+      `PSD x Trial`        = "sleepdepSD:probenum",
+      `PSD x Pre-positive` = "sleepdepSD:pre_pos",
       `PSD x Pre-negative` = "sleepdepSD:pre_neg"),
       var = ordered(var, levels = c(
         "Intercept", "Trial", "Pre-positive", "Pre-negative", "PSD", 
         "PSD x Trial", "PSD x Pre-positive", "PSD x Pre-negative", 
-        "$\\sigma$ (subjects)", #"Sigma (subjects)", 
-        "LOOIC", "$\\text{R}^2$" # "R2"
+        "Sigma (subj)", "LOOIC", "R2"
       ) )
     ) |>
     arrange(var) 
 }
-
-behav_tbl <- 
-  bayes_tbl_sum(mod_bay_sleep_cont$bv, add_sigma = T, fmt_md=T,
-                add_loo = T,add_R2 = T, apa_table = T) |>
-  bayes_tbl_add_sig() |>
-  mutate_bayes_mod_beh() |>
-  rename_with(~paste0("cont_bv_", .x), 3:6) |>
-  left_join(
-    bayes_tbl_sum(mod_bay_sleep_cont$ae, add_sigma = T, fmt_md=T,
-                  add_loo = T,add_R2 = T, apa_table = T) |>
-      bayes_tbl_add_sig() |>
-      mutate_bayes_mod_beh() |>
-      rename_with(~paste0("cont_ae_", .x), 3:6)
-  ) |>
-  # split
-  left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$bv, add_sigma = T, fmt_md=T,
-                  add_loo = T,add_R2 = T, apa_table = T) |>
-      bayes_tbl_add_sig() |>
-      mutate_bayes_mod_beh() |>
-      bayes_tbl_add_sig() |>
-      rename_with(~paste0("exc_bv_", .x), 3:6)
-  ) |>
-  left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$ae, add_sigma = T,fmt_md=T,
-                  add_loo = T,add_R2 = T, apa_table = T) |>
-      mutate_bayes_mod_beh() |>
-      rename_with(~paste0("exc_ae_", .x), 3:6)
-  )  |>
-  mutate(
-    c_ae_p   = if_else(as.numeric(cont_ae_p) >= .95, TRUE, FALSE),
-    c_bv_p   = if_else(as.numeric(cont_bv_p) >= .95, TRUE, FALSE),
-    e_ae_p   = if_else(as.numeric(exc_ae_p) >= .95, TRUE, FALSE),
-    e_bv_p   = if_else(as.numeric(exc_bv_p) >= .95, TRUE, FALSE),
-    diff_bv  = if_else(c_bv_p != e_bv_p, TRUE, FALSE),
-    diff_ae  = if_else(c_ae_p != e_ae_p, TRUE, FALSE),
-    e = ""
-  ) 
