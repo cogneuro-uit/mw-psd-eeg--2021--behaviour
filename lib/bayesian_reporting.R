@@ -483,8 +483,6 @@ bayes_tbl_sum <- function(bayes_model
       sigma_est
     }) |> purrr::list_rbind()
     
-    print(tbl)
-    print(sigma_tbl)
     tbl <- dplyr::bind_rows(tbl, sigma_tbl)
   }
   
@@ -550,6 +548,7 @@ bayes_tbl_sum <- function(bayes_model
       R2_name <- ifelse(fmt_md, "$\\text{R}^2$", "R2")
       
       r2 <- tidybayes::mean_hdi( bayes_model[["criteria"]][["bayes_R2"]] ) |>
+        filter(row_number() == 1) |>
         fmt_APA_numbers(.chr=T, .low_val=T, .rm_leading_0 = T)
       
       r2_df <- tibble::tibble(
@@ -582,7 +581,7 @@ bayes_tbl_add_sig <- function(data, sig = .95, na.rm = T){
   if(na.rm) data <- data |> mutate( ppp222 = if_else( is.na(ppp222), 0, ppp222) )
   data |>
     mutate(
-      m  = if_else(ppp222 > sig, paste0(m,"*"), m),
+      m  = if_else(ppp222 >= sig, paste0(m,"*"), m),
       ppp222 = NULL
     )
 }
