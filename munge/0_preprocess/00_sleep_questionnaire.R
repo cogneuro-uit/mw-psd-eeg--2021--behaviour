@@ -5,7 +5,7 @@ NAMES_panas_neg <- map(c(2, 4, 6, 7, 8, 11, 13, 15, 18, 20), \(x){
   paste0("S6_Q",x)}) |> list_c()
 
 
-#' General sleep summary 
+## General sleep summary  ======
 general_sleep <- 
   sleep_quiz |>
   mutate(
@@ -35,7 +35,7 @@ general_sleep <-
   add_row(name = "actual_sleep", .before=6) 
 
 
-#' Transform variables to calculate various scales:
+##  Transform variables to calculate various scales ======
 sleep_quiz_trans <- 
   sleep_quiz |>
   rowwise() |>
@@ -90,6 +90,7 @@ sleep_quiz_trans <-
       c7a <= 4 ~ 2,
       c7a <= 6 ~ 3),
     
+    ## DINURAL SCALE
     # Reverse scores: 
     S5_Q1 = 5 - S5_Q1,
     S5_Q3 = 5 - S5_Q3,
@@ -98,71 +99,107 @@ sleep_quiz_trans <-
   )  |>
   select(-c2a, -c2b, -c4a, -c7a)
 
-#' Summarize the scales
+
+## Cronbach's alpha    =====
+sleep_quiz_alpha <- 
+  tibble(
+  fatigue     = psych::alpha(sleep_quiz_trans |> select(S2_Q1:S2_Q8) ) |> pluck("feldt") |> unlist() |> fmt_APA_numbers(.low_val = T)
+  , names       = names(fatigue)
+  , sleepiness  = psych::alpha(sleep_quiz_trans |> select(S3_Q1:S3_Q8) ) |> pluck("feldt") |> unlist() |> fmt_APA_numbers(.low_val = T)
+  , insomnia    = psych::alpha(sleep_quiz_trans |> select(S4_Q1:S4_Q7) ) |> pluck("feldt") |> unlist() |> fmt_APA_numbers(.low_val = T)
+  , pittsburgh  = psych::alpha(sleep_quiz_trans |> select(c1:c7) )       |> pluck("feldt") |> unlist() |> fmt_APA_numbers(.low_val = T)
+  , dinural_avg = psych::alpha(sleep_quiz_trans |> select(S5_Q1:S5_Q7) ) |> pluck("feldt") |> unlist() |> fmt_APA_numbers(.low_val = T)
+  , panas_neg   = psych::alpha(sleep_quiz_trans |> select(NAMES_panas_neg) ) |> pluck("feldt") |> unlist() |> fmt_APA_numbers(.low_val = T)
+  , panas_pos   = psych::alpha(sleep_quiz_trans |> select(NAMES_panas_pos) ) |> pluck("feldt") |> unlist() |> fmt_APA_numbers(.low_val = T)
+  , alcohol     = psych::alpha(sleep_quiz_trans |> select(S7_Q1:S7_Q3) ) |> pluck("feldt") |> unlist() |> fmt_APA_numbers(.low_val = T)
+  ) |>
+  pivot_longer(c(everything(), -names)) |>
+  mutate(names = case_when(
+    str_starts(names, "lower.") ~ "Lower"
+    , str_starts(names, "alpha") ~ "alpha"
+    , str_starts(names, "upper") ~ "Upper"
+  )) |> 
+  filter(!is.na(names)) |>
+  pivot_wider(names_from = names, values_from = value) |>
+  mutate(
+    across(c(2:4), ~fmt_APA_numbers(.x, .low_val = T, .chr=T, .rm_leading_0 = T))
+    , CI = sprintf("[%s, %s]", Lower, Upper)
+  ) |>
+  select(name, alpha, CI)
+
+# for reporting alphas in text
+rep_sleep_quiz_alpha <- 
+  sleep_quiz_alpha |> mutate(CI = NULL, alpha = as.character(alpha)) |> 
+  pivot_wider(names_from = name, values_from = alpha) 
+  
+
+## Summarize the scales ======
 sleep_quiz_summary <- 
   sleep_quiz_trans |>
   rowwise() |>
   mutate(
-    .before = 1,
     #' **FATIGUE**
     #' Average all responses (S2.1:S2.8)
-    fatigue     = mean(c_across(starts_with("S2_"))),
+    , fatigue     = mean(c_across(starts_with("S2_")))
+    , fatigue_n   = length(c_across(starts_with("S2_"))) 
     
     #' **Sleepiness** 
     #' Sum all responses.
     #' 0-5 : low; 6-10 : normal; 11-12 : mild
     #' 13-15 : Moderate; 16-24 : severe
-    sleepiness  = sum(c_across(starts_with("S3_"))),
+    , sleepiness   = sum(c_across(starts_with("S3_")))
+    , sleepiness_n = length(c_across(starts_with("S3_")))
     
     #' **Insomnia**
     #' Sum all responses (S4.1:S4.7)
     #' 0-7: no insomnia; 8-14: subthreshold; 
     #' 15-21: moderate; 22-28: severe
-    insomnia    = sum(c_across(S4_Q1:S4_Q7), na.rm = T),
+    , insomnia    = sum(c_across(S4_Q1:S4_Q7), na.rm = T)
+    , insomnia_n  = length(c_across(S4_Q1:S4_Q7))
     
     #' **Sleep qualty**
     #' Sum all C columns
     #' Higher scores indicate worse sleep quality.
-    pittsburgh  = sum(c_across(c1:c7)),
+    , pittsburgh  = sum(c_across(c1:c7), na.rm = T)
+    , pittsburgh_n  = length(c_across(c1:c7))
     
     #' **Day preference**
     #' Average or sum all responses
     #' *LOWER* values indicate *NIGHT preference* (night owl)
     #' *HIGHER* values indicate *EARLY preference* (early bird) 
-    dinural_avg = mean(c_across(S5_Q1:S5_Q7)),
-    dinural_sum = sum(c_across(S5_Q1:S5_Q7)),
+    , dinural_avg   = mean(c_across(S5_Q1:S5_Q7))
+    , dinural_n     = length(c_across(S5_Q1:S5_Q7))
+    , dinural_sum   = sum(c_across(S5_Q1:S5_Q7))
     
     #' **PANAS**
-    panas_neg   = sum(c_across(NAMES_panas_neg), na.rm = T),
-    panas_pos   = sum(c_across(NAMES_panas_pos), na.rm = T),
+    , panas_neg   = sum(c_across(NAMES_panas_neg), na.rm = T)
+    , panas_neg_n = length(c_across(NAMES_panas_neg))
+    , panas_pos   = sum(c_across(NAMES_panas_pos), na.rm = T)
+    , panas_pos_n = length(c_across(NAMES_panas_pos))
     
     #' **Alcohol** 
-    alcohol     = sum(c_across(S7_Q1:S7_Q3), na.rm = T)
+    , alcohol     = sum(c_across(S7_Q1:S7_Q3), na.rm = T)
+    , alcohol_n   = length(c_across(S7_Q1:S7_Q3))
   ) |> 
   ungroup() |>
-  pivot_longer(c(
-    fatigue, sleepiness, insomnia, pittsburgh, dinural_avg, 
-    panas_pos, panas_neg, alcohol)
+  pivot_longer(c(fatigue:alcohol_n)) |> 
+  mutate(
+    split = if_else(str_detect(name, "_n$"), "num", "value")
+    , name = if_else(str_detect(name, "_n$"), NA, name)
   ) |> 
+  fill(name, .direction = "down") |>
+  pivot_wider(names_from = split, values_from = value) |>
   summarise(
     .by = name, 
-    m   = mean(value, na.rm=T),
-    sd  = sd(value,   na.rm=T),
-    min = min(value,  na.rm=T),
-    max = max(value,  na.rm=T)
+    , m   = mean(value, na.rm=T)
+    , sd  = sd(value,   na.rm=T)
+    , min = min(value,  na.rm=T)
+    , max = max(value,  na.rm=T)
+    , n = unique(num)
   ) |>
   add_row(name = "PANAS", .before=6) |>
   left_join(
-    tibble(
-      fatigue     = psych::alpha(sleep_quiz_trans |> select(S2_Q1:S2_Q8) )$total$raw_alpha |> fmt_APA_numbers(.low_val = T),
-      sleepiness  = psych::alpha(sleep_quiz_trans |> select(S3_Q1:S3_Q8) )$total$raw_alpha |> fmt_APA_numbers(.low_val = T),
-      insomnia    = psych::alpha(sleep_quiz_trans |> select(S4_Q1:S4_Q7) )$total$raw_alpha |> fmt_APA_numbers(.low_val = T),
-      pittsburgh  = psych::alpha(sleep_quiz_trans |> select(c1:c7) )$total$raw_alpha |> fmt_APA_numbers(.low_val = T),
-      dinural_avg = psych::alpha(sleep_quiz_trans |> select(S5_Q1:S5_Q7) )$total$raw_alpha |> fmt_APA_numbers(.low_val = T),
-      panas_neg   = psych::alpha(sleep_quiz_trans |> select(NAMES_panas_neg) )$total$raw_alpha |> fmt_APA_numbers(.low_val = T),
-      panas_pos   = psych::alpha(sleep_quiz_trans |> select(NAMES_panas_pos) )$total$raw_alpha |> fmt_APA_numbers(.low_val = T),
-      alcohol     = psych::alpha(sleep_quiz_trans |> select(S7_Q1:S7_Q3) )$total$raw_alpha |> fmt_APA_numbers(.low_val = T),
-    ) |> pivot_longer(everything(), values_to = "alpha") 
+    sleep_quiz_alpha
     , by = "name"
   )
 
