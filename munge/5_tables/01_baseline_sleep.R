@@ -12,19 +12,25 @@ tbls[["baseline_sleep"]] <-
   ) |>
   bind_rows( sleep_quiz_summary |> mutate(across(c(min,max),  ~fmt_APA_numbers(.x, .chr=T))) ) |>
   mutate(
-    across(c(where(is.numeric), -alpha), ~fmt_APA_numbers(.x, .chr=T)),
-    across(everything(), ~if_else(is.na(.x), "", as.character(.x))),
-    range = if_else(min=="", "", paste0(min, " - ", max))
-  ) |>
+    across(c(where(is.numeric), -alpha), ~fmt_APA_numbers(.x, .chr=T))
+    , across(everything(), ~if_else(is.na(.x), "", as.character(.x)))
+    , range = if_else(min=="", "", paste0(min, " - ", max))
+    , n = as.integer(n)
+    , n = if_else(is.na(n), "", as.character(n))
+  )  |>
   select(-min, -max) |>
   gt() |>
+  tab_spanner("Data", c(m, sd, range)) |>
+  tab_spanner("Reliability", c(n, alpha, CI)) |>
   cols_label(
-    name  ~ "Measure",
-    m     ~ md("*M*"),
-    sd    ~ md("*SD*"),
-    range ~ "Data range",
-    alpha ~ md("$\\alpha$")
+    name  ~ "Measure"
+    , m     ~ md("*M*")
+    , sd    ~ md("*SD*")
+    , range ~ "Data range"
+    , alpha ~ md("$\\alpha$")
+    , CI = md("95% CI")
   ) |>
+  cols_move(range, sd) |>
   text_case_match(
     "night_shift"        ~ "Night shift",
     "preferential_sleep" ~ "Preferential sleep",
@@ -64,7 +70,8 @@ tbls[["baseline_sleep"]] <-
                locations = cells_body(name, c(16)) ) |>
   tab_footnote("Measure provided by Saksvik-Lehouillier et al. (2020).", 
                locations = cells_body(name, c(19)) ) |>
-  tab_fmt_APA()
+  tab_fmt_APA() |>
+  cols_align("center", c(everything(), -name))
 
 
 conditional_save(
