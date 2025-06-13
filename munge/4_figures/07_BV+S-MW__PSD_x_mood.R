@@ -40,7 +40,7 @@ figs[["BV+SMW__PSD_x_pre_pos"]] <-
   ggplot(aes(mood_deviation, value, col = cond, linetype = cond)) + 
   facet_wrap(~out, scales="free") +
   geom_line(linewidth = 1) +
-  labs( y = "Change in outcome", x = "Z-scored positive mood", 
+  labs( y = "Change in outcome", x = "Z-scored positive affect", 
         col = "Condition", linetype="Condition") +
   scale_color_manual(   values = name_colour_interactions ) +
   scale_linetype_manual(values = name_line_interactions ) +
@@ -49,6 +49,6 @@ figs[["BV+SMW__PSD_x_pre_pos"]] <-
 
 conditional_save(
   figs[["BV+SMW__PSD_x_pre_pos"]]
-  , "Interaction - Behaviour on MW"
+  , "Interaction - PSDxMoodxBehaviour on MW"
 )
 ""

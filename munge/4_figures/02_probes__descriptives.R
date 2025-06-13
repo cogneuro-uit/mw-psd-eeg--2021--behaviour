@@ -18,7 +18,7 @@ plot_data <-
     highlight = unique(highlight),
     Condition2 = unique(Condition2),
   ) |>
-  pivot_longer(c(MW,MB,SMW), names_to="name", values_to="value") |>
+  pivot_longer(c(MW,MB,SMW), names_to = "name", values_to = "value") |>
   mutate(
     name = ordered(name, levels = c("MW", "MB", "SMW")),
     name = fct_recode(name, `% MW` = "MW", `% MB` = "MB", `% Spontaneous` = "SMW")
@@ -102,8 +102,8 @@ plot2_data_sum <-
   pivot_longer(c(cont_n, exc_n), values_to="count", names_to="dataset") |>
   mutate(
     probe_type = case_when(
-      probe_type=="mw" ~ "Mind wandering",
-      probe_type=="mb" ~ "Mind blanking",
+      probe_type=="mw"  ~ "Mind wandering",
+      probe_type=="mb"  ~ "Mind blanking",
       probe_type=="smw" ~ "Spontaneous mind wandering",
     ) |> fct_relevel("Mind wandering"), 
     dataset = if_else(dataset=="exc_n", "Dichotomous", "Continuous"),
@@ -122,7 +122,7 @@ figs[["probes__descriptives_count"]] <-
   geom_bar(data = plot2_data_sum |> filter(dataset=="Dichotomous"), 
            stat = "identity", color="black", position = position_dodge(.9), linewidth=0.2,
            width = .45) +
-  scale_fill_manual(values = gen_col("bBrR") ) + 
+  scale_fill_manual(values = gen_col("/bb/rr") ) + 
   labs(x = "Thought probe response", y = "Count", title = "b)", fill = "Condition") +
   theme(legend.position = "top", legend.direction = "horizontal")
 

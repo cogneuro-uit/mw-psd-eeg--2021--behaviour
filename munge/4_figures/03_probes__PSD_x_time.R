@@ -9,7 +9,7 @@ figs[["probes__PS_x_time--data"]] <-
   geom_smooth(method="lm", alpha=.2) +
   scale_color_manual(values = gen_col("br")) +
   scale_fill_manual( values = gen_col("br")) +
-  coord_cartesian(ylim=c(1,4)) +
+  coord_cartesian(ylim = c(1,4)) +
   theme(legend.position = "top")
 
 conditional_save(
@@ -64,7 +64,7 @@ figs[["probes__PSD_x_time"]] <-
   ggplot(aes(z_score, value, col = cond, linetype=cond)) +
   facet_wrap(~probes) +
   geom_line(linewidth = 1) +
-  labs( y = "Probe Response", x = "Time-on-task (probe number)", 
+  labs( y = "Probe Response", x = "Probe number (time-on-task)", 
         col = "Condition", linetype = "Condition") +
   scale_x_continuous(breaks = seq(0,1,1/(25/5)), labels = c(1, seq(5,26,5))) + 
   scale_color_manual(    values = name_colour_interactions ) +
