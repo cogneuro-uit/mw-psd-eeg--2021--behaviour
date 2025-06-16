@@ -107,6 +107,8 @@ format:
 
 crossref-fig-title: "Figure S"
 fig-title-prefix: "Figure S"
+crossref-tbl-title: "Table S"
+fig-title-prefix: "Table S"
 floatsintext: true
 
 execute:
@@ -126,9 +128,40 @@ quarto_load_project(relative_path, load_data_data = T)
 
 Participant 31 did not self-report their normal sleep before the NS test and received special treatment. We used the latest nights of sleep as a proxy for their 3 nights of NS before the NS test. 
 
+<!-- Overall sleep effect -->
+Participants demonstrated significantly reduced sleep duration during the PSD period compared to the NS period, as confirmed by both the self-reported, actigraphy and the adjusted sleep estimates. However, considerable inter-individual variability was observed in the magnitude of sleep restriction achieved. Previous research demonstrates that sensitivity to sleep loss varies between, but remains consistent within individuals [@hudson2020; @rupp2012; @vandongen2004; @dennis2017]. This suggests that participants may have naturally modulated their sleep restriction according to their own sensitivity to sleep loss. However, the variability in sleep loss could have occured because of ambiguous sleep restriction instructions. Sleep restriction protocols typically employ either a fixed time-in-bed [e.g., @hudson2020; @vandongen2004] or a predetermined bedtimes [@saksvik-lehouillier2020]. In contrast, our protocol required participants to estimate their own sleep restriction, potentially allowing for less stringent implementation among some individuals. Therefore, the inter-individual variability in sleep loss likely reflect both individual differences to sleep loss as well as methodological limitations of the protocol. 
+
+<!--# We have some discrepancies, explain how these might arise -->
+
+The self-report and actigraphy did not always provide similar sleep/wake times. The reason for the discrepancies likely stems from two sources: First, participants might have adjusted their reports to meet perceived study expectations (e.g., reporting later bedtimes or earlier wake times than actually experienced). Second, actigraphy has inherent limitations in accurately detecting sleep/wake transitions. For example, actigraphy might misinterpret motionless pre-sleep activities as sleep - such as using a mobile phone in bed, a common phenomenon in modern society [@gradisar2013; @hjetland2021; @hysing2015]. Similarly, it might fail to register actual wake times when participants remain in bed after waking. Regardless of these measurement challenges, our data showed that participants generally slept less during the PSD period compared to the NS period, as indicated by the self-report, actigraphy and most importantly, the adjusted sleep estimates that takes both measures into consideration.
+
+### Shiney
+
+In the Shiny application [@shiney2025; see the application at <https://github.com/cogneuro-uit/mw-psd-eeg--2021--behaviour/tree/master/shiny-sleep-adjustments>], time was visualized on the x-axis, while the actigraphy recorded activity (raw data) and light (log-transformed) were visualized on separate y-axis. Coloured marks highlighted the self-reported and actigraphy sleep onset and wake times. The rest interval was indicated by shaded areas ranging from the sleep attempt to the sleep onset, and the wake time to the rise time for the self-report and actigraphy. The researchers could either adjust two sliders to adjust the time (hours and minutes), providing a third coloured marker, or use two separate buttons to apply the exact values of the self-reported or actigraphy as the onset/wake time. Around each marker, a transparently coloured area of (+-) 15 minute was presented.
+
+
 ### Adjusted Sleep Estimate 
 
-@fig-SD-between-modalities indicates the estimated sleep loss during the partial sleep deprivation (PSD) compared to the normal sleep (NS).
+@fig-onset-wake-diffs indicate the differences between self-reported and actigraphy onset/wake times. 
+
+```{r}
+#| label: fig-onset-wake-diffs
+#| fig-cap: Differences Between Self-Reported and Actigraphy Sleep Onset and Wake
+#| fig-cap-location: top
+#| fig-format: svg
+#| fig-width: 4.5
+#| fig-height: 8
+#| fig-dpi: 300
+#| apa-note: "(a) Indicate the overall difference between the self-report and actigraphy estimated sleep onset/wake across condition. (b) Indicate the individual relationship between self-reported and actigraphy across conditions. NS = normal sleep, PSD = partial sleep deprivation."
+#| ##  META  ##
+#| include: true
+#| warning: false
+#| message: false
+
+figs[["onset-wake_difference"]]
+```
+
+@fig-SD-between-modalities indicates the estimated sleep loss during the partial sleep deprivation (PSD) compared to the normal sleep (NS). Note some great discrepancies between red (self-reported) and blue (actigraphy) estimates. 
 
 ```{r}
 #| label: fig-SD-between-modalities
@@ -151,7 +184,7 @@ figs[["PSD__report_type"]]
 ```{r}
 #| label: fig-sleeptimes-across-source
 #| fig-cap-location: top
-#| fig-cap: Sleep Deprivation Across Sleep Source
+#| fig-cap: Relationship Between Sleep Loss and Mind Wandering Across Sleep Estimates
 #| fig-height: 5
 #| fig-dpi: 300
 #| apa-note: "NS = normal sleep, PSD = partial sleep deprivation"
@@ -162,8 +195,6 @@ figs[["PSD__report_type"]]
 
 figs[["sleep_variables_mw"]]
 ```
-
-
 ### Test of Differences Between Sleep Estimates Between Modality
 
 We explored whether there was any significant difference between the modalities (self-report and actigraphy). @tbl-diff-sr-ag show the result of a simple paired sample Bayesian t-test, indicating that sleep duration but not sleep onset and wake time differed between modalities.
@@ -217,6 +248,10 @@ tbls[["test_sleep_wake_delay"]]
 ### The Relationship Between Sleep Quality and Reduced Sleep
 
 To test whether sleep quality improved with greater PSD, we used a simple Bayesian linear model with sleep quality as the outcome and sleep loss as the predictor. Results are shown presented in @tbl-sleep-quality and illustrated in @fig-sleep-quality-over-sleep-loss, indicating no relationship between sleep loss (hour of reduced sleep) and sleep quality. 
+
+<!--# Sleep quality -->
+
+Sleep quality has previously been reported to be positively correlated with time spent awake and objective sleep quality, and negatively correlated with sleep latency [@elmenhorst2008; @saksvik-lehouillier2020]. Although our participants reported sleeping less during the PSD period, they did not report better sleep quality. Given the variation in sleep reduction between participants, sleep quality might have improved only in participants who slept the least. However, an exploratory analysis (see the Supplementary) did not find support for this idea: Those who slept the least had similar sleep quality as those who slept more, indicating that the PSD did not influence sleep quality in our sample. One alternative explanation is that participants used their phone before falling asleep, which could have reduced their sleep quality [e.g., @exelmans2019; @hjetland2021; @hysing2015; @lastella2020; @nosetti2021], possibly through blue-light [@chang2015]. <!--# Thus, it could be that  during the PSD but was reduced but was cancelled by  and reduced from phone use, they would ultimately cancel each other out. sleep quality was improved during the PSD, but that improvement could be cancelled by their phone use.  --> However, this alternative explanation is speculative as we do not have data on participant's phone use, and future research is needed to confirm whether bedtime phone use impedes improvements in sleep quality following sleep deprivation.
 
 ```{r}
 #| label: tbl-sleep-quality
