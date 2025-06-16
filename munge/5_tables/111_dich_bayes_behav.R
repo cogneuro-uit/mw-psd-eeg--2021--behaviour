@@ -1,4 +1,3 @@
-
 behav_tbl <- 
   bayes_tbl_sum(mod_bay_sleep_cont$bv, add_sigma = T, fmt_md=T,
                 add_loo = T,add_R2 = T, apa_table = T) |>

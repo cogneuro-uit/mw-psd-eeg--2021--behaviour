@@ -1,4 +1,3 @@
-
 probe_tbl_reduced <- 
   bayes_tbl_sum(mod_bay_sleep_cont$mw, apa_table = T)  |>
   bayes_tbl_add_sig() |>

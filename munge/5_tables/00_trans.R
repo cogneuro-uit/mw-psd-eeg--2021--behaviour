@@ -33,12 +33,12 @@ sleep_time_session_condition <-
   pivot_wider(names_from = sleep_cond, values_from = c(mean, sd, min, max)) |>
   summarise(
     .by     = c(modality, name),
-    psd_m   = mean( mean_sd, na.rm=T),
+    psd_m   = mean(mean_sd, na.rm=T),
     psd_sd  = sd(  mean_sd, na.rm=T),
     ns_m    = mean(mean_ns, na.rm=T),
-    ns_sd   = sd( mean_ns, na.rm=T),
+    ns_sd   = sd(  mean_ns, na.rm=T),
     diff_m  = psd_m - ns_m,
-    diff_sd = sd(mean_sd-mean_ns, na.rm=T),
+    diff_sd = sd(mean_sd - mean_ns, na.rm=T),
     bf      = extractBF( ttestBF(
       mean_sd[!is.na(mean_sd) & !is.na(mean_ns)], 
       mean_ns[!is.na(mean_sd) & !is.na(mean_ns)], paired=T) )$bf,
@@ -47,19 +47,21 @@ sleep_time_session_condition <-
   ) |> 
   pivot_longer(c(ends_with("_m"), ends_with("_sd")), 
                names_sep = "_", names_to = c("cond", "value2")) |>
+  pivot_wider(names_from = c(cond, value2)) |>
   mutate(
-    modality = if_else(is.na(modality), "Sleep quality", modality),
-    value = case_when(
-      modality == "Sleep quality" ~ fmt_APA_numbers(value, .chr=T),
-      cond == "diff" ~ clock_h_m(value),
-      name == "Sleep duration" ~ clock_h_m(value),
-      value2 == "m" ~ clock_24(value), 
-      T ~ clock_h_m(value),
-    )) |>
-  pivot_wider(names_from = c(cond, value2)) |> 
-  mutate(bf = if_else(bf>1000, format(bf, scientific=T, digits=2), 
-                      fmt_APA_numbers(bf, .chr=T))) |>
-  select(c(everything(), -bf), bf)
+    modality = if_else(is.na(modality), "Sleep quality", modality)
+    , across(c(ends_with("_sd"), diff_m)
+             , ~if_else(modality != "Sleep quality"
+                        , clock_h_m(.x)
+                        , fmt_APA_numbers(.x, .chr = T) ) )
+    , across(c(psd_m, ns_m)
+             , ~if_else(modality != "Sleep quality"
+                        , clock_24(.x)
+                        , fmt_APA_numbers(.x, .chr = T) ) )
+    , bf = if_else(bf>1000, format(bf, scientific=T, digits=2)
+                   , fmt_APA_numbers(bf, .chr=T))
+  ) |>
+  select(c(everything(), -bf), bf) 
 
 ## Bayesian thought probes transformations   =====
 # Function
