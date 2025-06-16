@@ -20,16 +20,14 @@ tbls[["sleep_comparison"]] <-
   cols_align("center", c(everything(),-name)) |>
   tab_footnote(
     md("*Note.* Differences are calculated as partial sleep deprivation (PSD) -  normal sleep (NS). 
-       BF~10~ > 1 indicate the evidence in favour of the alternative hypothesis, while a BF~10~ < 1 indicate evidence for the null hypothesis.")
+       BF~10~ > 1 indicates the evidence in favour of the alternative hypothesis, while a BF~10~ < 1 indicates evidence for the null hypothesis.")
     # PANAS = positive and negative affect scale, pre = pre-task measure, post = post-task measure, pos = positive, neg = negative. 
   ) |> 
   opt_footnote_marks(marks = letters) |>
   # a
   tab_footnote(
     "Sleep quality was rated on a 5-point Likert scale (1 = very bad to 5 = very good).",
-    locations = cells_body(modality, modality=="Sleep quality") ) |>
-  tab_fmt_APA()
-
+    locations = cells_body(modality, modality=="Sleep quality") ) 
 
 conditional_save(
   tbls[["sleep_comparison"]]

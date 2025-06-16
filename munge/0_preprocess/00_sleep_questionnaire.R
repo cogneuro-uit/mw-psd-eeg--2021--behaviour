@@ -9,16 +9,16 @@ NAMES_panas_neg <- map(c(2, 4, 6, 7, 8, 11, 13, 15, 18, 20), \(x){
 general_sleep <- 
   sleep_quiz |>
   mutate(
-    .before=1,
-    night_shift    = S1_Q1,
-    pref_sleep     = as.numeric(S1_Q2)/3600,
-    pref_sleep     = if_else(pref_sleep<=5, pref_sleep+24, pref_sleep),
-    pref_wake      = as.numeric(S1_Q3)/3600,
-    pref_sleep_dur = S1_Q4,
-    sleep_week     = S1_Q5,
-    sleep_week_end = S1_Q6,
-    coff_day       = S1_Q7,
-    energy_drink   = S1_Q8,
+    .before=1
+    , night_shift    = S1_Q1
+    , pref_sleep     = as.numeric(S1_Q2)/3600
+    , pref_sleep     = if_else(pref_sleep<=5, pref_sleep+24, pref_sleep)
+    , pref_wake      = as.numeric(S1_Q3)/3600
+    , pref_sleep_dur = S1_Q4
+    , sleep_week     = S1_Q5
+    , sleep_week_end = S1_Q6
+    , coff_day       = S1_Q7
+    , energy_drink   = S1_Q8
   ) |>
   pivot_longer(c(
     night_shift, pref_sleep, pref_wake, pref_sleep_dur,
@@ -26,10 +26,20 @@ general_sleep <-
   ) |>
   summarise(
     .by = name,
-    m = mean(value, na.rm=T),
-    sd = sd(value, na.rm=T),
-    min = min(value, na.rm=T),
-    max = max(value, na.rm=T),
+    , m   = mean(value, na.rm = T)
+    , sd  = sd(value, na.rm = T) 
+    , min = min(value, na.rm = T) 
+    , max = max(value, na.rm = T)
+  ) |>
+  mutate(
+    across(c(m,min,max), ~ if_else(name %in% c("pref_sleep", "pref_wake")
+                                   , clock_24(if_else(.x>24, .x-24, .x)) 
+                                   , fmt_APA_numbers(.x, .chr = T)) )
+    , sd = if_else(name %in% c("pref_sleep", "pref_wake", "pref_sleep_dur", "sleep_week","sleep_week_end")
+                   , clock_h_m(sd)
+                   , fmt_APA_numbers(sd, .chr = T))
+    , across(c(m,min,max), ~if_else(name %in% c("pref_sleep_dur", "sleep_week", "sleep_week_end")
+                                    , clock_h_m(.x), .x))
   ) |>
   add_row(name = "preferential_sleep", .before=2) |>
   add_row(name = "actual_sleep", .before=6) 

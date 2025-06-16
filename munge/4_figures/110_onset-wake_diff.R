@@ -26,3 +26,8 @@ p2 <-
 
 figs[["onset-wake_difference"]] <- 
   p1 + p2 + patchwork::plot_layout(ncol = 1)
+
+conditional_save(
+  figs[["onset-wake_difference"]] 
+  , "Onset-wake differences"
+)

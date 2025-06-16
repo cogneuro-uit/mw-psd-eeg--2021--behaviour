@@ -1,23 +1,20 @@
-
 tbls[["baseline_sleep"]] <-
   general_sleep |>
-  mutate(
-    max = if_else(max > 24, max - 24, max)
-    , min = case_when( 
-      str_starts(name, "pref_sleep") | str_starts(name, "pref_wake") ~ clock_24(min)
-      , T ~ as.character(min))
-    , max = case_when(
-      str_starts(name, "pref_sleep") | str_starts(name, "pref_wake") ~ clock_24(max)
-      , T ~ as.character(max))
+  mutate( 
+    across(c(m,sd), ~fmt_APA_numbers(.x, .chr=T)) 
+    , across(c(min, max), ~as.character(.x)) 
   ) |>
-  bind_rows( sleep_quiz_summary |> mutate(across(c(min,max),  ~fmt_APA_numbers(.x, .chr=T))) ) |>
+  bind_rows( 
+    sleep_quiz_summary |> mutate(
+      across(c(m,sd,min,max),  ~fmt_APA_numbers(.x, .chr=T))
+      , n = as.character(n) )
+  ) |>
   mutate(
-    across(c(where(is.numeric), -alpha), ~fmt_APA_numbers(.x, .chr=T))
-    , across(everything(), ~if_else(is.na(.x), "", as.character(.x)))
-    , range = if_else(min=="", "", paste0(min, " - ", max))
-    , n = as.integer(n)
-    , n = if_else(is.na(n), "", as.character(n))
+    range = if_else(is.na(min), NA, sprintf("%s - %s", min, max))
+    , across(c(everything(), -name), ~
+               if_else(name %in% c("preferential_sleep", "actual_sleep", "PANAS"), "",.x))
   )  |>
+  filter(!(name == "dinural_sum")) |>
   select(-min, -max) |>
   gt() |>
   tab_spanner("Data", c(m, sd, range)) |>
@@ -26,22 +23,22 @@ tbls[["baseline_sleep"]] <-
     name  ~ "Measure"
     , m     ~ md("*M*")
     , sd    ~ md("*SD*")
-    , range ~ "Data range"
+    , range ~ "Range"
     , alpha ~ md("$\\alpha$")
     , CI = md("95% CI")
   ) |>
   cols_move(range, sd) |>
   text_case_match(
-    "night_shift"        ~ "Night shift",
+    "night_shift"        ~ "Night shift ",
     "preferential_sleep" ~ "Preferential sleep",
-    "pref_sleep"         ~ "Time of going to bed",
-    "pref_wake"          ~ "Time of awakening",
+    "pref_sleep"         ~ "Time of going to bed (HH:MM)",
+    "pref_wake"          ~ "Time of awakening (HH:MM)",
     "pref_sleep_dur"     ~ "Duration of sleep",
-    "actual_sleep"       ~ "Typical sleep duration",
-    "sleep_week"         ~ "Weekday",
-    "sleep_week_end"     ~ "Weekend",
-    "coff_day"           ~ "Coffee consumption",
-    "energy_drink"       ~ "Number of energy drinks",
+    "actual_sleep"       ~ "Typical sleep duration during",
+    "sleep_week"         ~ "Weekdays",
+    "sleep_week_end"     ~ "Weekends",
+    "coff_day"           ~ "Coffee consumption (number of cups)",
+    "energy_drink"       ~ "Number of energy drinks (units)",
     "fatigue"            ~ "Fatigue",
     "sleepiness"         ~ "Sleepiness",
     "insomnia"           ~ "Insomnia", 
@@ -50,10 +47,11 @@ tbls[["baseline_sleep"]] <-
     "PANAS"              ~ "PANAS", 
     "panas_pos"          ~ "Positive",
     "panas_neg"          ~ "Negative", 
-    "alcohol"            ~ "Alcohol",
-    .default="", .locations = cells_body(columns = name)
+    "alcohol"            ~ "Alcohol habit score",
+    .default = "", .locations = cells_body(columns = name)
   ) |>
   opt_footnote_marks(marks = letters) |>
+  tab_footnote(md("*Note*. "))
   tab_footnote("On weekdays.", locations = cells_body(name, 2) ) |>
   tab_footnote("On a typical day.", locations = cells_body(name, c(9,10)) ) |>
   tab_footnote("Measured with Fatigue Severity Scale (Krupp et al., 1989).", 
@@ -68,11 +66,10 @@ tbls[["baseline_sleep"]] <-
                locations = cells_body(name, c(15)) ) |>
   tab_footnote("Measured with the Positive and Negative Affect Schedule (Watson et al., 1988).", 
                locations = cells_body(name, c(16)) ) |>
-  tab_footnote("Measure provided by Saksvik-Lehouillier et al. (2020).", 
+  tab_footnote("Measure provided by Saksvik-Lehouillier et al. (2020), higher score indicate greater alcohol consumption habit", 
                locations = cells_body(name, c(19)) ) |>
-  tab_fmt_APA() |>
-  cols_align("center", c(everything(), -name))
-
+  cols_align("center", c(everything(), -name)) |>
+  fmt_missing()
 
 conditional_save(
   tbls[["baseline_sleep"]]
