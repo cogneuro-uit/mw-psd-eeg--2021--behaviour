@@ -80,7 +80,7 @@ tbls[["dich_probit_model"]] <-
     cells_body(matches("exc_smw"),diff_smw)
   ) |>
   tab_bayes_generics(
-    pre_footnote = "Bold rows indicate a difference to the continuous Bayesian model", 
+    pre_footnote = "Bold rows indicate a difference to the continuous Bayesian model,", 
     post_footnote = "BV = behavioural variability, AE = approximate entropy, 
     Pre-positive = Pre-test positive mood, Pre-negative = Pre-test negative mood, 
     PSD = partial sleep deprivation.") 

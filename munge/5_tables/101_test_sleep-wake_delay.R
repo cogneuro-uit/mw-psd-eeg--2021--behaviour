@@ -35,7 +35,7 @@ tbls[["test_sleep_wake_delay"]] <-
     # , start_NA   = sum(start_NA)
     , start_m    = mean(start, na.rm = T)
     , start_sd   = sd(start, na.rm = T)
-  
+    
     # END
     # , end_n      = unique(end_miss)
     # , end_NA     = sum(end_NA)
@@ -50,12 +50,14 @@ tbls[["test_sleep_wake_delay"]] <-
     , bf         = extractBF( ttestBF(
       start[!is.na(start) & !is.na(end)], 
       end[!is.na(start) & !is.na(end)], paired=T) )[["bf"]]
-  ) |>
+  ) |> 
   mutate( 
-    across(is.double, ~fmt_APA_numbers(.x))
+    across(c(start_m, end_m), ~ clock_24( if_else(.x >= 24, .x - 24, .x) ) )
+    , across(c(ends_with("_sd"), diff_m), ~clock_h_m(.x))
+    , across(is.double, ~fmt_APA_numbers(.x))
     , bf = if_else(bf > 1000, format(bf, scientific = T, digits = 3), as.character(bf))
     , split = if_else(split=="sleep", "Bed-sleep delay", "Wake-rise delay")
-  ) |>
+  )  |>
   rename(diff_bf = bf) |>
   gt(groupname_col = "split") |>
   tab_spanner("Start time", starts_with("start_")) |>
@@ -73,13 +75,11 @@ tbls[["test_sleep_wake_delay"]] <-
     md("PSD = Partial sleep deprivation, NS = normal sleep, *M* = mean, *SD* = standard deviation,
        BF~10~ = Bayesian factor in favour of the alternative hypothesis.")
   ) |>
-  tab_fmt_APA() |>
   cols_align("center", c(-condition))
-  
+
 conditional_save(
   tbls[["test_sleep_wake_delay"]]
   , "Test sleep-wake delay"
 )
 
-  
-  
+

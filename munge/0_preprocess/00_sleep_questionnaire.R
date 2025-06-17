@@ -33,13 +33,13 @@ general_sleep <-
   ) |>
   mutate(
     across(c(m,min,max), ~ if_else(name %in% c("pref_sleep", "pref_wake")
-                                   , clock_24(if_else(.x>24, .x-24, .x)) 
+                                   , clock_24( if_else(.x > 24, .x - 24, .x) ) 
                                    , fmt_APA_numbers(.x, .chr = T)) )
     , sd = if_else(name %in% c("pref_sleep", "pref_wake", "pref_sleep_dur", "sleep_week","sleep_week_end")
                    , clock_h_m(sd)
                    , fmt_APA_numbers(sd, .chr = T))
     , across(c(m,min,max), ~if_else(name %in% c("pref_sleep_dur", "sleep_week", "sleep_week_end")
-                                    , clock_h_m(.x), .x))
+                                    , clock_h_m(.x,rm_0m = T), .x))
   ) |>
   add_row(name = "preferential_sleep", .before=2) |>
   add_row(name = "actual_sleep", .before=6) 

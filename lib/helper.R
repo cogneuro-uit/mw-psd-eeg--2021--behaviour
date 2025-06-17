@@ -15,19 +15,22 @@ clock_24 <- function(data){
   }) |> list_c()
 }
 
-clock_h_m <- function(data, rm_0h = TRUE){
+clock_h_m <- function(data, rm_0h = TRUE, rm_0m = FALSE){
   map(data, \(d){
     is_negative <- ""
     d2 <- str_split(d, "\\.")[[1]][1]
-    if( str_starts(d2, "-") ) is_negative <- "-"
+    if( str_starts(d2, "-") ) d2_is_negative <- "-"
     d3 <- str_split( round((as.numeric(d) - as.numeric(d2)) * .6, digits=2), "\\.")[[1]][2]
-    if(str_starts(d3, "0") & !is.na(d3)) d3 <- str_remove(d3, "0")
-    if(is.na(d3)) d3 <- "0"
+    if( str_starts(d3, "0") & !is.na(d3) ) d3 <- str_remove(d3, "0")
+    if( is.na(d3) ) d3 <- "0"
     
     if(rm_0h & (d2 == 0 | d2 == "-0")){
       sprintf("%s%sm", is_negative, d3)
+    } else if (rm_0m & (d3 == 0 | d2 == "-0")){
+      sprintf("%s%sh", is_negative, d2)
     } else {
       str_glue("{d2}h {d3}m")
     }
   }) |> list_c()
 }
+
