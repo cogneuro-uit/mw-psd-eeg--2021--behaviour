@@ -10,8 +10,7 @@ tbls[["sleep_quality+sleep"]] <-
   tab_spanner("Adjusted", starts_with("adj_")) |>
   tab_spanner("Self-report", starts_with("sr_")) |>
   tab_spanner("Actigraphy", starts_with("ag_")) |>
-  tab_bayes_generics( ) |>
-  tab_fmt_APA()
+  tab_bayes_generics()
 
 conditional_save(
   tbls[["sleep_quality+sleep"]]

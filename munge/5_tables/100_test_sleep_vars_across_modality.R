@@ -1,5 +1,4 @@
-
-tbls[["test_sleep_vars_across_modality"]] <-
+tbls[["test_sleep_vars_across_modality"]] <- 
   sleeptimes_updated_trans |>
   select(-starts_with("Adjusted"), -starts_with("c.")) |>
   pivot_longer(c(starts_with("Self"), starts_with("Actig"))) |>
@@ -33,7 +32,7 @@ tbls[["test_sleep_vars_across_modality"]] <-
       Sleep == "Wake" ~ "Wake time", 
       Sleep == "Onset" ~ "Onset time",
       Sleep == "Duration" ~ "Sleep Duration"
-    )) |>
+    )) |> 
   gt(groupname_col = "sleepdep") |>
   tab_spanner("Self-report", starts_with("SR_")) |>
   tab_spanner("Actigraphy", starts_with("AG_")) |>
@@ -54,9 +53,7 @@ tbls[["test_sleep_vars_across_modality"]] <-
   opt_footnote_marks(marks = letters) |>
   tab_footnote(md(
     "Actigraphy has two less *n*, as two actigraphies malfunctioned during the data collection."), 
-    locations = cells_column_spanners("Actigraphy") ) |>
-  tab_fmt_APA() 
-
+    locations = cells_column_spanners("Actigraphy") )
 
 conditional_save(
   tbls[["test_sleep_vars_across_modality"]]

@@ -1,4 +1,4 @@
-tbls[["baseline_sleep"]] <-
+tbls[["baseline_sleep"]] <-""
   general_sleep |>
   mutate( 
     across(c(m,sd), ~fmt_APA_numbers(.x, .chr=T)) 
@@ -16,6 +16,7 @@ tbls[["baseline_sleep"]] <-
   )  |>
   filter(!(name == "dinural_sum")) |>
   select(-min, -max) |>
+  filter(!(name=="night_shift")) |>
   gt() |>
   tab_spanner("Data", c(m, sd, range)) |>
   tab_spanner("Reliability", c(n, alpha, CI)) |>
@@ -51,23 +52,23 @@ tbls[["baseline_sleep"]] <-
     .default = "", .locations = cells_body(columns = name)
   ) |>
   opt_footnote_marks(marks = letters) |>
-  tab_footnote(md("*Note*. "))
+  tab_footnote(md("*Note*. ")) |>
   tab_footnote("On weekdays.", locations = cells_body(name, 2) ) |>
   tab_footnote("On a typical day.", locations = cells_body(name, c(9,10)) ) |>
   tab_footnote("Measured with Fatigue Severity Scale (Krupp et al., 1989).", 
-               locations = cells_body(name, c(11)) ) |>
+               locations = cells_body(name, c(10)) ) |>
   tab_footnote("Measured with Epworth Sleepiness Scale (Johns, 1991).", 
-               locations = cells_body(name, c(12)) ) |> 
+               locations = cells_body(name, c(11)) ) |> 
   tab_footnote("Measured with Insomnia Severity Index (Bastien et al., 2001).", 
-               locations = cells_body(name, c(13)) ) |>
+               locations = cells_body(name, c(12)) ) |>
   tab_footnote("Measured with Pittsburgh Sleep Quality Index, low scores indicate good sleep quality (Buysse et al., 1989).", 
-               locations = cells_body(name, c(14)) ) |>
+               locations = cells_body(name, c(13)) ) |>
   tab_footnote("Measured with Diurnal Scale (calculated as mean), low scores indicate a preference to go to bed late and wake up late (Torsvall & Åkerstedt, 1980).", 
-               locations = cells_body(name, c(15)) ) |>
+               locations = cells_body(name, c(14)) ) |>
   tab_footnote("Measured with the Positive and Negative Affect Schedule (Watson et al., 1988).", 
-               locations = cells_body(name, c(16)) ) |>
+               locations = cells_body(name, c(15)) ) |>
   tab_footnote("Measure provided by Saksvik-Lehouillier et al. (2020), higher score indicate greater alcohol consumption habit", 
-               locations = cells_body(name, c(19)) ) |>
+               locations = cells_body(name, c(18)) ) |>
   cols_align("center", c(everything(), -name)) |>
   fmt_missing()
 
