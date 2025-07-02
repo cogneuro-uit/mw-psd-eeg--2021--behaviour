@@ -1,4 +1,3 @@
-
 # How the sleep deprivation changed as a function of the sleep adjustment:
 figs[["PSD__report_type"]] <-
   sleeptimes_updated_trans |>
