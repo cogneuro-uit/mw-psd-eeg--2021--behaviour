@@ -83,8 +83,9 @@ sleep_quiz <- map(fnames, \(fname) {
   
   ##' Putting it together
   tibble(
-    subj = str_split(fname, "[/_]")[[1]][3],
-    S1_Q1 = q1, S1_Q2 = hms(q23[1]), S1_Q3 = hms(q23[2])
+    subj = str_split(fname, "/") |> pluck(1) |> pluck(-1) |>
+      str_split("_") |> pluck(1) |> pluck(1)
+    , S1_Q1 = q1, S1_Q2 = hms(q23[1]), S1_Q3 = hms(q23[2])
   ) |>
     bind_cols(
       q46, q78, s2q19, s3q18, s4q17, S4_Q8=hms(s4q8), S4_Q9=s4q9, 

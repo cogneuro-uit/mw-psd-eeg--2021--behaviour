@@ -12,7 +12,8 @@ pos.items <- c("Q1", "Q3", "Q5", "Q9", "Q10", "Q12", "Q14", "Q16", "Q17", "Q19")
 
 panas_session <- map(fnames, \(fname) {
   print(fname)
-  subj = str_split(fname, "[/_]")[[1]][3]
+  subj = str_split(fname, "/") |> pluck(1) |> pluck(-1) |>
+    str_split("_") |> pluck(1) |> pluck(1)
   
   sd.pre  <- readxl::read_xlsx(fname, sheet="PANAS", range="A3:B23", col_names = T, na = "NA") |> 
     mutate(sleepdep="SD", prepost="pre")

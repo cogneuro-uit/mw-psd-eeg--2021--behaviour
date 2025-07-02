@@ -52,7 +52,8 @@ read_xlsx2 <- function(...){
 # New diary: "sleepdiary2"
 sleep_diary <- map(fnames, \(fname) {
   print(fname)
-  subj <- strsplit(fname, "\\/|\\_")[[1]][3]
+  subj <- str_split(fname, "/") |> pluck(1) |> pluck(-1) |>
+    str_split("_") |> pluck(1) |> pluck(1)
   
   ##' section 1: Generell sovn
   diary <- read_xlsx2(fname, sheet="sleepdiary2", range="A1:J20", col_names = T)

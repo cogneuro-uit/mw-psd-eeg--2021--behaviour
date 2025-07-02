@@ -1,6 +1,6 @@
-fnames=list.files(
+fnames = list.files(
   paste0(relative_path, "data/behaviour"), pattern="*.csv", full.names = T) 
-fnames=fnames[str_detect(fnames, "day")]
+fnames = fnames[str_detect(fnames, "day")]
 
 data <- map_df(fnames, \(fname){
   print(fname)
@@ -11,7 +11,8 @@ data <- map_df(fnames, \(fname){
     stimulus = col_character(),
     response = col_character())
   ) |> 
-    mutate(day = str_split(fname, "[/_]")[[1]][4])
+    mutate(day = str_split(fname, "/") |> pluck(1) |> pluck(-1) |>
+             str_split("_") |> pluck(1) |> pluck(2))
 })
 
 # add probenum variable
@@ -33,8 +34,8 @@ data <-
 data <- 
   data |> 
   left_join(
-    demographics |> select(subj, group), 
-    by="subj"
+    demographics |> select(subj, group)
+    , by="subj"
   ) |>
   mutate(
     sleepdep = case_when(

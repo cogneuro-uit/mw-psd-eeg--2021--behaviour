@@ -1,6 +1,8 @@
 fnames = list.files(
   paste0(relative_path, "data/actigraphy"), pattern="*.csv", full.names = T) 
-subjs = map_chr(fnames, ~str_split(.x, "[/_]")[[1]][[3]]) |> unique() 
+subjs = map_chr(fnames, ~str_split(.x, "/") |> pluck(1) |> pluck(-1) |>
+                  str_split("_") |> pluck(1) |> pluck(1)
+                ) |> unique() 
 
 as_hour_time <- function(stime){
   map_dbl(str_split(stime,":"), \(x){
@@ -63,15 +65,15 @@ h_wk_19 <- function(stime){ # wake
   })
 }
 
-
-
 ##' combine files per subj because some files have duplicate days
 actigraphy <- map(subjs, \(subj){
-  fnames=list.files(
-    paste0(relative_path, "data/actigraphy"),
-    pattern=sprintf("%s_.*.csv",subj), full.names = T)
+  # fnames=list.files(
+  #   paste0(relative_path, "data/actigraphy"),
+  #   pattern=sprintf("%s_.*.csv",subj), full.names = T)
+  
+  r_fname <- fnames[str_detect(fnames, sprintf("/%s", subj))]
 
-  map_df(fnames, \(fname){
+  map_df(r_fname, \(fname){
     print(fname)
     d <- suppressMessages(
       read_csv(fname, locale = readr::locale(encoding = "UTF-16"), skip=64,col_types = cols(.default = "c"))) 
