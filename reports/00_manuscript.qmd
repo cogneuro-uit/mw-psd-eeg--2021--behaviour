@@ -128,7 +128,7 @@ cap-location: top
 ```{r load project data munge Parameters, warning=FALSE}
 relative_path <- "../" # b/c quarto 
 source( paste0(relative_path, "lib/quarto_load_project.R") )
-quarto_load_project(relative_path, load_data_data = T)
+quarto_load_project(relative_path, load_data_data = T, load_data_scripts = T, load_caches = F)
 ```
 
 # Introduction
