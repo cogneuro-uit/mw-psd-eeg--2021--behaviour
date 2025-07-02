@@ -52,22 +52,22 @@ sleep_adjustment_r1 <-
   left_join(
     p_l_wak |> 
       select(subj, date, wake_time_adj, wake_folleso_adj) |>
-      rename(wake_sa = wake_folleso_adj),
-    by = c("subj","date")
+      rename(wake_sa = wake_folleso_adj)
+    ,  by = c("subj","date")
   ) |>
   left_join(
     p_l_on |> 
       select(subj, date, onset_time_adj, onset_folleso_adj) |>
-      rename(onset_sa=onset_folleso_adj),
-    by = c("subj","date")
+      rename(onset_sa=onset_folleso_adj)
+    , by = c("subj","date")
   ) |> 
   left_join(
     time_adj |> 
       filter(!is.na(subj)) |>
       pivot_wider(names_from=wake_or_onset, values_from = time_adj, 
                   names_prefix = "gc_") |>
-      rename(wake_gc = gc_Wake, onset_gc = gc_Onset),
-    by = c("subj", "date")
+      rename(wake_gc = gc_Wake, onset_gc = gc_Onset)
+    , by = c("subj", "date")
   )
 
 # Check these participants after round 1:

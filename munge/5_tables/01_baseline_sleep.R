@@ -1,4 +1,4 @@
-tbls[["baseline_sleep"]] <-""
+tbls[["baseline_sleep"]] <-
   general_sleep |>
   mutate( 
     across(c(m,sd), ~fmt_APA_numbers(.x, .chr=T)) 
