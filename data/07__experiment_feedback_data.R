@@ -9,7 +9,12 @@ fnames <- fnames[!str_detect(fnames, "~")]
 
 feedback <- map(fnames, \(fname){
   print(fname)
-  subj <- str_split(fname, "[/_]")[[1]][3]
+  subj <- str_split(fname, "/") |> 
+    pluck(1) |> 
+    pluck(-1) |>
+    str_split("_") |> 
+    pluck(1) |> 
+    pluck(1)
   
   par <- read_xlsx(fname, sheet = "Feedback-comments", col_names = F)
   
