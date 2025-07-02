@@ -70,7 +70,7 @@ rep_bayes_coef <- function(x, .rep = "simple", ..., .preserve_negative = TRUE){
   mean                     <- mean(x)
   hdi                      <- rep_bayes_hdi(x, ...)
   evidence_ratio_direction <- rep_bayes_er(x, ...)
-  probability_direction    <- rep_bayes_p(x, ..., .psym = T)
+  probability_direction    <- rep_bayes_p(x, ..., .p = T)
   
   # preserve negative if rounding turns very low
   if(.preserve_negative & mean < 0 & round(mean, 2)==0){
@@ -361,7 +361,6 @@ bayes_tbl_sum <- function(bayes_model
     add_sigma  = T
     add_loo    = T
     add_R2     = T
-    add_loo_R2 = T
   }
   
   #' FUNCTION FUNCTIONS
