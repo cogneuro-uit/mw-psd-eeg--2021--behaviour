@@ -110,65 +110,6 @@ mutate_bayes_mod_probe <- function(data){
     arrange(var)
 }
 
-probe_tbl_cont <- 
-  bayes_tbl_sum(mod_bay_sleep_cont$mw, add_sigma = T, fmt_md = T,
-                add_loo = T, add_R2 = T, apa_table = T)  |>
-  bayes_tbl_add_sig() |>
-  mutate_bayes_mod_probe() |> 
-  rename_with(~paste0("cont_mw_",.x), 3:6) |>
-  left_join(
-    bayes_tbl_sum(mod_bay_sleep_cont$mb, add_sigma = T, fmt_md = T,
-                  add_loo = T, add_R2 = T, apa_table = T)  |>
-      bayes_tbl_add_sig() |>
-      mutate_bayes_mod_probe() |> 
-      rename_with(~paste0("cont_mb_",.x), 3:6),
-    by = c("group", "var") 
-  ) |>
-  left_join(
-    bayes_tbl_sum(mod_bay_sleep_cont$smw, add_sigma = T, fmt_md = T,
-                  add_loo = T, add_R2 = T, apa_table = T)  |>
-      bayes_tbl_add_sig() |>
-      mutate_bayes_mod_probe() |> 
-      rename_with(~paste0("cont_smw_",.x), 3:6),
-    by = c("group", "var") 
-  ) |>
-  left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$mw, add_sigma = T, fmt_md = T,
-                  add_loo = T, add_R2 = T, apa_table = T)  |>
-      bayes_tbl_add_sig() |>
-      mutate_bayes_mod_probe() |> 
-      rename_with(~paste0("exc_mw_",.x), 3:6),
-    by = c("group", "var") 
-  ) |>
-  left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$mb, add_sigma = T, fmt_md = T,
-                  add_loo = T, add_R2 = T, apa_table = T)  |>
-      bayes_tbl_add_sig() |>
-      mutate_bayes_mod_probe() |> 
-      rename_with(~paste0("exc_mb_",.x), 3:6),
-    by = c("group", "var") 
-  ) |>
-  left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$smw, add_sigma = T, fmt_md = T,
-                  add_loo = T, add_R2 = T, apa_table = T)  |>
-      bayes_tbl_add_sig() |>
-      mutate_bayes_mod_probe() |> 
-      rename_with(~paste0("exc_smw_",.x), 3:6),
-    by = c("group", "var") 
-  ) |>
-  mutate(
-    c_mw_p    = if_else(as.numeric(cont_mw_p) >= .95, TRUE, FALSE),
-    c_mb_p    = if_else(as.numeric(cont_mb_p) >= .95, TRUE, FALSE),
-    c_smw_p   = if_else(as.numeric(cont_smw_p) >= .95, TRUE, FALSE),
-    e_mw_p    = if_else(as.numeric(exc_mw_p) >= .95, TRUE, FALSE),
-    e_mb_p    = if_else(as.numeric(exc_mb_p) >= .95, TRUE, FALSE),
-    e_smw_p    = if_else(as.numeric(exc_smw_p) >= .95, TRUE, FALSE),
-    diff_mw   = if_else(c_mw_p  != e_mw_p, TRUE, FALSE),
-    diff_mb   = if_else(c_mb_p  != e_mb_p, TRUE, FALSE),
-    diff_smw  = if_else(c_smw_p != e_smw_p, TRUE, FALSE),
-    across(c(starts_with("c_"), starts_with("e_")), ~NULL),
-    mw_e="", mb_e="",smw_e=""
-  )
 ## Bayesian BEHAVIOUR   ======
 mutate_bayes_mod_beh <- function(data){
   data |>
