@@ -1,38 +1,38 @@
 probe_tbl_reduced <- 
-  bayes_tbl_sum(mod_bay_sleep_cont$mw, apa_table = T)  |>
+  bayes_tbl_sum(mod.cont$mw, apa_table = T)  |>
   bayes_tbl_add_sig() |>
   mutate_bayes_mod_probe() |> 
   rename_with(~paste0("cont_mw_",.x), 3:6) |>
   left_join(
-    bayes_tbl_sum(mod_bay_sleep_cont$mb, apa_table = T)  |>
+    bayes_tbl_sum(mod.cont$mb, apa_table = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("cont_mb_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod_bay_sleep_cont$smw, apa_table = T)  |>
+    bayes_tbl_sum(mod.cont$smw, apa_table = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("cont_smw_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$mw, apa_table = T)  |>
+    bayes_tbl_sum(mod.dich$mw, apa_table = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("exc_mw_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$mb, apa_table = T)  |>
+    bayes_tbl_sum(mod.dich$mb, apa_table = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("exc_mb_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$smw, apa_table = T)  |>
+    bayes_tbl_sum(mod.dich$smw, apa_table = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("exc_smw_",.x), 3:6),
@@ -51,7 +51,6 @@ probe_tbl_reduced <-
     across(c(starts_with("c_"), starts_with("e_")), ~NULL),
     mw_e="", mb_e="",smw_e=""
   )
-
 
 tbls[["dich_probit_model"]] <- 
   probe_tbl_reduced |>

@@ -1,28 +1,24 @@
 behav_tbl <- 
-  bayes_tbl_sum(mod_bay_sleep_cont$bv, add_sigma = T, fmt_md=T,
-                add_loo = T,add_R2 = T, apa_table = T) |>
+  bayes_tbl_sum(mod.cont$bv, apa_table = T) |>
   bayes_tbl_add_sig() |>
   mutate_bayes_mod_beh() |>
   rename_with(~paste0("cont_bv_", .x), 3:6) |>
   left_join(
-    bayes_tbl_sum(mod_bay_sleep_cont$ae, add_sigma = T, fmt_md=T,
-                  add_loo = T,add_R2 = T, apa_table = T) |>
+    bayes_tbl_sum(mod.cont$ae, apa_table = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("cont_ae_", .x), 3:6)
   ) |>
   # split
   left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$bv, add_sigma = T, fmt_md=T,
-                  add_loo = T,add_R2 = T, apa_table = T) |>
+    bayes_tbl_sum(mod.dich$bv, apa_table = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       bayes_tbl_add_sig() |>
       rename_with(~paste0("exc_bv_", .x), 3:6)
   ) |>
   left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$ae, add_sigma = T,fmt_md=T,
-                  add_loo = T,add_R2 = T, apa_table = T) |>
+    bayes_tbl_sum(mod.dich$ae, apa_table = T) |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("exc_ae_", .x), 3:6)
   )  |>
@@ -39,25 +35,25 @@ behav_tbl <-
 
 tbls[["dich_behav_models"]] <- 
   # Continuous
-  bayes_tbl_sum(mod_bay_sleep_cont$bv, apa_table = T) |>
+  bayes_tbl_sum(mod.cont$bv, apa_table = T) |>
   bayes_tbl_add_sig() |>
   mutate_bayes_mod_beh() |>
   rename_with(~paste0("cont_bv_", .x), 3:6) |>
   left_join(
-    bayes_tbl_sum(mod_bay_sleep_cont$ae, apa_table = T) |>
+    bayes_tbl_sum(mod.cont$ae, apa_table = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("cont_ae_", .x), 3:6)
   ) |>
   # split
   left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$bv, apa_table = T) |>
+    bayes_tbl_sum(mod.dich$bv, apa_table = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("exc_bv_", .x), 3:6)
   ) |>
   left_join(
-    bayes_tbl_sum(mod_bay_split_sleep$ae, apa_table = T) |>
+    bayes_tbl_sum(mod.dich$ae, apa_table = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("exc_ae_", .x), 3:6)
