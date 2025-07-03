@@ -1,38 +1,38 @@
 probe_tbl_reduced <- 
-  bayes_tbl_sum(mod.cont$mw, apa_table = T)  |>
+  bayes_tbl_sum(mod.cont$mw, apa_table = T, add_loo_R2 = T)  |>
   bayes_tbl_add_sig() |>
   mutate_bayes_mod_probe() |> 
   rename_with(~paste0("cont_mw_",.x), 3:6) |>
   left_join(
-    bayes_tbl_sum(mod.cont$mb, apa_table = T)  |>
+    bayes_tbl_sum(mod.cont$mb, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("cont_mb_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.cont$smw, apa_table = T)  |>
+    bayes_tbl_sum(mod.cont$smw, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("cont_smw_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.dich$mw, apa_table = T)  |>
+    bayes_tbl_sum(mod.dich$mw, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("exc_mw_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.dich$mb, apa_table = T)  |>
+    bayes_tbl_sum(mod.dich$mb, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("exc_mb_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.dich$smw, apa_table = T)  |>
+    bayes_tbl_sum(mod.dich$smw, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("exc_smw_",.x), 3:6),
@@ -79,7 +79,7 @@ tbls[["dich_probit_model"]] <-
     cells_body(matches("exc_smw"),diff_smw)
   ) |>
   tab_bayes_generics(
-    pre_footnote = "Bold rows indicate a difference to the continuous Bayesian model,", 
+    pre_footnote = "Bold rows indicate a difference to the continuous Bayesian model.", 
     post_footnote = "BV = behavioural variability, AE = approximate entropy, 
     Pre-positive = Pre-test positive mood, Pre-negative = Pre-test negative mood, 
     PSD = partial sleep deprivation.") 

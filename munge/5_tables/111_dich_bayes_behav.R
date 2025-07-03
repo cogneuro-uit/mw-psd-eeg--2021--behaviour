@@ -1,24 +1,24 @@
 behav_tbl <- 
-  bayes_tbl_sum(mod.cont$bv, apa_table = T) |>
+  bayes_tbl_sum(mod.cont$bv, apa_table = T, add_loo_R2 = T) |>
   bayes_tbl_add_sig() |>
   mutate_bayes_mod_beh() |>
   rename_with(~paste0("cont_bv_", .x), 3:6) |>
   left_join(
-    bayes_tbl_sum(mod.cont$ae, apa_table = T) |>
+    bayes_tbl_sum(mod.cont$ae, apa_table = T,  add_loo_R2 = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("cont_ae_", .x), 3:6)
   ) |>
   # split
   left_join(
-    bayes_tbl_sum(mod.dich$bv, apa_table = T) |>
+    bayes_tbl_sum(mod.dich$bv, apa_table = T,  add_loo_R2 = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       bayes_tbl_add_sig() |>
       rename_with(~paste0("exc_bv_", .x), 3:6)
   ) |>
   left_join(
-    bayes_tbl_sum(mod.dich$ae, apa_table = T) |>
+    bayes_tbl_sum(mod.dich$ae, apa_table = T,  add_loo_R2 = T) |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("exc_ae_", .x), 3:6)
   )  |>
@@ -35,25 +35,25 @@ behav_tbl <-
 
 tbls[["dich_behav_models"]] <- 
   # Continuous
-  bayes_tbl_sum(mod.cont$bv, apa_table = T) |>
+  bayes_tbl_sum(mod.cont$bv, apa_table = T, add_loo_R2 = T) |>
   bayes_tbl_add_sig() |>
   mutate_bayes_mod_beh() |>
   rename_with(~paste0("cont_bv_", .x), 3:6) |>
   left_join(
-    bayes_tbl_sum(mod.cont$ae, apa_table = T) |>
+    bayes_tbl_sum(mod.cont$ae, apa_table = T, add_loo_R2 = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("cont_ae_", .x), 3:6)
   ) |>
   # split
   left_join(
-    bayes_tbl_sum(mod.dich$bv, apa_table = T) |>
+    bayes_tbl_sum(mod.dich$bv, apa_table = T, add_loo_R2 = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("exc_bv_", .x), 3:6)
   ) |>
   left_join(
-    bayes_tbl_sum(mod.dich$ae, apa_table = T) |>
+    bayes_tbl_sum(mod.dich$ae, apa_table = T, add_loo_R2 = T) |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |>
       rename_with(~paste0("exc_ae_", .x), 3:6)
@@ -81,7 +81,7 @@ tbls[["dich_behav_models"]] <-
     cells_body(matches("exc_ae"),diff_ae)
   ) |>
   cols_hide(starts_with("diff")) |>
-  tab_bayes_generics(pre_footnote = "Bold rows indicate a difference to the continuous Bayesian model,", 
+  tab_bayes_generics(pre_footnote = "Bold rows indicate a difference to the continuous Bayesian model.", 
                      post_footnote = "Pre-positive = Pre-test positive mood, Pre-negative = Pre-test negative mood, PSD = partial sleep deprivation.") 
 
 conditional_save(
