@@ -103,7 +103,7 @@ mutate_bayes_mod_probe <- function(data){
         "PSD", "PSD x Trial", "PSD x BV", "PSD x AE",
         "PSD x Pre-positive", "PSD x Pre-negative",
         "Sigma (subj)", # "Sigma (subjects)", 
-        "LOOIC",
+        "LOOIC", "LOO R2", 
         "R2"
       ))
     )  |>
@@ -135,7 +135,7 @@ mutate_bayes_mod_beh <- function(data){
       var = ordered(var, levels = c(
         "Intercept", "Trial", "Pre-positive", "Pre-negative", "PSD", 
         "PSD x Trial", "PSD x Pre-positive", "PSD x Pre-negative", 
-        "Sigma (subj)", "LOOIC", "R2"
+        "Sigma (subj)", "LOOIC", "LOO R2", "R2"
       ) )
     ) |>
     arrange(var) 
