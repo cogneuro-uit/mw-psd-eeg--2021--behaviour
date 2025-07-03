@@ -2,7 +2,7 @@
 
 # mood -1 <-> 1
 # PSD -1 <-> 1
-figs[["BV+SMW__PSD_x_pre_pos"]] <-
+plot_data <-
   expand_grid(
     sleep_deviation = c(-1,0,1),
     mood_deviation  = c(-1,0,1),
@@ -36,19 +36,24 @@ figs[["BV+SMW__PSD_x_pre_pos"]] <-
   , out = case_when(
     names_out=="smw" ~ "Spontaneous mind wandering"
     , names_out=="bv" ~ "Behavioural variability"
-  )) |>
+  )) 
+
+figs[["BV__PSD_x_pre_pos"]] <- 
+  plot_data |> 
+  filter(out == "Behavioural variability") |>
   ggplot(aes(mood_deviation, value, col = cond, linetype = cond)) + 
-  facet_wrap(~out, scales="free") +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = .25) +
   geom_line(linewidth = 1) +
-  labs( y = "Change in outcome", x = "Z-scored positive affect", 
-        col = "Condition", linetype="Condition") +
+  labs( 
+    y = "Change in Z-score BV"
+    , x = "Z-scored positive affect"
+    , col = "Condition"
+    , linetype="Condition") +
   scale_color_manual(   values = name_colour_interactions ) +
   scale_linetype_manual(values = name_line_interactions ) +
   theme(legend.position = "top")
 
-
 conditional_save(
-  figs[["BV+SMW__PSD_x_pre_pos"]]
-  , "Interaction - PSDxMoodxBehaviour on MW"
+  figs[["BV__PSD_x_pre_pos"]]
+  , "BV - Interaction between sleep and affect"
 )
-""
