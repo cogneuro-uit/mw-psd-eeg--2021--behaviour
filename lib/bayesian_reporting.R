@@ -59,18 +59,22 @@ rep_bayes_coef <- function(x, .rep = "simple", ..., .preserve_negative = TRUE){
   
   .rep2 <- str_to_lower(.rep)
   
+  ..p <- F
+  ..psym <- T
   if( .rep2 %in% c("text", "txt", "tx", "long", "lng") ){
     .rep2 <- "long"
   } 
   if( .rep2 %in% c("df","data", "frm", "dataframe", "data.frame", "tibble", "frame") ){
     .rep2 <- "df"
+    ..p <- T
+    ..psym <- F
   } 
   
   # calc
   mean                     <- mean(x)
   hdi                      <- rep_bayes_hdi(x, ...)
   evidence_ratio_direction <- rep_bayes_er(x, ...)
-  probability_direction    <- rep_bayes_p(x, ..., .p = T)
+  probability_direction    <- rep_bayes_p(x, ..., .p = ..p, .psym = ..psym)
   
   # preserve negative if rounding turns very low
   if(.preserve_negative & mean < 0 & round(mean, 2)==0){
@@ -415,7 +419,7 @@ bayes_tbl_sum <- function(bayes_model
       c_hdi <- rep_bayes_hdi( bayes_estimate_transformation( data, coef_calc ) )
     }
     c_er <- rep_bayes_er( data )
-    c_p  <- rep_bayes_p(  data )
+    c_p  <- rep_bayes_p(  data, .p = T )
     
     # Frame
     coef_est <- tibble::tibble(
