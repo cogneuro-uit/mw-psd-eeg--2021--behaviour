@@ -1,38 +1,38 @@
 probe_tbl_cont <- 
-  bayes_tbl_sum(mod.cont$mw, apa_table = T)  |>
+  bayes_tbl_sum(mod.cont$mw, apa_table = T, add_loo_R2 = T)  |>
   bayes_tbl_add_sig() |>
   mutate_bayes_mod_probe() |> 
   rename_with(~paste0("cont_mw_",.x), 3:6) |>
   left_join(
-    bayes_tbl_sum(mod.cont$mb, apa_table = T)  |>
+    bayes_tbl_sum(mod.cont$mb, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("cont_mb_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.cont$smw, apa_table = T)  |>
+    bayes_tbl_sum(mod.cont$smw, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("cont_smw_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.dich$mw, apa_table = T)  |>
+    bayes_tbl_sum(mod.dich$mw, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("exc_mw_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.dich$mb, apa_table = T)  |>
+    bayes_tbl_sum(mod.dich$mb, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("exc_mb_",.x), 3:6),
     by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.dich$smw, apa_table = T)  |>
+    bayes_tbl_sum(mod.dich$smw, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_probe() |> 
       rename_with(~paste0("exc_smw_",.x), 3:6),
@@ -57,11 +57,11 @@ probe_tbl_cont <-
 tbls[["cont_probit_model"]] <- 
   probe_tbl_cont |>
   gt(groupname_col = "group") |>
-  tab_spanner("Mind wandering", starts_with("exc_mw_")) |>
-  tab_spanner("Mind blanking", starts_with("exc_mb_")) |>
-  tab_spanner("Spontaneous mind wandering", starts_with("exc_smw_")) |>
+  tab_spanner("Mind wandering", starts_with("cont_mw_")) |>
+  tab_spanner("Mind blanking", starts_with("cont_mb_")) |>
+  tab_spanner("Spontaneous mind wandering", starts_with("cont_smw_")) |>
   cols_hide(
-    c(starts_with("cont_"), starts_with("diff_"))
+    c(starts_with("exc_"), starts_with("diff_"))
   ) |>
   cols_move(starts_with("smw_"), exc_mb_p) |>
   cols_move(starts_with("mb_"),  exc_mw_p) |>
@@ -70,18 +70,18 @@ tbls[["cont_probit_model"]] <-
   cols_move(smw_e, exc_smw_p) |>
   tab_style(
     cell_text(weight="bold"),
-    cells_body(matches("exc_mw"),diff_mw)
+    cells_body(matches("cont_mw"),diff_mw)
   ) |>
   tab_style(
     cell_text(weight="bold"),
-    cells_body(matches("exc_mb"),diff_mb)
+    cells_body(matches("cont_mb"),diff_mb)
   ) |>
   tab_style(
     cell_text(weight="bold"),
-    cells_body(matches("exc_smw"),diff_smw)
+    cells_body(matches("cont_smw"),diff_smw)
   ) |>
   tab_bayes_generics(
-    pre_footnote = "Bold rows indicate a difference to the continuous Bayesian model,", 
+    pre_footnote = "Bold rows indicate a difference to the dichotomous Bayesian model.", 
     post_footnote = "BV = behavioural variability, AE = approximate entropy, 
     Pre-positive = Pre-test positive mood, Pre-negative = Pre-test negative mood, 
     PSD = partial sleep deprivation.") 
