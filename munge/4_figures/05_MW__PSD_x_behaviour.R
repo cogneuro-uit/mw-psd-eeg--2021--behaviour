@@ -1,6 +1,6 @@
 
 # Model
-figs[["MW__PSD_x_behaviour"]] <-
+plot_data <- 
   expand_grid(
     sleep_deviation = c(-1,0,1),
     z_score = c(-1,0,1),
@@ -35,17 +35,39 @@ figs[["MW__PSD_x_behaviour"]] <-
     names_probe=="bv" ~ "Behavioural variability"
     , names_probe=="ae" ~ "Approximate entropy"
     ) |> fct_relevel("Behavioural variability")
-  ) |> 
-  ggplot(aes(z_score, value, col = cond, linetype = cond)) + 
-  facet_wrap(~probes) +
+  ) 
+
+# BV
+p1 <- 
+  plot_data |>
+  filter(probes=="Behavioural variability") |>
+  ggplot(aes(z_score, value, col = cond, linetype = cond)) +
   geom_line(linewidth = 1) +
-  labs( y = "Association to mind wandering", x = "Z-score Behaviour", 
-        col = "Condition", linetype="Condition") +
+  labs(
+    title = "b"
+    , y = "Association to mind wandering"
+    , x = "Z-score BV"
+    , col = "Condition"
+    , linetype = "Condition") +
   scale_color_manual(   values = name_colour_interactions ) +
   scale_linetype_manual(values = name_line_interactions ) +
   theme(legend.position = "top")
 
-  
+# AE
+p2 <-
+  plot_data |>
+  filter(probes=="Approximate entropy") |>
+  ggplot(aes(z_score, value, col = cond, linetype = cond)) +
+  geom_line(linewidth = 1) +
+  labs(y = "Association to mind wandering", x = "Z-score AE", 
+       col = "Condition", linetype="Condition") +
+  scale_color_manual(   values = name_colour_interactions ) +
+  scale_linetype_manual(values = name_line_interactions ) +
+  theme(legend.position = "none"
+        , axis.title.y = element_blank())
+
+figs[["MW__PSD_x_behaviour"]] <- p1 + p2   
+
 conditional_save(
   figs[["MW__PSD_x_behaviour"]]
   , "Interaction - Behaviour on MW"
