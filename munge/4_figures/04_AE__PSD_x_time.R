@@ -17,7 +17,7 @@ conditional_save(
 )
 
 # model
-figs[["behaviour__PSD_x_time"]] <- 
+plot_data <- 
   expand_grid(
     sleep_deviation = c(-1,0,1),
     z_score = c(0,1),
@@ -52,19 +52,25 @@ figs[["behaviour__PSD_x_time"]] <-
     names_probe=="bv" ~ "Behavioural variability"
     , names_probe=="ae" ~ "Approximate entropy"
     ) |> fct_relevel("Behavioural variability")
-  ) |>
+  )
+
+figs[["AE__PSD_x_time"]] <- 
+  plot_data |>
+  filter( probes == "Approximate entropy" ) |>
   ggplot(aes(z_score, value, col = cond, linetype = cond)) + 
-  facet_wrap(~ probes) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = .25) +
   geom_line(linewidth = 1) +
-  labs( y = "Z-Scored Behaviour", x = "Probe number (Time-on-task)", 
-        col = "Condition", linetype = "Condition") +
+  labs( 
+    y = "Z-Scored AE"
+    , x = "Probe number (Time-on-task)"
+    , col = "Condition"
+    , linetype = "Condition") +
   scale_x_continuous(breaks = seq(0,1,1/(25/5)), labels = c(1, seq(5,25,5))) + 
   scale_color_manual(   values = name_colour_interactions ) +
   scale_linetype_manual(values = name_line_interactions ) +
-  theme(legend.position = "top", legend.direction = "horizontal")
-
+  theme(legend.position = "none")
 
 conditional_save(
-  figs[["behaviour__PSD_x_time"]]
-  , "Behaviour - Changes Over Time Across Sleep Loss"
+    figs[["AE__PSD_x_time"]]
+  , "AE - Changes Over Time Across Sleep Loss"
 )
