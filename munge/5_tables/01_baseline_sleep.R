@@ -67,7 +67,7 @@ tbls[["baseline_sleep"]] <-
                locations = cells_body(name, c(14)) ) |>
   tab_footnote("Measured with the Positive and Negative Affect Schedule (Watson et al., 1988).", 
                locations = cells_body(name, c(15)) ) |>
-  tab_footnote("Measure provided by Saksvik-Lehouillier et al. (2020), higher score indicate greater alcohol consumption habit", 
+  tab_footnote("Measure provided by Saksvik-Lehouillier et al. (2020; who adapted it from Morin, 1993), higher score indicates greater alcohol consumption habit", 
                locations = cells_body(name, c(18)) ) |>
   cols_align("center", c(everything(), -name)) |>
   fmt_missing()
