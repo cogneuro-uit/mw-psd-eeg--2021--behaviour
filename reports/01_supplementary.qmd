@@ -6,87 +6,38 @@ authors:
     orcid: 0000-0003-2807-7504
     affiliation: 
       - ref: uit
-    roles: 
-      - writing
-      - data curation
-      - investigation
-      - formal analysis
-      - resources
-      - visualization
   - name: Samy Engebø Babiker
     affiliation:
       - ref: previously
       - ref: uit
-    roles: 
-      - data curation
-      - investigation
-      - resources
-      - editing
   - name: Aurora Marie Kleivik Vangen
     affiliation: 
       - ref: uit 
-    roles: 
-      - data curation
-      - investigation
-      - resources
   - name: Silje Balsnes Haugan
     affiliation: 
       - ref: previously
       - ref: uit 
-    roles: 
-      - data curation
-      - investigation
-      - resources
-      - editing
   - name: Sanna Aurora Sandell
     affiliation: 
       - ref: previously
       - ref: uit 
-    roles: 
-      - data curation
-      - investigation
-      - resources
   - name: Gábor Csifcsák
     orcid: 0000-0001-7719-7073
     affiliation: 
       - ref: uit 
-    roles: 
-      - conceptualization
-      - methodology
-      - supervision
-      - validation
-      - resources
-      - editing
   - name: Ingvild Saksvik-Lehouillier
     orcid: 0000-0002-1953-7364
     affiliation: 
       - ref: ntnu
-    roles: 
-      - editing
-      - resources
-      - methodology
   - name: Julia W. Y. Kam
     orcid: 0000-0002-2369-2148
     affiliation: 
       - ref: kam
-    roles:
-      - editing
   - name: Matthias Mittner
     orcid: 0000-0003-0205-7353
     email: matthias.mittner@uit.no
     affiliation: 
       - ref: uit
-    roles: 
-      - conceptualization
-      - funding acquisition
-      - project administration
-      - methodology
-      - software
-      - resources
-      - supervision
-      - validation
-      - visualization
-      - editing
     corresponding: true
 affiliations: 
   - id: uit
@@ -97,13 +48,6 @@ affiliations:
     name: "Department of Psychology, Hotchkiss Brain Institute, University of Calgary, Canada"
   - id: previously
     name: "Previously associated with the"
-keywords: [attention, sleep, mind wandering, partial sleep deprivation, executive functions, affect, mood]
-author-note:
-  disclosures:
-    conflict-of-interest: "The author has no conflict of interest to declare. The authors wish to declare that they have used large language models (LLM), such as Claude, ChatGPT, SciSpace, Perplexity, to aid the various steps in the production of this manuscript (e.g., writing, literature search, analysis and coding). Any added material was always fact-checked and verified before being added to the manuscript."
-    data-sharing: "Data from this study can be accessed at the Open Science Foundation (OSF): https://osf.io/xq6wr/."
-    financial-support: ""
-    gratitude: "We would like to extend our gratitude to Ragnhild Nicolaisen Drevland for helping in the data collection, as well as to our participants who slept less (for Science!)."
 bibliography: references.bib
 
 # Format
@@ -114,9 +58,8 @@ format:
   apaquarto-typst: default
 floatsintext: true
 
-crossref:
-  fig-prefix: "Figure S"     # Default is "Figure"
-  tbl-prefix: "Table S"      # Default is "Table"
+crossref-tbl-title: "Table S" # Default is "Table" 
+crossref-fig-title: "Figure S"# Default is "Figure"
 
 # Code settings
 editor: source
@@ -131,7 +74,7 @@ cap-location: top
 ```{r Parameters, warning=FALSE, message=FALSE}
 relative_path <- "../" # b/c quarto 
 source( paste0(relative_path, "lib/quarto_load_project.R") )
-quarto_load_project(relative_path, load_data_data = T)
+quarto_load_project(relative_path, load_data_data = T, load_data_scripts = T, load_caches = F)
 ```
 
 # Supplementary Materials
@@ -182,7 +125,7 @@ figs[["onset-wake_difference"]]
 #| fig-format: svg
 #| fig-width: 9.5
 #| fig-dpi: 300
-#| apa-note: "Sleep deprivation compared to the normal sleep (NS). Sleep duration is averaged for the three nights preceding each test, and the difference is calculated as partial sleep deprivation (PSD) - NS. The black solid line indicates the original acceptance threshold, while the red dashed line indicated the adjusted sleep threshold (the criterion used for the reduced sample). Cases above the 1.5 threshold are highlighted by their associated participant code."
+#| apa-note: "Sleep deprivation compared to the normal sleep (NS). Sleep duration is averaged for the three nights preceding each test, and the difference is calculated as partial sleep deprivation (PSD) - NS. The black solid line indicates the original acceptance threshold, while the red dashed line indicates the adjusted sleep threshold (the criterion used for the reduced sample). Cases above the 1.5 threshold are highlighted by their associated participant code."
 #| ##  META  ##
 #| include: true
 #| warning: false
@@ -198,8 +141,8 @@ figs[["PSD__report_type"]]
 #| fig-cap-location: top
 #| fig-cap: Relationship Between Sleep Loss and Mind Wandering Across Sleep Estimates
 #| fig-height: 5
-#| fig-dpi: 300
-#| apa-note: "NS = normal sleep, PSD = partial sleep deprivation"
+#| fig-dpi: 600
+#| apa-note: "Note. Average sleep deprivation is calculated based on the difference from the normal sleep (NS) period, such that 0 indicates each subjects’ NS sleep time and the sleep deprivation indicates the (average) differences from their NS average. Participant 3, 5, 12 and 23 are highlighted to illustrate how mind wandering changed from their NS to their sleep-deprived scores split by sleep measure (separate colours). The solid lines indicate the overall relationship for the three different measure types. PSD = partial sleep deprivation."
 #| ##  Meta  ##
 #| include: true 
 #| warning: false 
@@ -226,7 +169,7 @@ tbls[["test_sleep_vars_across_modality"]]
 
 ### Sleep and Wake Delay
 
-@fig-delay-in-sleep-and-wake indicates the self-reported delay from sleep attempt to sleep onset and from wake time to rise time. @tbl-test-diff-sr-ag indicate the test statistics, using a simple Bayesian paired-sample t-test, for the sleep delay
+@fig-delay-in-sleep-and-wake indicates the self-reported delay from sleep attempt to sleep onset and from wake time to rise time. @tbl-test-diff-sr-ag indicates the test statistics, using a simple Bayesian paired-sample t-test, for the sleep delay
 
 ```{r}
 #| label: fig-delay-in-sleep-and-wake
@@ -302,6 +245,38 @@ PSD_sleep_quality |>
 ```
 
 
+## Continuous model 
+
+@tbl-cont-probes indicates the coefficients for the continuously treated PSD on the various MW types, and @tbl-cont-behav indicates the coefficients for the continuously treated PSD on the behaviours. Bold indicates a difference from the dichotomously treated PSD (see below).
+
+### Probes
+
+```{r}
+#| label: tbl-cont-probes
+#| tbl-cap: Continuous Bayesian Models for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["cont_probit_model"]]
+```
+
+### Behaviour
+
+```{r}
+#| label: tbl-cont-behav
+#| tbl-cap: Continuous Bayesian Models for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["cont_behav_models"]]
+```
+
 ## Dichotomous model
 
 ### Participants
@@ -347,7 +322,7 @@ demographics_reduced |>
 
 #### Thought Probes
 
-The Bayesian hierarchical ordered-probit models of the thought probes for the dichotomous variable treatment is presented in @tbl-dich-probes. Changes in the probe responses over time and conditions are illustrated in @fig-dich-probes-over-time.
+The Bayesian hierarchical ordered-probit models of the thought probes for the dichotomous variable treatment are presented in @tbl-dich-probes. Changes in the probe responses over time and conditions are illustrated in @fig-dich-probes-over-time.
 
 ```{r}
 #| label: tbl-dich-probes
@@ -407,3 +382,6 @@ tbls[["dich_behav_models"]]
 figs[["dich_behav_over_time"]] 
 ```
 
+{{< pagebreak >}}
+
+# References
