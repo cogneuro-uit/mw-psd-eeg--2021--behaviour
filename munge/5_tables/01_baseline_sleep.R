@@ -1,9 +1,21 @@
 tbls[["baseline_sleep"]] <-
   general_sleep |>
-  mutate( 
-    across(c(m,sd), ~fmt_APA_numbers(.x, .chr=T)) 
-    , across(c(min, max), ~as.character(.x)) 
+  mutate(
+    max = if_else(max > 24, max - 24, max)
+    , across(c(m, sd, min, max), ~if_else(
+      name %in% c("pref_sleep_dur", "sleep_week", "sleep_week_end")
+      , as.character( clock_h_m(.x, rm_0h = T, rm_0m = T) )
+      , fmt_APA_numbers(.x, .chr=T) ) )
+    , sd = if_else(name %in% c("pref_sleep", "pref_wake"), clock_h_m(sd), sd)
+    , across(c(m, min, max), ~if_else(
+      name %in% c("pref_sleep", "pref_wake")
+      , clock_24( as.numeric(.x) )
+      , .x ) ) 
   ) |>
+  # mutate( 
+  #   across(c(m,sd), ~fmt_APA_numbers(.x, .chr=T)) 
+  #   , across(c(min, max), ~as.character(.x)) 
+  # ) 
   bind_rows( 
     sleep_quiz_summary |> mutate(
       across(c(m,sd,min,max),  ~fmt_APA_numbers(.x, .chr=T))
@@ -17,6 +29,8 @@ tbls[["baseline_sleep"]] <-
   filter(!(name == "dinural_sum")) |>
   select(-min, -max) |>
   filter(!(name=="night_shift")) |>
+  add_row(.before = 8, name = "consumption", m = "", sd = ""
+          , n = "", alpha = "", CI = "", range = "") |>
   gt() |>
   tab_spanner("Data", c(m, sd, range)) |>
   tab_spanner("Reliability", c(n, alpha, CI)) |>
@@ -30,31 +44,32 @@ tbls[["baseline_sleep"]] <-
   ) |>
   cols_move(range, sd) |>
   text_case_match(
-    "night_shift"        ~ "Night shift ",
-    "preferential_sleep" ~ "Preferential sleep",
-    "pref_sleep"         ~ "Time of going to bed (HH:MM)",
-    "pref_wake"          ~ "Time of awakening (HH:MM)",
-    "pref_sleep_dur"     ~ "Duration of sleep",
-    "actual_sleep"       ~ "Typical sleep duration during",
-    "sleep_week"         ~ "Weekdays",
-    "sleep_week_end"     ~ "Weekends",
-    "coff_day"           ~ "Coffee consumption (number of cups)",
-    "energy_drink"       ~ "Number of energy drinks (units)",
-    "fatigue"            ~ "Fatigue",
-    "sleepiness"         ~ "Sleepiness",
-    "insomnia"           ~ "Insomnia", 
-    "pittsburgh"         ~ "Sleep quality", 
-    "dinural_avg"        ~ "Dinural preference",
-    "PANAS"              ~ "PANAS", 
-    "panas_pos"          ~ "Positive",
-    "panas_neg"          ~ "Negative", 
-    "alcohol"            ~ "Alcohol habit score",
-    .default = "", .locations = cells_body(columns = name)
+    "night_shift"        ~ "Night shift "
+    , "preferential_sleep" ~ "Preferential sleep during weekdays"
+    , "pref_sleep"         ~ "Time of going to bed (HH:MM)"
+    , "pref_wake"          ~ "Time of awakening (HH:MM)"
+    , "pref_sleep_dur"     ~ "Duration of sleep"
+    , "actual_sleep"       ~ "Typical sleep duration during"
+    , "sleep_week"         ~ "Weekdays"
+    , "sleep_week_end"     ~ "Weekends"
+    , "consumption"        ~ "Consumption on a typical day"
+    , "coff_day"           ~ "Coffee (number of cups)"
+    , "energy_drink"       ~ "Energy drinks (Number of units)"
+    , "fatigue"            ~ "Fatigue"
+    , "sleepiness"         ~ "Sleepiness"
+    , "insomnia"           ~ "Insomnia"
+    , "pittsburgh"         ~ "Sleep quality"
+    , "dinural_avg"        ~ "Dinural preference"
+    , "PANAS"              ~ "PANAS"
+    , "panas_pos"          ~ "Positive"
+    , "panas_neg"          ~ "Negative"
+    , "alcohol"            ~ "Alcohol habit score"
+    , .default = "", .locations = cells_body(columns = name)
   ) |>
   opt_footnote_marks(marks = letters) |>
   tab_footnote(md("*Note*. ")) |>
-  tab_footnote("On weekdays.", locations = cells_body(name, 2) ) |>
-  tab_footnote("On a typical day.", locations = cells_body(name, c(9,10)) ) |>
+  # tab_footnote("On weekdays.", locations = cells_body(name, 2) ) |>
+  # tab_footnote("On a typical day.", locations = cells_body(name, c(9,10)) ) |>
   tab_footnote("Measured with Fatigue Severity Scale (Krupp et al., 1989).", 
                locations = cells_body(name, c(10)) ) |>
   tab_footnote("Measured with Epworth Sleepiness Scale (Johns, 1991).", 
