@@ -648,7 +648,7 @@ tab_bayes_generics <- function(data, fmt_md_var = F, pre_footnote="", post_footn
       #'                                                            {looic}{loor2}
       , placement = "left"
     ) |>
-    tab_footnote( md("\\* *p*~dir~ > .95") ) |> # Probability notation
+    tab_footnote( md("\\* *p*~dir~ >= .95") ) |> # Probability notation
     cols_align("center", -var) |>
     cols_align("left", var) |> # Align
     tab_fmt_APA()  # General table transformations

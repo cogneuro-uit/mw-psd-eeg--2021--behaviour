@@ -48,7 +48,7 @@ tbls[["cont_behav_models"]] <-
   ) |>
   cols_hide(starts_with("diff")) |>
   tab_bayes_generics(pre_footnote = "Bold rows indicate a difference to the dichotomous Bayesian model.", 
-                     post_footnote = "Pre-positive = Pre-test positive mood, Pre-negative = Pre-test negative mood, PSD = partial sleep deprivation.") 
+                     post_footnote = "Pre-positive = Pre-test positive affect, Pre-negative = Pre-test negative affect, PSD = partial sleep deprivation.") 
 
 conditional_save(
   tbls[["cont_behav_models"]]
