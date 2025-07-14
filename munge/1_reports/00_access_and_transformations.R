@@ -4,12 +4,14 @@ summarised_vals <-
   data.probe.mood.sleep |> 
   filter(sleepdep=="SD") |> 
   summarise(
-    sleep_m  = mean(c.Adjusted_Duration.diff.pos),
-    sleep_sd = sd(c.Adjusted_Duration.diff.pos), 
-    mood_pos_m   = mean(pre_pos),
-    mood_pos_sd  = sd(pre_pos),
-    mood_neg_m   = mean(pre_neg),
-    mood_neg_sd  = sd(pre_neg),
+    sleep_m  = mean(c.Adjusted_Duration.diff.pos)
+    , sleep_sd = sd(c.Adjusted_Duration.diff.pos),
+    , mood_pos_m   = mean(pre_pos)
+    , mood_pos_sd  = sd(pre_pos)
+    , mood_neg_m   = mean(pre_neg)
+    , mood_neg_sd  = sd(pre_neg)
+    , mw_m = mean(as.numeric(mw))
+    , mw_sd = sd(as.numeric(mw))
   )
 
 
@@ -185,9 +187,17 @@ r <- list(
 
 ##  Mood        =======
 mood <- list(
-  po_p     = as_tibble( mod.mood.cont$pos$psd )
-  , po_p.m = as_tibble( mod.mood.cont$pos$psdXmw )
-  , ne_p   = as_tibble( mod.mood.cont$neg$psd )
-  , ne_p.m = as_tibble( mod.mood.cont$neg$psdXmw )
+  cont = list(
+    p_s     = as_tibble( mod.mood.cont$pos$psd )
+    , p_s.m = as_tibble( mod.mood.cont$pos$psdXmw )
+    , n_s   = as_tibble( mod.mood.cont$neg$psd )
+    , n_s.m = as_tibble( mod.mood.cont$neg$psdXmw )
+  ),
+  dich = list(
+    p_s      = as_tibble( mod.mood.dich$pos$psd )
+    , p_s.m = as_tibble( mod.mood.dich$pos$psdXmw )
+    , n_s   = as_tibble( mod.mood.dich$neg$psd )
+    , n_s.m = as_tibble( mod.mood.dich$neg$psdXmw )
+  )
 )
 
