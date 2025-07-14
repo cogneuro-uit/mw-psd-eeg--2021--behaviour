@@ -81,7 +81,7 @@ tbls[["dich_probit_model"]] <-
   tab_bayes_generics(
     pre_footnote = "Bold rows indicate a difference to the continuous Bayesian model.", 
     post_footnote = "BV = behavioural variability, AE = approximate entropy, 
-    Pre-positive = Pre-test positive mood, Pre-negative = Pre-test negative mood, 
+    Pre-positive = Pre-test positive affect, Pre-negative = Pre-test negative affect, 
     PSD = partial sleep deprivation.") 
 
 conditional_save(
