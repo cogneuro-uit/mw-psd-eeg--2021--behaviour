@@ -9,7 +9,7 @@ if( getOption("project_bayes_run_models") ){
     , data = test_panas_diff |> filter(valence=="pos")
     , init = 0, iter = 6000, chains = 6) |>
     add_criterion(c("bayes_R2", "loo", "loo_R2"))
-  brms::pp_check(  mod.mood.cont$pos$psd, ndraws=50)
+  brms::pp_check(  mod.mood.cont$pos$psd, ndraws = 50)
   bayes_chain_stab(mod.mood.cont$pos$psd) 
   bayes_diag(      mod.mood.cont$pos$psd) 
   
@@ -19,7 +19,7 @@ if( getOption("project_bayes_run_models") ){
     , data = mood_diff_test
     , init = 0, iter = 6000, chains = 6) |>
     add_criterion(c("bayes_R2", "loo", "loo_R2"))
-  brms::pp_check(  mod.mood.cont$pos$psdXmw, ndraws=50)
+  brms::pp_check(  mod.mood.cont$pos$psdXmw, ndraws = 50)
   bayes_chain_stab(mod.mood.cont$pos$psdXmw) 
   bayes_diag(      mod.mood.cont$pos$psdXmw) 
   

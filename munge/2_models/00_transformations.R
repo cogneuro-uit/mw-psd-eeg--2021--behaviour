@@ -25,6 +25,7 @@ mood_diff_test <-
   data.probe.mood.sleep |>
   summarise(
     .by = c(subj, c.Adjusted_Duration.diff.pos)
+    , sleepdep = unique(sleepdep)
     , mw = mean(as.numeric(mw))
     , mb = mean(as.numeric(mb))
     , smw = mean(as.numeric(smw))
