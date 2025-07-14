@@ -8,18 +8,15 @@ authors:
       - ref: uit
   - name: Samy Engebø Babiker
     affiliation:
-      - ref: previously
       - ref: uit
   - name: Aurora Marie Kleivik Vangen
     affiliation: 
       - ref: uit 
   - name: Silje Balsnes Haugan
     affiliation: 
-      - ref: previously
       - ref: uit 
   - name: Sanna Aurora Sandell
     affiliation: 
-      - ref: previously
       - ref: uit 
   - name: Gábor Csifcsák
     orcid: 0000-0001-7719-7073
@@ -46,8 +43,6 @@ affiliations:
     name: "Department of Psychology, Norwegian University of Science and Technology, Norway"
   - id: kam
     name: "Department of Psychology, Hotchkiss Brain Institute, University of Calgary, Canada"
-  - id: previously
-    name: "Previously associated with the"
 bibliography: references.bib
 
 # Format
@@ -92,7 +87,7 @@ The self-report and actigraphy did not always provide similar sleep/wake times. 
 
 ### Shiney
 
-In the Shiny application [@shiney2025; see the application at <https://github.com/cogneuro-uit/mw-psd-eeg--2021--behaviour/tree/master/shiny-sleep-adjustments>], time was visualized on the x-axis, while the actigraphy recorded activity (raw data) and light (log-transformed) were visualized on separate y-axis. Coloured marks highlighted the self-reported and actigraphy sleep onset and wake times. The rest interval was indicated by shaded areas ranging from the sleep attempt to the sleep onset, and the wake time to the rise time for the self-report and actigraphy. The researchers could either adjust two sliders to adjust the time (hours and minutes), providing a third coloured marker, or use two separate buttons to apply the exact values of the self-reported or actigraphy as the onset/wake time. Around each marker, a transparently coloured area of (+-) 15 minute was presented.
+In the Shiny application [@shiney2025; see the application at <https://github.com/cogneuro-uit/mw-psd-eeg--2021--behaviour/tree/master/shiny-sleep-adjustments>], time was visualized on the x-axis, while the actigraphy recorded activity (raw data) and light (log-transformed) were visualized on separate y-axes. Coloured marks highlighted the self-reported and actigraphy sleep onset and wake times. The rest interval was indicated by shaded areas ranging from the sleep attempt to the sleep onset, and the wake time to the rise time for the self-report and actigraphy. The researchers could either adjust two sliders to adjust the time (hours and minutes), providing a third coloured marker, or use two separate buttons to apply the exact values of the self-reported or actigraphy as the onset/wake time. Around each marker, a transparently coloured area of (+-) 15 minutes was presented.
 
 
 ### Adjusted Sleep Estimate 
@@ -125,7 +120,7 @@ figs[["onset-wake_difference"]]
 #| fig-format: svg
 #| fig-width: 9.5
 #| fig-dpi: 300
-#| apa-note: "Sleep deprivation compared to the normal sleep (NS). Sleep duration is averaged for the three nights preceding each test, and the difference is calculated as partial sleep deprivation (PSD) - NS. The black solid line indicates the original acceptance threshold, while the red dashed line indicates the adjusted sleep threshold (the criterion used for the reduced sample). Cases above the 1.5 threshold are highlighted by their associated participant code."
+#| apa-note: "Sleep deprivation is estimated as the sleep lost during the partial sleep deprivation (PSD) period relative to the normal sleep (NS) period. Sleep duration is averaged for the three nights preceding each test, and the difference is calculated as PSD - NS. The black solid line indicates the original acceptance threshold, while the red dashed line indicates the adjusted sleep threshold (the criterion used for the reduced sample). Cases above the 1.5 threshold are highlighted by their associated participant code."
 #| ##  META  ##
 #| include: true
 #| warning: false
@@ -142,7 +137,7 @@ figs[["PSD__report_type"]]
 #| fig-cap: Relationship Between Sleep Loss and Mind Wandering Across Sleep Estimates
 #| fig-height: 5
 #| fig-dpi: 600
-#| apa-note: "Note. Average sleep deprivation is calculated based on the difference from the normal sleep (NS) period, such that 0 indicates each subjects’ NS sleep time and the sleep deprivation indicates the (average) differences from their NS average. Participant 3, 5, 12 and 23 are highlighted to illustrate how mind wandering changed from their NS to their sleep-deprived scores split by sleep measure (separate colours). The solid lines indicate the overall relationship for the three different measure types. PSD = partial sleep deprivation."
+#| apa-note: "Note. Average sleep deprivation is calculated based on the difference from the normal sleep (NS) period, such that 0 indicates each subject’s NS sleep time, and the sleep deprivation indicates the (average) differences from their NS average. Participants 3, 5, 12, and 23 are highlighted to illustrate how mind wandering changed from their NS to their sleep-deprived scores split by sleep measure (separate colours). The solid lines indicate the overall relationship for the three different measure types. PSD = partial sleep deprivation."
 #| ##  Meta  ##
 #| include: true 
 #| warning: false 
@@ -151,7 +146,7 @@ figs[["PSD__report_type"]]
 figs[["sleep_variables_mw"]]
 ```
 
-### Test of Differences Between Sleep Estimates Between Modality
+### Test of Differences Between Sleep Estimates Between Self-Reports and Actigraphy
 
 We explored whether there was any significant difference between the modalities (self-report and actigraphy). @tbl-diff-sr-ag shows the result of a simple paired sample Bayesian t-test, indicating that sleep duration but not sleep onset and wake time differed between modalities.
 
@@ -167,30 +162,10 @@ We explored whether there was any significant difference between the modalities 
 tbls[["test_sleep_vars_across_modality"]]
 ```
 
-### Sleep and Wake Delay
-
-@fig-delay-in-sleep-and-wake indicates the self-reported delay from sleep attempt to sleep onset and from wake time to rise time. @tbl-test-diff-sr-ag indicates the test statistics, using a simple Bayesian paired-sample t-test, for the sleep delay
-
-```{r}
-#| label: fig-delay-in-sleep-and-wake
-#| fig-cap: Self-Reported Delay in Sleep Onset and Wake Time
-#| fig-cap-location: top
-#| fig-format: svg
-#| fig-width: 6
-#| fig-dpi: 300
-#| apa-note: "PSD = partial sleep deprivation, NS = normal sleep"
-#| ## Settings
-#| include: true
-#| message: false
-#| warning: false
-
-figs[["delay_in_wake-onset"]]
-```
-
 
 ```{r}
 #| label: tbl-test-diff-sr-ag
-#| tbl-cap: The Difference in Sleep Estimates Between Self-Report and Actigraphy
+#| tbl-cap: "The Difference in Sleep Estimates Between Self-Report and Actigraphy"
 #| tbl-cap-location: top
 #| ##  META  ##
 #| include: true
@@ -198,50 +173,6 @@ figs[["delay_in_wake-onset"]]
 #| message: false
 
 tbls[["test_sleep_wake_delay"]]
-```
-
-
-### The Relationship Between Sleep Quality and Reduced Sleep
-
-To test whether sleep quality improved with greater PSD, we used a simple Bayesian linear model with sleep quality as the outcome and sleep loss as the predictor. Results are shown presented in @tbl-sleep-quality and illustrated in @fig-sleep-quality-over-sleep-loss, indicating no relationship between sleep loss (hour of reduced sleep) and sleep quality. 
-
-<!--# Sleep quality -->
-
-Sleep quality has previously been reported to be positively correlated with time spent awake and objective sleep quality, and negatively correlated with sleep latency [@elmenhorst2008; @saksvik-lehouillier2020]. Although our participants reported sleeping less during the PSD period, they did not report better sleep quality. Given the variation in sleep reduction between participants, sleep quality might have improved only in participants who slept the least. However, an exploratory analysis (see the Supplementary) did not find support for this idea: Those who slept the least had similar sleep quality as those who slept more, indicating that the PSD did not influence sleep quality in our sample. One alternative explanation is that participants used their phone before falling asleep, which could have reduced their sleep quality [e.g., @exelmans2019; @hjetland2021; @hysing2015; @lastella2020; @nosetti2021], possibly through blue-light [@chang2015]. However, this alternative explanation is speculative as we do not have data on participant's phone use, and future research is needed to confirm whether bedtime phone use impedes improvements in sleep quality following sleep deprivation.
-
-```{r}
-#| label: tbl-sleep-quality
-#| tbl-cap: The Relationship Between Sleep Loss and Sleep Quality
-#| tbl-cap-location: top
-#| ##  META  ##
-#| include: true
-#| warning: false
-#| message: false
-
-tbls[["sleep_quality+sleep"]] 
-```
-
-
-```{r}
-#| label: fig-sleep-quality-over-sleep-loss
-#| fig-cap: The Effect of the Partial Sleep Deprivation on Sleep Quality
-#| fig-cap-location: top
-#| fig-format: svg
-#| fig-width: 5.5
-#| fig-dpi: 300
-#| apa-note: "PSD = partial sleep deprivation, NS = normal sleep"
-#| ## META ## 
-#| include: true
-#| message: false
-#| warning: false
-
-PSD_sleep_quality |>
-  ggplot(aes(sleep, sleep_quality_SD, col = name)) +
-  # facet_wrap(~name) +
-  geom_point(alpha = .5) + 
-  geom_smooth(method = "lm", alpha = .07)  +
-  labs(x = "Sleep deprivation", y = "Sleep quality", col = "Modality") +
-  theme(legend.position = "top")
 ```
 
 
@@ -253,7 +184,7 @@ PSD_sleep_quality |>
 
 ```{r}
 #| label: tbl-cont-probes
-#| tbl-cap: Continuous Bayesian Models for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering
+#| tbl-cap: "Continuous Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
 #| tbl-cap-location: top
 #| ## META ##
 #| include: true
@@ -267,7 +198,7 @@ tbls[["cont_probit_model"]]
 
 ```{r}
 #| label: tbl-cont-behav
-#| tbl-cap: Continuous Bayesian Models for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering
+#| tbl-cap: "Continuous Bayesian Model for Behavioural Variability and Approximate Entropy"
 #| tbl-cap-location: top
 #| ## META ##
 #| include: true
@@ -281,52 +212,17 @@ tbls[["cont_behav_models"]]
 
 ### Participants
 
-@tbl-dichotomous-demo indicates the dichotomous sample demographics. 
-
-```{r}
-#| label: tbl-dichotomous-demo
-#| tbl-cap: Dichotomous Sample Demographics
-#| tbl-cap-location: top
-#| ##  META  ##
-#| include: true
-#| warning: false
-#| message: false
-
-demographics_reduced |> 
-  mutate(Age = as.numeric(Age)) |>
-  summarise(
-    sum = length(Age)
-    , female = sum(Gender == 1)
-    , male = sum(Gender == 2)
-    , missing = sum(is.na(Age))
-    , min = min(Age, na.rm = T)
-    , mean = mean(Age, na.rm = T)
-    , sd = sd(Age, na.rm = T)
-    , max = max(Age, na.rm = T)
-    , skewness = moments::skewness(Age, na.rm = T)
-    , kurtosis = moments::kurtosis(Age, na.rm = T)
-  ) |>
-  mutate(across(c(mean, sd, skewness, kurtosis), ~fmt_APA_numbers(.x, .chr=T))) |>
-  gt() |>
-  tab_spanner("Age", c(min, mean, sd, max, skewness, kurtosis)) |>
-  tab_spanner("Number", c(sum, female, male, missing)) |>
-  cols_label(
-    sum = "Total", female = "Female", male = "Male", missing = "Missing",
-    min = "Min", mean = md("*M*"), sd = md("*SD*"), max = "Max",
-    skewness = "Skew", kurtosis ="Kurt"
-  )
-```
-
+In the dichotomous model, we treated the partial sleep deprivation as a dichotomous variable. Using our pre-defined criteria for sleep loss,  `r subj$red$exc` participants had to be excluded. This left the dichotomous models with a total sample size of `r subj$red$num` participants with an average age of `r subj$red$age` (*SD* = `r subj$red$age_sd`, range = `r subj$red$age_min`-`r subj$red$age_max`, females = `r subj$red$gender_f`).
 
 ### Bayesian Statistical Models
 
 #### Thought Probes
 
-The Bayesian hierarchical ordered-probit models of the thought probes for the dichotomous variable treatment are presented in @tbl-dich-probes. Changes in the probe responses over time and conditions are illustrated in @fig-dich-probes-over-time.
+The Bayesian hierarchical ordered-probit models of the thought probes for the dichotomous variable treatment are presented in @tbl-dich-probes. 
 
 ```{r}
 #| label: tbl-dich-probes
-#| tbl-cap: Dichotomous Bayesian Models for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering
+#| tbl-cap: "Dichotomous Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
 #| tbl-cap-location: top
 #| ## META ##
 #| include: true
@@ -336,28 +232,13 @@ The Bayesian hierarchical ordered-probit models of the thought probes for the di
 tbls[["dich_probit_model"]]
 ```
 
-```{r}
-#| label: fig-dich-probes-over-time
-#| fig-cap: "Thought Probes Over Time Between Conditions"
-#| fig-cap-location: top
-#| fig-width: 8
-#| fig-height: 4.5
-#| fig-dpi: 300
-#| ## META ##
-#| include: true
-#| warning: false
-#| message: false
-
-figs[["dich_probes_over_time"]]
-```
-
 #### Behaviour
 
-The Bayesian hierarchical linear model of the behaviour for the dichotomous variable treatment is in @tbl-dich-behav-models. Changes in behaviour over time and conditions are illustrated in @fig-dich-behav-over-time.
+The Bayesian hierarchical linear model of the behaviour for the dichotomous variable treatment is in @tbl-dich-behav-models.
 
 ```{r}
 #| label: tbl-dich-behav-models
-#| tbl-cap: Bayesian Behavioural Models for The Reduced Sample
+#| tbl-cap: "Dichotomous Bayesian Model for Behavioural Variability and Approximate Entropy"
 #| tbl-cap-location: top
 #| # settings
 #| include: true
@@ -367,20 +248,39 @@ The Bayesian hierarchical linear model of the behaviour for the dichotomous vari
 tbls[["dich_behav_models"]]
 ```
 
+## Affect
+
+### Pre-Task Affect
+
+::: {.landscape}
+
 ```{r}
-#| label: fig-dich-behav-over-time
-#| fig-cap: "Behaviour Over Time Between Conditions"
-#| fig-cap-location: top
-#| fig-width: 8
-#| fig-height: 4
-#| fig-dpi: 300
-#| # settings
+#| label: tbl-psd-on-pre-task-affect
+#| tbl-cap: "Partial Sleep Deprivation on pre-Task Positive and Negative Affect"
+#| tbl-cap-location: top
+#| ## META ##
 #| include: true
 #| warning: false
 #| message: false
 
-figs[["dich_behav_over_time"]] 
+tbls[["psd_on_pre-task_affect"]]
 ```
+
+### Affect Change Across the Task
+
+```{r}
+#| label: tbl-psd-mw-on-pre-task-affect
+#| tbl-cap: "The Effect of Partial Sleep Deprivation and Mind Wandering on the Change in Affect Across the Task"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["affect-change__psd+mw"]]
+```
+
+:::
 
 {{< pagebreak >}}
 
