@@ -1,30 +1,24 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
+# The Effects of Partial Sleep Deprivation on Mind Wandering, Executive Performance and Affect
 
-# mw-psd-eeg-behaviour-2021
-
-Data and analysis for the paper "Increasing Mind Wandering With
-Accelerated Intermittent Theta Burst Stimulation Over the Left
-Dorsolateral Prefrontal Cortex".
+Data and analysis for the paper "The Effects of Partial Sleep Deprivation on Mind Wandering, Executive Performance and Affect".
 
 ~~Not yet published~~.
 
-Preprint is available at
-[PsyArXiv]().
+Preprint is available at [PsyArXiv](https://osf.io/kmqfz_v1).
 
-If you want to use this data/analysis in a research publication, please
-cite [our
-paper]().
+If you want to use this data/analysis in a research publication, please cite the paper (above).
 
-~~~{bibtex} @article{aasen-mw-psd-2021, author={Steffen Rygg
-Aasen and Ragnhild Nicolaisen Drevland and Gábor Csifcsák and Matthias
-Mittner}, title={Increasing Mind Wandering With Accelerated Intermittent
-Theta Burst Stimulation Over the Left Dorsolateral Prefrontal Cortex},
-year=2024, journal={Neuropsychologia}, volume=204, number=109008,
-doi=<https://doi.org/10.1016/j.neuropsychologia.2024.109008> }~~~
+
+~~~{bibtex}
+@misc{aasen2025mwpsd,
+  author = {Aasen, S. and Babiker, S. and Vangen, A. and Haugan, S. and Sandell, S. and Csifcsák, G. and Saksvik-Lehouillier, I. and Kam, J. and Mittner, M.},
+  title = {The Effects of Partial Sleep Deprivation on Mind Wandering, Executive Performance and Affect},
+  year = {2025},
+  publisher = {OSF},
+  url = {https://osf.io/kmqfz_v1},
+  note = {Retrieved 23 July 2025}
+}
+~~~
 
 ## Requirements
 
