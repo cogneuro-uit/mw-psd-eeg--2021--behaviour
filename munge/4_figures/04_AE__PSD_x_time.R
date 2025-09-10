@@ -51,7 +51,7 @@ plot_data <-
   , probes = case_when(
     names_probe=="bv" ~ "Behavioural variability"
     , names_probe=="ae" ~ "Approximate entropy"
-    ) |> fct_relevel("Behavioural variability")
+  ) |> fct_relevel("Behavioural variability")
   )
 
 figs[["AE__PSD_x_time"]] <- 
@@ -71,6 +71,7 @@ figs[["AE__PSD_x_time"]] <-
   theme(legend.position = "none")
 
 conditional_save(
-    figs[["AE__PSD_x_time"]]
+  figs[["AE__PSD_x_time"]]
   , "AE - Changes Over Time Across Sleep Loss"
+  , width = 3, height = 3
 )

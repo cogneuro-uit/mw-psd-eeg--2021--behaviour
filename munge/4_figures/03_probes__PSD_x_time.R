@@ -19,7 +19,7 @@ conditional_save(
 
 
 # Model:
-figs[["probes__PSD_x_time"]] <-
+plot_data <- 
   # estimate the growth 
   expand_grid(
     sleep_deviation = c(-1,0,1),
@@ -60,7 +60,10 @@ figs[["probes__PSD_x_time"]] <-
     names_probe=="mw" ~ "Mind wandering (MW)"
     , names_probe=="mb" ~ "Mind blanking"
     , names_probe=="smw" ~ "Spontaneous MW"
-  ) |> fct_relevel("Mind wandering (MW)")) |> 
+  ) |> fct_relevel("Mind wandering (MW)"))
+
+figs[["probes__PSD_x_time"]] <- 
+  plot_data |>
   ggplot(aes(z_score, value, col = cond, linetype=cond)) +
   facet_wrap(~probes) +
   geom_line(linewidth = 1) +
@@ -75,5 +78,25 @@ figs[["probes__PSD_x_time"]] <-
 
 conditional_save(
   figs[["probes__PSD_x_time"]] 
-  , "Probes - Changes over time across sleep loss"
+  , "Probes - Changes over time across sleep loss", width = 6, height = 3
+)
+
+#  Mind wandeirng       ======
+figs[["MW~PSD*time"]] <- 
+  plot_data |>
+  filter(names_probe=="mw") |>
+  ggplot(aes(z_score, value, col = cond, linetype=cond)) +
+  geom_line(linewidth = 1) +
+  labs( y = "Mind wandering", x = "Probe number (time-on-task)", 
+        col = "Condition", linetype = "Condition") +
+  scale_x_continuous(breaks = seq(0,1,1/(25/5)), labels = c(1, seq(5,26,5))) + 
+  scale_color_manual(    values = name_colour_interactions ) +
+  scale_linetype_manual( values = name_line_interactions ) +
+  coord_cartesian(ylim = c(1, 4)) + 
+  theme(legend.position = "none")
+
+conditional_save(
+ figs[["MW~PSD*time"]]
+  , "MW - Changes over time across sleep loss"
+ , width = 3, height = 3
 )
