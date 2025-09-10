@@ -15,9 +15,8 @@ Dorsolateral Prefrontal Cortex".
 Preprint is available at
 [PsyArXiv]().
 
-If you want to use this data/analysis in a research publication, please
-cite [our
-paper]().
+If you want to use this data/analysis in a research publication, please 
+cite [our paper]().
 
 ~~~{bibtex} @article{aasen-mw-psd-2021, author={Steffen Rygg
 Aasen and Ragnhild Nicolaisen Drevland and Gábor Csifcsák and Matthias
