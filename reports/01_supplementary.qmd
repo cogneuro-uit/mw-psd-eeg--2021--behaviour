@@ -18,10 +18,6 @@ authors:
   - name: Sanna Aurora Sandell
     affiliation: 
       - ref: uit 
-  - name: Gábor Csifcsák
-    orcid: 0000-0001-7719-7073
-    affiliation: 
-      - ref: uit 
   - name: Ingvild Saksvik-Lehouillier
     orcid: 0000-0002-1953-7364
     affiliation: 
@@ -32,9 +28,13 @@ authors:
       - ref: kam
   - name: Matthias Mittner
     orcid: 0000-0003-0205-7353
-    email: matthias.mittner@uit.no
     affiliation: 
       - ref: uit
+  - name: Gábor Csifcsák
+    orcid: 0000-0001-7719-7073
+    email: gabor.csifcsak@uit.no
+    affiliation: 
+      - ref: uit 
     corresponding: true
 affiliations: 
   - id: uit
