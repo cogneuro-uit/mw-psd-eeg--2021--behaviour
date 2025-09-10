@@ -5,6 +5,45 @@ sleeptimes <-
   left_join(actigraphy, by=c("subj","date"="date_end_ag"))
 
 
+# sleeptimes, because we want to adjust ALL subjects to see if their sleep times changes (i.e., if the exclusion changes) 
+sleeptimes_d_check <- 
+  sleeptimes |>
+  filter(!(subj=="030")) |>
+  #' Subject 030 **does not** have actigraphy data, hence the person is removed.
+  mutate(
+    .before = 2, 
+    pre_control_lead  = if_else(pre_control==1  | lead(pre_control==1),  1, 0),
+    pre_sleepdep_lead = if_else(pre_sleepdep==1 | lead(pre_sleepdep==1), 1, 0),
+  ) |>
+  filter(pre_control_lead==1 | pre_sleepdep_lead==1)  |>
+  mutate(
+    .by = c(subj, pre_control_lead), 
+    .before = 4,
+    p_c_cs = cumsum(pre_control_lead),
+    p_s_cs = cumsum(pre_sleepdep_lead),
+    pre_cum = if_else(p_c_cs==0, p_s_cs, p_c_cs),
+    p_c_cs = NULL, p_s_cs = NULL,
+    date = ymd(date),
+  ) |>
+  #' By subject becausse some participants have overlapping dates, and 
+  #' therefore, we do not want to filter out the wrong participants
+  mutate(
+    .by = subj,
+    .before=1,
+    wake_diff    = sleep_wake_ag_h - last_awaking_fix, # higher indicate LATER AG wake
+    check_wake   = if_else(abs(wake_diff)  >= .25 & pre_cum != 1, TRUE, NA),
+    onset_diff   = (sleep_onset_ag_h - sleep_time_cum), # higher indicate LATER AG onset
+    check_onset  = if_else( abs(onset_diff) >= .25 & pre_cum != 1, TRUE, NA),
+    check_onset_k  = if_else( check_onset | lead(check_onset), TRUE, check_onset)
+    # keep extra
+  )  
+
+sleeptimes_check <- 
+  sleeptimes_d_check |>
+  filter( !is.na(check_wake) | !is.na(check_onset_k) )
+
+
+
 #   Adjusted sleep      =====
 ## Fixes for adjusted sleep       =====
 # fix empty entries & transform to character.

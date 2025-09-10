@@ -33,14 +33,17 @@ figs[["sleep_variables_mw"]] <-
   ) |> 
   ggplot(aes(sleep, mw, col = modalityXcondition, group = modalityXsubj)) +
   # aesthetics
+  geom_point(alpha = .2) +
+  geom_line(alpha = .065, col = "grey") +
   scale_colour_manual(values = gen_col("/G-r-b-grbg")) + # + the general (smooth) <<lines
-  scale_alpha_manual(values = c("NS" = 0.0, "PSD" = 0.25, "Highlight_dot" = .9,
-                                "Highlight_line" = .4, "weak_line" = .035)) +
-  # connecting lines
-  geom_line(aes(col = NULL, alpha = alpha_lines)) +
-  # Dots
-  geom_point(aes(alpha = alpha_dots)) +
-  geom_text_repel(aes(label = if_else(sleep == 0, NA, subj), alpha = alpha_dots)) +
+  # # Below creates a lot of jargo, but is still cool -- also illustrates a couple of cases. 
+  # scale_alpha_manual(values = c("NS" = 0.0, "PSD" = 0.25, "Highlight_dot" = .9,
+  #                               "Highlight_line" = .4, "weak_line" = .035)) +
+  # # connecting lines
+  # geom_line(aes(col = NULL, alpha = alpha_lines)) +
+  # # Dots
+  # geom_point(aes(alpha = alpha_dots)) +
+  # geom_text_repel(aes(label = if_else(sleep == 0, NA, subj), alpha = alpha_dots)) +
   # grand lines 
   geom_line(aes(group = name, col = name), stat = "smooth", method = "lm", alpha = .7, linewidth = .7) +
   labs(x = "Average sleep deprivation", y = "Mind wandering", col = "Condition") +
@@ -49,4 +52,5 @@ figs[["sleep_variables_mw"]] <-
 conditional_save(
   figs[["sleep_variables_mw"]]
   , "The relationship between sleep deprivation and MW tendency between modalities"
+  , width = 4, height = 4 
 )
