@@ -25,6 +25,7 @@ plot_data <-
     + mean(c$bv[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
     + mean(c$bv[["b_c.Adjusted_Duration.diff.pos:pre_pos"]]) * sleep * mood
     
+    # MW
     , mw_ns = -(mean(c$mw[["b_Intercept[1]"]]) + mean(c$mw[["b_Intercept[2]"]]) + mean(c$mw[["b_Intercept[3]"]]))
     + mean(c$mw[["b_pre_pos"]]) * mood
     , mw_psd = mw_ns
@@ -68,6 +69,7 @@ conditional_save(
   , width = 3, height = 3
 )
 
+
 ## SMW      ======
 figs[["SMW__PSD_x_pre_pos"]] <- 
   plot_data |> 
@@ -90,8 +92,8 @@ conditional_save(
 )
 
 
-#  # ##
-figs[["MW__PSD_x_pre_pos"]] <- 
+#  MW           =======
+figs[["MW~PSD*pre_pos"]] <- 
   plot_data |> 
   filter(out == "Mind wandering") |>
   ggplot(aes(mood_deviation, value, col = cond, linetype = cond)) + 
@@ -105,6 +107,9 @@ figs[["MW__PSD_x_pre_pos"]] <-
   scale_linetype_manual(values = name_line_interactions ) +
   theme(legend.position = "none")
 
+conditional_save(
+  figs[["MW~PSD*pre_pos"]]
+  , "SMW - Interaction between sleep and affect"
+  , width = 3, height = 3
+)
 
-
-## 
