@@ -1,4 +1,3 @@
-
 # Model
 plot_data <- 
   expand_grid(
@@ -89,7 +88,13 @@ conditional_save(
 
 
 # COMBINE       =====
-figs[["MW~PSD*behaviour"]] <- figs[["MW~PSD*BV"]]  + figs[["MW~PSD*AE"]] 
+figs[["MW~PSD*behaviour"]] <- 
+  patchwork::guide_area() +
+  figs[["MW~PSD*BV"]]  + figs[["MW~PSD*AE"]] +
+  patchwork::plot_layout(ncol = 1, guides = "collect", heights = c(0.10, 1)
+  , design = "11
+  23")
+  
 
 conditional_save(
   figs[["MW~PSD*behaviour"]]
