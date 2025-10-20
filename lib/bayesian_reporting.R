@@ -660,3 +660,100 @@ tab_bayes_generics <- function(data, fmt_md_var = F, pre_footnote="", post_footn
   
   data
 }
+
+
+
+
+#' Calculate Expected Value with HDI for Ordinal Bayesian Models
+#'
+#' Computes the expected value and highest density interval (HDI) across
+#' ordinal categories for cumulative ordinal regression models.
+#'
+#' @param bayes_model A Bayesian ordinal regression model object (e.g., from brms)
+#' @param transformation Character string specifying the inverse link function.
+#'   Options: "pnorm" (probit), "plogis" (logit). Default is "pnorm".
+#' @param reference Numeric value for the linear predictor. Use 0 for reference
+#'   level, or add coefficient values for other levels. Default is 0.
+#' @param categories Optional numeric vector of category values. If NULL (default),
+#'   assumes sequential integers from 1 to (number of intercepts + 1).
+#' @param prob Probability mass for the HDI. Default is 0.95 (95% HDI).
+#'
+#' @return List containing:
+#'   - estimate: posterior mean of expected value
+#'   - median: posterior median of expected value
+#'   - lower: lower bound of HDI
+#'   - upper: upper bound of HDI
+#'
+#' @examples
+#' # For reference level (e.g., GPT3.0)
+#' result <- bayes_coef_intercept_hdi(mod.quality$appr, transformation = "pnorm")
+#' cat("Expected value:", result$estimate,
+#'     "HDI: [", result$lower, ",", result$upper, "]\n")
+#'
+#' @export
+bayes_coef_intercept <- function(bayes_model,
+                                 transformation,
+                                 reference = 0,
+                                 categories = NULL,
+                                 prob = 0.95) {
+  require(tidybayes)
+  require(posterior)
+  require(bayestestR)
+  
+  # Get posterior draws
+  draws <- as_draws_df(bayes_model)
+  
+  # Extract intercept column names
+  intercept_cols <- grep("^b_Intercept\\[", colnames(draws), value = TRUE)
+  
+  # Determine transformation function
+  transform_fn <- match.fun(transformation)
+  
+  # Define category values if not provided
+  n_intercepts <- length(intercept_cols)
+  if (is.null(categories)) {
+    categories <- 1:(n_intercepts + 1)
+  }
+  
+  # Verify length match
+  if (length(categories) != (n_intercepts + 1)) {
+    stop("Length of 'categories' must equal number of intercepts + 1")
+  }
+  
+  # Calculate expected value for each posterior draw
+  n_draws <- nrow(draws)
+  expected_values <- numeric(n_draws)
+  
+  for (i in 1:n_draws) {
+    # Extract intercepts for this draw
+    intercepts_draw <- as.numeric(draws[i, intercept_cols])
+    
+    # Calculate cumulative probabilities
+    cum_probs <- transform_fn(intercepts_draw - reference)
+    cum_probs <- c(0, cum_probs, 1)
+    
+    # Calculate category probabilities
+    cat_probs <- diff(cum_probs)
+    
+    # Calculate expected value for this draw
+    expected_values[i] <- sum(categories * cat_probs)
+  }
+  
+  # Calculate summary statistics
+  result <- list(
+    estimate = mean(expected_values),
+    median   = median(expected_values),
+    sd       = sd(expected_values),
+    qlower   = quantile(expected_values, probs = (1 - prob) / 2)[[1]],
+    qupper   = quantile(expected_values, probs = 1 - (1 - prob) / 2)[[1]]
+  )
+  
+  # Add HDI using bayestestR if available
+  if (requireNamespace("bayestestR", quietly = TRUE)) {
+    hdi_result <- bayestestR::hdi(expected_values, ci = prob)
+    result$hdi_lower <- hdi_result$CI_low
+    result$hdi_upper <- hdi_result$CI_high
+  }
+  
+  return(result)
+}

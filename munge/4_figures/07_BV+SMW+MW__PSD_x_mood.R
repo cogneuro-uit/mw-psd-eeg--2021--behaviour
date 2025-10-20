@@ -12,7 +12,7 @@ plot_data <-
     mood  = summarised_vals$mood_pos_m + (summarised_vals$mood_pos_sd * mood_deviation),
     
     # PSD x positive on smw 
-    , smw_ns = -(mean(c$smw[["b_Intercept[1]"]]) + mean(c$smw[["b_Intercept[2]"]]) + mean(c$smw[["b_Intercept[3]"]]))
+    , smw_ns = c$smw_i
     + mean(c$smw[["b_pre_pos"]]) * mood
     , smw_psd = smw_ns
     + mean(c$smw[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
@@ -26,7 +26,7 @@ plot_data <-
     + mean(c$bv[["b_c.Adjusted_Duration.diff.pos:pre_pos"]]) * sleep * mood
     
     # MW
-    , mw_ns = -(mean(c$mw[["b_Intercept[1]"]]) + mean(c$mw[["b_Intercept[2]"]]) + mean(c$mw[["b_Intercept[3]"]]))
+    , mw_ns = c$mw_i
     + mean(c$mw[["b_pre_pos"]]) * mood
     , mw_psd = mw_ns
     + mean(c$mw[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 

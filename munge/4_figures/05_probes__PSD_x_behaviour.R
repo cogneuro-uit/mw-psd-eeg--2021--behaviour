@@ -9,21 +9,21 @@ plot_data <-
     sleep = summarised_vals$sleep_m + (summarised_vals$sleep_sd * sleep_deviation),
     
     # MW ~ bv * psd 
-    , mw_bv_ns = (mean(c$mw[["b_Intercept[1]"]]) + mean(c$mw[["b_Intercept[2]"]]) + mean(c$mw[["b_Intercept[3]"]]))
+    , mw_bv_ns = c$mw_i
     + mean(c$mw[["b_zlogbv"]]) * z_score
     , mw_bv_psd = mw_bv_ns
     + mean(c$mw[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
     + mean(c$mw[["b_c.Adjusted_Duration.diff.pos:zlogbv"]]) * z_score * sleep
     
     # mw ~ AE * PSD
-    , mw_ae_ns = (mean(c$mw[["b_Intercept[1]"]]) + mean(c$mw[["b_Intercept[2]"]]) + mean(c$mw[["b_Intercept[3]"]]))
+    , mw_ae_ns = c$mw_i
     + mean(c$mw[["b_zlogapen"]]) * z_score
     , mw_ae_psd = mw_ae_ns
     + mean(c$mw[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
     + mean(c$mw[["b_c.Adjusted_Duration.diff.pos:zlogapen"]]) * z_score * sleep
     
     # MB ~ bv * psd
-    , mb_bv_ns = (mean(c$mb[["b_Intercept[1]"]]) + mean(c$mb[["b_Intercept[2]"]]) + mean(c$mb[["b_Intercept[3]"]]))
+    , mb_bv_ns = c$mb_i
     + mean(c$mb[["b_zlogbv"]]) * z_score
     , mb_bv_psd = mb_bv_ns
     + mean(c$mb[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
