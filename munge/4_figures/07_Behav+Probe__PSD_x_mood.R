@@ -11,26 +11,34 @@ plot_data <-
     sleep = summarised_vals$sleep_m + (summarised_vals$sleep_sd * sleep_deviation),
     mood  = summarised_vals$mood_pos_m + (summarised_vals$mood_pos_sd * mood_deviation),
     
-    # PSD x positive on smw 
+    # MW ~ PSD x prePOS
+    , mw_ns = c$mw_i
+    + mean(c$mw[["b_pre_pos"]]) * mood
+    , mw_psd = mw_ns
+    + mean(c$mw[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
+    + mean(c$mw[["b_c.Adjusted_Duration.diff.pos:pre_pos"]]) * sleep * mood
+    
+    # SMW ~ PSD x prePOS
     , smw_ns = c$smw_i
     + mean(c$smw[["b_pre_pos"]]) * mood
     , smw_psd = smw_ns
     + mean(c$smw[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
     + mean(c$smw[["b_c.Adjusted_Duration.diff.pos:pre_pos"]]) * sleep * mood
     
-    # psd x positive on BV
+    # BV ~ PSD x prePOS
     , bv_ns = mean(c$bv[["b_Intercept"]])
     + mean(c$bv[["b_pre_pos"]]) * mood
     , bv_psd = bv_ns
     + mean(c$bv[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
     + mean(c$bv[["b_c.Adjusted_Duration.diff.pos:pre_pos"]]) * sleep * mood
     
-    # MW
-    , mw_ns = c$mw_i
-    + mean(c$mw[["b_pre_pos"]]) * mood
-    , mw_psd = mw_ns
-    + mean(c$mw[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
-    + mean(c$mw[["b_c.Adjusted_Duration.diff.pos:pre_pos"]]) * sleep * mood
+    # AE ~ PSD x prePOS
+    , ae_ns = mean(c$ae[["b_Intercept"]])
+    + mean(c$ae[["b_pre_pos"]]) * mood
+    , ae_psd = ae_ns
+    + mean(c$ae[["b_c.Adjusted_Duration.diff.pos"]]) * sleep 
+    + mean(c$ae[["b_c.Adjusted_Duration.diff.pos:pre_pos"]]) * sleep * mood
+    
   ) |>
   pivot_longer(c(ends_with("psd"), ends_with("ns")), names_to="names") |>
   separate_wider_delim(names, "_", names_sep = "_", names = c("out", "cond")) |>
@@ -43,6 +51,7 @@ plot_data <-
   , out = case_when(
     names_out=="smw" ~ "Spontaneous mind wandering"
     , names_out=="bv" ~ "Behavioural variability"
+    , names_out=="ae" ~ "Approximate Entropy"
     , names_out == "mw" ~ "Mind wandering"
   )) 
 
@@ -66,6 +75,28 @@ figs[["BV__PSD_x_pre_pos"]] <-
 conditional_save(
   figs[["BV__PSD_x_pre_pos"]]
   , "BV - Interaction between sleep and affect"
+  , width = 3, height = 3
+)
+
+## AE       ======
+figs[["AE~PSD x prePOS"]] <- 
+  plot_data |> 
+  filter(out == "Approximate Entropy") |>
+  ggplot(aes(mood_deviation, value, col = cond, linetype = cond)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = .25) +
+  geom_line(linewidth = 1) +
+  labs( 
+    y = "Change in Z-score AE"
+    , x = "Z-scored positive affect"
+    , col = "Condition"
+    , linetype="Condition") +
+  scale_color_manual(   values = name_colour_interactions ) +
+  scale_linetype_manual(values = name_line_interactions ) +
+  theme(legend.position = "none")
+
+conditional_save(
+  figs[["AE~PSD x prePOS"]]
+  , "AE - PSD x prePOS"
   , width = 3, height = 3
 )
 

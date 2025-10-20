@@ -126,3 +126,23 @@ conditional_save(
   , "MW+MB - Behaviour x BV"
   , width = 5, height = 3
 )
+
+
+## MB ~ BV * PSD       ======
+figs[["MB~PSD*BV"]] <-
+  plot_data |>
+  filter(names_probe=="mb") |>
+  ggplot(aes(z_score, value, col = cond, linetype = cond)) +
+  coord_cartesian(ylim = c(1, 4)) + 
+  geom_line(linewidth = 1) +
+  labs(y = "Association with Mind Blanking", x = "Z-score BV", 
+       col = "Condition", linetype="Condition") +
+  scale_color_manual(   values = name_colour_interactions ) +
+  scale_linetype_manual(values = name_line_interactions ) +
+  theme(legend.position = "none")
+
+conditional_save(
+  figs[["MB~PSD*BV"]]
+  , "MB - Behaviour x BV"
+  , width = 3, height = 3
+)
