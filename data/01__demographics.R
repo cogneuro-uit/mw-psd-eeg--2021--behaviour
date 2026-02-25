@@ -13,28 +13,55 @@ demographics <- map(fnames, \(fname){
   datasheet <- read_xlsx(fname, sheet="DataSheet")
   
   datasheet |>
-    select(...2, ...3, VALUE, ...5 ) |> 
-    rename(var = ...2, value = VALUE) |>
+    select(General, ...2, ...3, VALUE, ...5 ) |>
+    mutate(General = if_else(row_number()==1, "Demographics", General)) |> 
+    fill(General) |>
+    filter( !(is.na(...2) & str_starts(General, "Notes ") | row_number() == 16) ) |> 
+    fill(...2) |> 
     mutate(
-      filter = case_when(
-        row_number() %in% 1:13 ~ T,
-        lag(str_starts(var, "No ")) ~ T,
-        lag(lag(str_starts(var, "No "))) ~ T,
-        )
-      ) |> 
-    fill(var) |>
-    filter(filter) |>
+      ...3 = case_when( 
+        ...2 == "T0" ~ "S0"
+        , str_ends(General, " T1") & !is.na(...2) ~ "S1"
+        , str_ends(General, " T2") & !is.na(...2) ~ "S2"
+        , ...3 == "T1" ~ "S1"
+        , ...3 == "T2" ~ "S2"
+        , T ~ ...3)
+      # , ...2 = case_when(
+      #   str_starts(...2, "No ") ~ paste0(", ...2)
+      #   , T ~ ...2
+      # )
+      , ...2 = if_else(str_starts(General, "Notes "), paste0("Notes: ", ...2), ...2) 
+      , ...2 = str_replace_all(...2, " – ", " ")
+    ) |> 
+    filter( !(str_starts(General, "Pre-") & is.na(...3) | ...2=="T0") ) |>
+    rename(var = ...2, value = VALUE) |>
+    # mutate(
+    #   filter = case_when(
+    #     row_number() %in% 1:13 ~ T
+    #     , lag(str_starts(var, "No ")) ~ T
+    #     , lag(lag(str_starts(var, "No "))) ~ T
+    #     , str_detect(var, "Protocol compliance, side effects") ~ T
+    #     , 
+    #     # , str_detect(var, regex("EEG problems", ignore_case = T)) ~ T
+    #     # , str_detect(var, regex("Task-related comments", ignore_case = T)) ~ T
+    #     # , str_detect(var, regex("Task-related comments", ignore_case = T)) ~ T
+    #     # , str_detect(var, regex("Else", ignore_case = T)) ~ T
+    #     )
+    #   ) |> view()
+    # fill(var) |>
+    # filter(filter) |>
     mutate(
       value = as.character(value),
       var = if_else(!is.na(...3), paste0(...3, "_", var), var),
       var = str_replace_all(var, "[()]", "") |>
+        str_replace_all(":", "") |>
         str_replace_all("/", ".") |>
         str_replace_all(" ", "_") |>
         str_replace_all("^T", "S"),
       value = if_else(str_ends(var, "_daylight"), 
                       sprintf("%2s:%2s", value, ...5),
                       value),
-   ) |>
+    ) |> 
     select(var, value) |>
     pivot_wider(names_from = var, values_from = value) |>
     rename(subj = Code, group = Group) |>
