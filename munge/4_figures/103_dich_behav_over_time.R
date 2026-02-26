@@ -1,7 +1,7 @@
 figs[["dich_behav_over_time"]] <- 
   data.probe.mood.sleep |>
   mutate(
-    condition_exc  = if_else(Adjusted_Duration.diff <= -1.5, TRUE, FALSE),
+    condition_exc  = if_else(c.Adjusted_Duration.diff <= -1.5, TRUE, FALSE),
     Block    = probenum,
     Condition = if_else(sleepdep=="SD", "PSD", "NS") |>
       fct_relevel("PSD", after = 0),

@@ -4,7 +4,7 @@ figs[["dich_probes_over_time"]] <-
     `Mind wandering`             = scale(as.numeric(mw)),
     `Mind blanking`              = scale(if_else(mw>2, as.numeric(mb), NA)),
     `Spontaneous mind wandering` = scale(if_else(mw>2, as.numeric(smw), NA)),
-    condition_exc  = if_else(Adjusted_Duration.diff <= -1.5, TRUE, FALSE),
+    condition_exc  = if_else(c.Adjusted_Duration.diff <= -1.5, TRUE, FALSE),
     Block    = probenum,
     Condition = if_else(sleepdep=="SD", "PSD", "NS") |>
       fct_relevel("PSD", after = 0),

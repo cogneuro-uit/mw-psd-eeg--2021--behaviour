@@ -52,5 +52,5 @@ figs[["sleep_variables_mw"]] <-
 conditional_save(
   figs[["sleep_variables_mw"]]
   , "The relationship between sleep deprivation and MW tendency between modalities"
-  , width = 4, height = 4 
+  , width = 6, height = 4 
 )
