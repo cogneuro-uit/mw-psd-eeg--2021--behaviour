@@ -1,0 +1,5 @@
+servers:
+  # WORKER_NAME:
+    # connection: YOUR_NAME@SERVER_ID # prefer to use auto ssh
+    # workers: 5   # optional: prespecified number of workers
+    # max_load: .6 # optional: prespecified max load  (of total cores)

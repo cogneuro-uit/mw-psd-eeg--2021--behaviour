@@ -15,6 +15,7 @@ figures/*.jpeg
 # Ignore table outputs
 tables/*.html
 tables/*.docx
+tables/*.rtf
 # Ignore reports documents
 reports/*.docx
 reports/*.pdf
