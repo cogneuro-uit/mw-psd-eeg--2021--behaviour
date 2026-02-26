@@ -19,7 +19,8 @@ feedback <- map(fnames, \(fname){
   par <- read_xlsx(fname, sheet = "Feedback-comments", col_names = F)
   
   if(as.numeric(subj) < 5){
-    par <- par |> 
+    par <- 
+      par |> 
       mutate(
         session = case_when( ...1 == "T1" ~ "S1", ...1 == "T2" ~ "S2" )
       ) |> 
@@ -72,7 +73,7 @@ feedback <- map(fnames, \(fname){
       pivot_wider(names_from = c(session, par, q_que), values_from = "Answer")
   }
   
-  res <- read_xlsx(fname, sheet = "DataSheet", range="B29:D37", col_names = FALSE) 
+  res <- read_xlsx(fname, sheet = "DataSheet", range="B31:D97", col_names = FALSE) 
   
   res <- res |>
     select(...1, ...3) |>
