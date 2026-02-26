@@ -99,10 +99,10 @@ demo_text_summary <-
 demographics_reduced <-
   demographics |>
   left_join(
-    sleeptimes_updated_trans |> filter(sleepdep=="SD"),
-    by = c("subj")
+    sleeptimes_updated_trans |> filter(sleepdep=="SD")
+    , by = c("subj")
   ) |>
-  filter(Adjusted_Duration.diff.pos > 1.5)
+  filter(c.Adjusted_Duration.diff.pos > 1.5)
 
 ### Summary   =====
 subj <- list(

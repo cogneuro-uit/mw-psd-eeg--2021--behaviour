@@ -13,7 +13,7 @@ test_panas <-
 
 # EXCLUDE (Dichotomous analyses data)
 test_panas_dict <- test_panas |>
-  filter( Adjusted_Duration.diff <= -1.5 )
+  filter( c.Adjusted_Duration.diff <= -1.5 )
 
 #' Mood difference 
 test_panas_diff <- 
@@ -31,7 +31,8 @@ mood_diff_test <-
     , smw = mean(as.numeric(smw))
     , pos_diff = unique(post_pos - pre_pos)
     , neg_diff = unique(post_neg - pre_neg)
-    , 
+    , c.Actigraphy_Duration.diff.pos = unique(c.Actigraphy_Duration.diff.pos)
+    , c.Self.report_Duration.diff.pos = unique(c.Self.report_Duration.diff.pos)
   ) 
 
 
