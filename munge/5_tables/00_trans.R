@@ -80,7 +80,7 @@ mutate_bayes_mod_probe <- function(data){
         `Pre-positive` = "pre_pos", 
         `Pre-negative` = "pre_neg", 
         
-        # Continuous
+        # Continuous (Adjusted)
         `PSD` = "c.Adjusted_Duration.diff.pos", 
         `PSD x Trial` = "c.Adjusted_Duration.diff.pos:probenum",
         `PSD x Trial` = "c.Adjusted_Duration.diff.pos:probenum_prop",
@@ -88,6 +88,25 @@ mutate_bayes_mod_probe <- function(data){
         `PSD x BV`    = "c.Adjusted_Duration.diff.pos:zlogbv",
         `PSD x Pre-positive` = "c.Adjusted_Duration.diff.pos:pre_pos", 
         `PSD x Pre-negative` = "c.Adjusted_Duration.diff.pos:pre_neg",
+        
+        # Continuous (self_report)
+        `PSD` = "c.Self.report_Duration.diff.pos", 
+        `PSD x Trial` = "c.Self.report_Duration.diff.pos:probenum",
+        `PSD x Trial` = "c.Self.report_Duration.diff.pos:probenum_prop",
+        `PSD x AE`    = "c.Self.report_Duration.diff.pos:zlogapen",
+        `PSD x BV`    = "c.Self.report_Duration.diff.pos:zlogbv",
+        `PSD x Pre-positive` = "c.Self.report_Duration.diff.pos:pre_pos", 
+        `PSD x Pre-negative` = "c.Self.report_Duration.diff.pos:pre_neg",
+        
+        # Continuous (actugraphy)
+        `PSD` = "c.Actigraphy_Duration.diff.pos", 
+        `PSD x Trial` = "c.Actigraphy_Duration.diff.pos:probenum",
+        `PSD x Trial` = "c.Actigraphy_Duration.diff.pos:probenum_prop",
+        `PSD x AE`    = "c.Actigraphy_Duration.diff.pos:zlogapen",
+        `PSD x BV`    = "c.Actigraphy_Duration.diff.pos:zlogbv",
+        `PSD x Pre-positive` = "c.Actigraphy_Duration.diff.pos:pre_pos", 
+        `PSD x Pre-negative` = "c.Actigraphy_Duration.diff.pos:pre_neg",
+        
         # Excluded
         #' This part is used below
         `PSD` = "sleepdepSD", 
@@ -126,15 +145,34 @@ mutate_bayes_mod_beh <- function(data){
       `PSD x Trial`        = "c.Adjusted_Duration.diff.pos:probenum",
       `PSD x Pre-positive` = "c.Adjusted_Duration.diff.pos:pre_pos",
       `PSD x Pre-negative` = "c.Adjusted_Duration.diff.pos:pre_neg",
+      `PSD x MW`           = "c.Adjusted_Duration.diff.pos:mw",
+      # continuous
+      PSD                  = "c.Self.report_Duration.diff.pos",
+      `PSD x Trial`        = "c.Self.report_Duration.diff.pos:probenum_prop",
+      `PSD x Trial`        = "c.Self.report_Duration.diff.pos:probenum",
+      `PSD x Pre-positive` = "c.Self.report_Duration.diff.pos:pre_pos",
+      `PSD x Pre-negative` = "c.Self.report_Duration.diff.pos:pre_neg",
+      `PSD x MW`           = "c.Self.report_Duration.diff.pos:mw",
+      # continuous (actigraphy)
+      PSD                  = "c.Actigraphy_Duration.diff.pos",
+      `PSD x Trial`        = "c.Actigraphy_Duration.diff.pos:probenum_prop",
+      `PSD x Trial`        = "c.Actigraphy_Duration.diff.pos:probenum",
+      `PSD x Pre-positive` = "c.Actigraphy_Duration.diff.pos:pre_pos",
+      `PSD x Pre-negative` = "c.Actigraphy_Duration.diff.pos:pre_neg",
+      `PSD x MW`           = "c.Actigraphy_Duration.diff.pos:mw",
       # Dichotomous
       PSD                  = "sleepdepSD",
       `PSD x Trial`        = "sleepdepSD:probenum_prop",
       `PSD x Trial`        = "sleepdepSD:probenum",
       `PSD x Pre-positive` = "sleepdepSD:pre_pos",
-      `PSD x Pre-negative` = "sleepdepSD:pre_neg"),
+      `PSD x Pre-negative` = "sleepdepSD:pre_neg",
+      `PSD x MW`           = "sleepdepSD:mw"
+      
+      , MW = "mw"
+      ),
       var = ordered(var, levels = c(
-        "Intercept", "Trial", "Pre-positive", "Pre-negative", "PSD", 
-        "PSD x Trial", "PSD x Pre-positive", "PSD x Pre-negative", 
+        "Intercept", "Trial", "Pre-positive", "Pre-negative", "PSD", "MW",
+        "PSD x Trial", "PSD x Pre-positive", "PSD x Pre-negative", "PSD x MW",
         "Sigma (subj)", "LOOIC", "LOO R2", "R2"
       ) )
     ) |>
