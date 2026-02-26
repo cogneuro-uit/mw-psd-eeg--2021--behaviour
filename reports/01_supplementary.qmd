@@ -74,12 +74,13 @@ quarto_load_project(relative_path, load_data_data = T, load_data_scripts = T, lo
 
 # Supplementary Materials
 
-## Sleep 
+## Sleep
 
-Participant 31 did not self-report their normal sleep before the NS test and received special treatment. We used the latest nights of sleep as a proxy for their 3 nights of NS before the NS test. 
+Participant 31 did not self-report their normal sleep before the NS test and received special treatment. We used the latest nights of sleep as a proxy for their 3 nights of NS before the NS test.
 
 <!-- Overall sleep effect -->
-Participants demonstrated significantly reduced sleep duration during the PSD period compared to the NS period, as confirmed by both the self-reported, actigraphy and the adjusted sleep estimates. However, considerable inter-individual variability was observed in the magnitude of sleep restriction achieved. Previous research demonstrates that sensitivity to sleep loss varies between, but remains consistent within individuals [@hudson2020; @rupp2012; @vandongen2004; @dennis2017]. This suggests that participants may have naturally modulated their sleep restriction according to their own sensitivity to sleep loss. However, the variability in sleep loss could have occurred because of ambiguous sleep restriction instructions. Sleep restriction protocols typically employ either a fixed time-in-bed [e.g., @hudson2020; @vandongen2004] or predetermined bedtimes [@saksvik-lehouillier2020]. In contrast, our protocol required participants to estimate their own sleep restriction, potentially allowing for less stringent implementation among some individuals. Therefore, the inter-individual variability in sleep loss likely reflects both individual differences in sleep loss and methodological limitations of the protocol. 
+
+Participants demonstrated significantly reduced sleep duration during the PSD period compared to the NS period, as confirmed by both the self-reported, actigraphy and the adjusted sleep estimates. However, considerable inter-individual variability was observed in the magnitude of sleep restriction achieved. Previous research demonstrates that sensitivity to sleep loss varies between, but remains consistent within individuals [@hudson2020; @rupp2012; @vandongen2004; @dennis2017]. This suggests that participants may have naturally modulated their sleep restriction according to their own sensitivity to sleep loss. However, the variability in sleep loss could have occurred because of ambiguous sleep restriction instructions. Sleep restriction protocols typically employ either a fixed time-in-bed [e.g., @hudson2020; @vandongen2004] or predetermined bedtimes [@saksvik-lehouillier2020]. In contrast, our protocol required participants to estimate their own sleep restriction, potentially allowing for less stringent implementation among some individuals. Therefore, the inter-individual variability in sleep loss likely reflects both individual differences in sleep loss and methodological limitations of the protocol.
 
 <!--# We have some discrepancies, explain how these might arise -->
 
@@ -89,10 +90,9 @@ The self-report and actigraphy did not always provide similar sleep/wake times. 
 
 In the Shiny application [@shiney2025; see the application at <https://github.com/cogneuro-uit/mw-psd-eeg--2021--behaviour/tree/master/shiny-sleep-adjustments>], time was visualized on the x-axis, while the actigraphy recorded activity (raw data) and light (log-transformed) were visualized on separate y-axes. Coloured marks highlighted the self-reported and actigraphy sleep onset and wake times. The rest interval was indicated by shaded areas ranging from the sleep attempt to the sleep onset, and the wake time to the rise time for the self-report and actigraphy. The researchers could either adjust two sliders to adjust the time (hours and minutes), providing a third coloured marker, or use two separate buttons to apply the exact values of the self-reported or actigraphy as the onset/wake time. Around each marker, a transparently coloured area of (+-) 15 minutes was presented.
 
+### Adjusted Sleep Estimate
 
-### Adjusted Sleep Estimate 
-
-@fig-onset-wake-diffs indicates the differences between self-reported and actigraphy onset/wake times. 
+@fig-onset-wake-diffs indicates the differences between self-reported and actigraphy onset/wake times.
 
 ```{r}
 #| label: fig-onset-wake-diffs
@@ -111,7 +111,7 @@ In the Shiny application [@shiney2025; see the application at <https://github.co
 figs[["onset-wake_difference"]]
 ```
 
-@fig-SD-between-modalities indicates the estimated sleep loss during the partial sleep deprivation (PSD) compared to the normal sleep (NS). Note some great discrepancies between red (self-reported) and blue (actigraphy) estimates. 
+@fig-SD-between-modalities indicates the estimated sleep loss during the partial sleep deprivation (PSD) compared to the normal sleep (NS). Note some great discrepancies between red (self-reported) and blue (actigraphy) estimates.
 
 ```{r}
 #| label: fig-SD-between-modalities
@@ -129,7 +129,7 @@ figs[["onset-wake_difference"]]
 figs[["PSD__report_type"]]
 ```
 
-@fig-sleeptimes-across-source illustrates how self-reported, actigraphy and adjusted sleep variables related to mind wandering (MW). 
+@fig-sleeptimes-across-source illustrates how self-reported, actigraphy and adjusted sleep variables related to mind wandering (MW).
 
 ```{r}
 #| label: fig-sleeptimes-across-source
@@ -137,13 +137,30 @@ figs[["PSD__report_type"]]
 #| fig-cap: Relationship Between Sleep Loss and Mind Wandering Across Sleep Estimates
 #| fig-height: 5
 #| fig-dpi: 600
-#| apa-note: "Note. Average sleep deprivation is calculated based on the difference from the normal sleep (NS) period, such that 0 indicates each subject’s NS sleep time, and the sleep deprivation indicates the (average) differences from their NS average. Participants 3, 5, 12, and 23 are highlighted to illustrate how mind wandering changed from their NS to their sleep-deprived scores split by sleep measure (separate colours). The solid lines indicate the overall relationship for the three different measure types. PSD = partial sleep deprivation."
+#| apa-note: "Note. Average sleep deprivation is calculated based on the difference from the normal sleep (NS) period, such that 0 indicates each subject’s NS sleep time, and the sleep deprivation indicates the (average) differences from their NS average. The solid lines indicate the overall relationship for the three different measure types. PSD = partial sleep deprivation."
 #| ##  Meta  ##
 #| include: true 
 #| warning: false 
 #| message: false
 
 figs[["sleep_variables_mw"]]
+```
+
+@fig-sleeptimes-across-source-summarised indicates the sleep estimates across sleep type and a connecting line between each participant.
+
+```{r}
+#| label: fig-sleeptimes-across-source-summarised
+#| fig-cap-location: top
+#| fig-cap: Relationship Between Sleep Loss and Mind Wandering Across Sleep Estimates
+#| fig-height: 5
+#| fig-dpi: 600
+#| apa-note: "Note. Average sleep deprivation is calculated based on the difference from the normal sleep (NS) period, such that 0 indicates each subject’s NS sleep time, and the sleep deprivation indicates the (average) differences from their NS average. The solid lines indicate the overall relationship for the three different measure types. PSD = partial sleep deprivation."
+#| ##  Meta  ##
+#| include: true 
+#| warning: false 
+#| message: false
+
+figs[["PSD__report_type_summarised"]]
 ```
 
 ### Test of Differences Between Sleep Estimates Between Self-Reports and Actigraphy
@@ -162,29 +179,65 @@ We explored whether there was any significant difference between the modalities 
 tbls[["test_sleep_vars_across_modality"]]
 ```
 
+<!-- ```{r} -->
+
+<!-- #| label: tbl-test-diff-sr-ag -->
+
+<!-- #| tbl-cap: "The Difference in Sleep Estimates Between Self-Report and Actigraphy" -->
+
+<!-- #| tbl-cap-location: top -->
+
+<!-- #| ##  META  ## -->
+
+<!-- #| include: true -->
+
+<!-- #| warning: false -->
+
+<!-- #| message: false -->
+
+<!-- tbls[["test_sleep_wake_delay"]] -->
+
+<!-- ``` -->
+
+## Probes Descriptives
+
+@fig-desc-additional-probe-comparison indicates the total raw count of probe values across probe type, condition, and data treatment. @tbl-probe-raw-count illustrates additional comparisons between the probe response options across conditions and sample choice. Note that, regardless of sample size choice, the proportions of responses remain comparable, suggesting that the exclusion of individuals did not change the response distribution meaningfully.
 
 ```{r}
-#| label: tbl-test-diff-sr-ag
-#| tbl-cap: "The Difference in Sleep Estimates Between Self-Report and Actigraphy"
+#| label: tbl-probe-raw-count
+#| tbl-cap: "Total Raw Count of Probe Values Across Probe Type, Condition, and Data Treatment"
 #| tbl-cap-location: top
-#| ##  META  ##
+#| ## META ##
 #| include: true
 #| warning: false
 #| message: false
 
-tbls[["test_sleep_wake_delay"]]
+tbls[["probe_descriptives_wide"]]
 ```
 
+```{r}
+#| label: fig-desc-additional-probe-comparison
+#| fig-cap-location: top
+#| fig-cap: "Relative Frequency and Count of Probe Responses Over Probe Type, Condition, and Data Treatment"
+#| fig-height: 8.5
+#| fig-width: 8
+#| fig-dpi: 300
+#| apa-note: "Note. a) Shows the relative frequency of each probe response across probe question, condition, and sample treatment. Similarly, b) shows the raw count across each participant (partially transparent) with an overall grand average (solid colour)."
+#| ##  Meta  ##
+#| include: true 
+#| warning: false 
+#| message: false
 
-## Continuous model 
+figs[["desc_probes_additional_comparisons"]]
+```
 
-@tbl-cont-probes indicates the coefficients for the continuously treated PSD on the various MW types, and @tbl-cont-behav indicates the coefficients for the continuously treated PSD on the behaviours. Bold indicates a difference from the dichotomously treated PSD (see below).
+## Dose-Response Models
 
-### Probes
+@tbl-dr-probes-models indicates the coefficients for the continuously treated PSD on the various MW types, and @tbl-dr-behavioural-models indicates the coefficients for the continuously treated PSD on the behaviours. Bold rows indicate a difference between the DR and SC models (see below).
 
 ```{r}
-#| label: tbl-cont-probes
-#| tbl-cap: "Continuous Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
+#| label: tbl-dr-probes-models
+#| tbl-cap: "Dose-Response Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
 #| tbl-cap-location: top
 #| ## META ##
 #| include: true
@@ -194,35 +247,33 @@ tbls[["test_sleep_wake_delay"]]
 tbls[["cont_probit_model"]]
 ```
 
-### Behaviour
-
 ```{r}
-#| label: tbl-cont-behav
-#| tbl-cap: "Continuous Bayesian Model for Behavioural Variability and Approximate Entropy"
+#| label: tbl-dr-behavioural-models
+#| tbl-cap: "Dose-Response Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
 #| tbl-cap-location: top
 #| ## META ##
 #| include: true
 #| warning: false
 #| message: false
 
-tbls[["cont_behav_models"]]
+tbls[["dich_behav_models"]]
 ```
 
-## Dichotomous model
+## Strict Compliance (SC) Models
 
 ### Participants
 
-In the dichotomous model, we treated the partial sleep deprivation as a dichotomous variable. Using our pre-defined criteria for sleep loss,  `r subj$red$exc` participants had to be excluded. This left the dichotomous models with a total sample size of `r subj$red$num` participants with an average age of `r subj$red$age` (*SD* = `r subj$red$age_sd`, range = `r subj$red$age_min`-`r subj$red$age_max`, females = `r subj$red$gender_f`).
+In the strict compliance (SC) models, we treated the partial sleep deprivation as a dichotomous variable. Using our pre-defined criteria for sleep loss, `r subj$red$exc` participants had to be excluded. This left the SC models with a total sample size of `r subj$red$num` participants with an average age of `r subj$red$age` (*SD* = `r subj$red$age_sd`, range = `r subj$red$age_min`-`r subj$red$age_max`, females = `r subj$red$gender_f`).
 
-### Bayesian Statistical Models
+## Bayesian Statistical Models
 
-#### Thought Probes
+### Thought Probes
 
-The Bayesian hierarchical ordered-probit models of the thought probes for the dichotomous variable treatment are presented in @tbl-dich-probes. 
+The Bayesian hierarchical ordered-probit models of the thought probes for the SC models are presented in Table S5. 
 
 ```{r}
-#| label: tbl-dich-probes
-#| tbl-cap: "Dichotomous Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
+#| label: tbl-dr-probes-models
+#| tbl-cap: "Dose-Response Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
 #| tbl-cap-location: top
 #| ## META ##
 #| include: true
@@ -232,15 +283,15 @@ The Bayesian hierarchical ordered-probit models of the thought probes for the di
 tbls[["dich_probit_model"]]
 ```
 
-#### Behaviour
+### Behaviour
 
-The Bayesian hierarchical linear model of the behaviour for the dichotomous variable treatment is in @tbl-dich-behav-models.
+The Bayesian hierarchical linear model of the behaviour for the SC models are presented in @tbl-sc-behavioural-models.
 
 ```{r}
-#| label: tbl-dich-behav-models
-#| tbl-cap: "Dichotomous Bayesian Model for Behavioural Variability and Approximate Entropy"
+#| label: tbl-sc-behavioural-models
+#| tbl-cap: "Dose-Response Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
 #| tbl-cap-location: top
-#| # settings
+#| ## META ##
 #| include: true
 #| warning: false
 #| message: false
@@ -248,11 +299,12 @@ The Bayesian hierarchical linear model of the behaviour for the dichotomous vari
 tbls[["dich_behav_models"]]
 ```
 
+
+::: landscape
+
 ## Affect
 
 ### Pre-Task Affect
-
-::: {.landscape}
 
 ```{r}
 #| label: tbl-psd-on-pre-task-affect
@@ -280,7 +332,81 @@ tbls[["psd_on_pre-task_affect"]]
 tbls[["affect-change__psd+mw"]]
 ```
 
+
 :::
+
+## Collider bias
+
+Excluding participants based on an arbitrary threshold can be concerning as such exclusion could be caused by another underlying factor, like motivation. To ensure that participants included in the SC models did not systematically differ from those that were excluded we, we used both Welch t-tests and Bayesian t-tests to test the difference across a various metrics. Specifically, we tested the groups across our probe responses (MW, MB, S-MW), task performance indices (BV, AE), and self-reported questionnaires (pre-positive mood, pre-negative mood, fatigue, sleepiness, insomnia, sleep quality, diurnal preference, alcohol consumption). Our results (@tbl-compliance_test_excluded_vs_included) indicated that there were no baseline differences between the groups, suggesting that the two groups did not systematically differ across various metrics other than their ability to achieve the specified sleep criteria.
+
+
+```{r}
+#| label: tbl-compliance_test_excluded_vs_included
+#| tbl-cap: "The Effect of Order on Thought Probes"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["compliance_test_excluded_vs_included"]] |> tab_header(title = "")
+```
+
+## Order effects
+
+To test whether there was an effect of order, we ran 3 Bayesian hierarchical ordered-probit models of the outcomes MW, MB, S-MW, and 2 Bayesian hierarchical linear models for the outcomes BV and AE with the predictors PSD and session (S1 vs S2), including random intercepts. Generally, the results did not indicate any order effects, except for MB, which generally showed reduced MB during S2 (b = -0.34, ERdir = 40.1, pdir = .976). However, that effect was qualified by the S2 x PSD interaction, such that whilst MB was generally reduced during S2, this reduction diminished with increasing PSD (b = 0.34, ERdir = 114, pdir = .991). Similarly, there appears to be a training effect for AE, which showed a general increase in the second session, but did not interact with PSD. Crucially, the PSD effect on MW tendency remains even when we control for order. Results are displayed in @tbl-order_effects_on_probes and @tbl-order_effects_on_behav.
+
+```{r}
+#| label: tbl-order_effects_on_probes
+#| tbl-cap: "The Effect of Order on Thought Probes"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["order_effects_on_probes"]] |> tab_header(title = "")
+```
+
+```{r}
+#| label: tbl-order_effects_on_behaviour
+#| tbl-cap: "The Effect of Order on Behaviour"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["order_effects_on_behav"]] |> tab_header(title = "")
+```
+
+## Test Time
+
+We tested whether test time (09:00 vs. 11:00) had an effect on the thought probes and behaviour. To achieve this, we implemented 5 Bayesian hierarchical linear models with outcomes MW, MB, S-MW, BV, and AE using the predictors PSD and test time (09:00 vs. 11:00). For the chronotype model, we did a simple Bayesian t-test of the average chronotype split by the test time group. For the chronotype model, those who were tested earlier tended to have an earlier chronotype ($M$ = `r effect_of_test_time$m_9`, $SD$ = `r effect_of_test_time$sd_9`) while those who were tested later tended to have a later chronotype ($M$ = `r effect_of_test_time$m_11`, $SD$ = `r effect_of_test_time$sd_11`). However, we did not observe any evidence ($BF_{10}$ = `r effect_of_test_time$bf`) that this difference ($M_\text{diff} $*M*~diff~ = 0.29) was significant. For the hierarchical linear models, the results did not find any effect of test time on the outcomes (none of the HDIs of the coefficients excluded zero) while maintaining the PSD effect (@tbl-test_time_on_probes and @tbl-test_time_on_behaviour).
+
+```{r}
+#| label: tbl-test_time_on_probes
+#| tbl-cap: "Test Time Effects on the Thought Probes"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["test_time_on_probes"]] |> tab_header(title = "")
+```
+
+```{r}
+#| label: tbl-test_time_on_behaviour
+#| tbl-cap: "Test Time Effects on Behaviour"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["test_time_on_behav"]] |> tab_header(title = "")
+```
 
 {{< pagebreak >}}
 
