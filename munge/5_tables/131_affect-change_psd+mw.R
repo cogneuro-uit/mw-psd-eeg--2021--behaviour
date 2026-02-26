@@ -38,8 +38,8 @@ tbls[["affect-change__psd+mw"]] <-
       (( dich_neg_p |> str_remove("[<>=]") |> as.numeric() ) >= .95 ), TRUE, FALSE)
   ) |>
   gt(groupname_col = "group") |>
-  tab_spanner("Continuous PSD", starts_with("cont_")) |>
-  tab_spanner("Dichotomous PSD", starts_with("dich_")) |>
+  tab_spanner("DR PSD", starts_with("cont_")) |>
+  tab_spanner("SC PSD", starts_with("dich_")) |>
   tab_spanner("Negative affect", matches("neg_")) |>
   tab_spanner("Positive affect", matches("pos_")) |>
   cols_move(contains("_pos_"), var) |>
@@ -48,9 +48,10 @@ tbls[["affect-change__psd+mw"]] <-
   cols_move("neg_e", cont_neg_p) |>
   cols_hide(ends_with("_diff")) |>
   tab_bayes_generics(
-    pre_footnote = "Continuous partial sleep deprivation (PSD) refers to how the 
-    PSD variable was treated, i.e., as a continuous variable. While under the dichotomous PSD, 
-    the variable was treated as a dichotomous (true/false) -- pertaining to fewer participants (*n* = 23). 
+    pre_footnote = "The partial sleep deprivation (PSD) for the dose-response 
+    (DR) models was treated as a continuous variable, while under the strict
+    compliance (SC) models, it was treated as a dichotomous (true/false) -- 
+    pertaining to fewer participants (*n* = 23).
     Bold rows indicate a difference between the models."
     , post_footnote = "MW = mind wandering."
   ) |>

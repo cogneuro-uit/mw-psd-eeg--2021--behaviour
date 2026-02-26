@@ -269,7 +269,7 @@ In the strict compliance (SC) models, we treated the partial sleep deprivation a
 
 ### Thought Probes
 
-The Bayesian hierarchical ordered-probit models of the thought probes for the SC models are presented in Table S5. 
+The Bayesian hierarchical ordered-probit models of the thought probes for the SC models are presented in @tbl-dr-probes-models. 
 
 ```{r}
 #| label: tbl-dr-probes-models

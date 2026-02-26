@@ -47,7 +47,7 @@ tbls[["cont_behav_models"]] <-
     cells_body(matches("cont_ae"),diff_ae)
   ) |>
   cols_hide(starts_with("diff")) |>
-  tab_bayes_generics(pre_footnote = "Bold rows indicate a difference to the dichotomous Bayesian model.", 
+  tab_bayes_generics(pre_footnote = "Bold rows indicate a difference to the corresponding strict compliance Bayesian model.", 
                      post_footnote = "Pre-positive = Pre-test positive affect, Pre-negative = Pre-test negative affect, PSD = partial sleep deprivation.") 
 
 conditional_save(
