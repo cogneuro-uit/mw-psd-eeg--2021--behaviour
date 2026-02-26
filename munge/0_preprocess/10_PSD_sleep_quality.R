@@ -14,8 +14,8 @@ PSD_sleep_quality <-
     .by = c(subj, psd), 
     , sleep_quality = mean(sleep_quality, na.rm=T)
     , adj = unique(c.Adjusted_Duration.diff.pos)
-    , sr = unique(Self.report_Duration.diff.pos)
-    , ag = unique(Actigraphy_Duration.diff.pos)
+    , sr = unique(c.Self.report_Duration.diff.pos)
+    , ag = unique(c.Actigraphy_Duration.diff.pos)
   ) |>
   pivot_wider(names_from = psd, values_from = c(sleep_quality, adj, sr, ag)) |>
   mutate(

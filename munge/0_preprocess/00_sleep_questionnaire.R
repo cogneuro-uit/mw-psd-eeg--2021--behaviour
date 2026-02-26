@@ -5,7 +5,7 @@ NAMES_panas_neg <- map(c(2, 4, 6, 7, 8, 11, 13, 15, 18, 20), \(x){
   paste0("S6_Q",x)}) |> list_c()
 
 
-## General sleep summary  ======
+# General sleep summary  ======
 general_sleep <- 
   sleep_quiz |>
   mutate(
@@ -45,7 +45,7 @@ general_sleep <-
   add_row(name = "actual_sleep", .before=6) 
 
 
-##  Transform variables to calculate various scales ======
+#  Transform variables to calculate various scales ======
 sleep_quiz_trans <- 
   sleep_quiz |>
   rowwise() |>
@@ -110,7 +110,7 @@ sleep_quiz_trans <-
   select(-c2a, -c2b, -c4a, -c7a)
 
 
-## Cronbach's alpha    =====
+# Cronbach's alpha    =====
 sleep_quiz_alpha <- 
   tibble(
   fatigue     = psych::alpha(sleep_quiz_trans |> select(S2_Q1:S2_Q8) ) |> pluck("feldt") |> unlist() |> fmt_APA_numbers(.low_val = T)
@@ -142,12 +142,13 @@ rep_sleep_quiz_alpha <-
   sleep_quiz_alpha |> mutate(CI = NULL, alpha = as.character(alpha)) |> 
   pivot_wider(names_from = name, values_from = alpha) 
   
-
-## Summarize the scales ======
-sleep_quiz_summary <- 
+# Summary   ======
+## Calculate the various scale summary effects    ======
+sleep_quiz_interim_trans <- 
   sleep_quiz_trans |>
   rowwise() |>
-  mutate(
+  summarise(
+    subj = subj
     #' **FATIGUE**
     #' Average all responses (S2.1:S2.8)
     , fatigue     = mean(c_across(starts_with("S2_")))
@@ -192,13 +193,26 @@ sleep_quiz_summary <-
     , alcohol_n   = length(c_across(S7_Q1:S7_Q3))
   ) |> 
   ungroup() |>
-  pivot_longer(c(fatigue:alcohol_n)) |> 
+  pivot_longer(c(fatigue:alcohol_n)) |>
   mutate(
     split = if_else(str_detect(name, "_n$"), "num", "value")
     , name = if_else(str_detect(name, "_n$"), NA, name)
-  ) |> 
+  ) |>
   fill(name, .direction = "down") |>
-  pivot_wider(names_from = split, values_from = value) |>
+  pivot_wider(names_from = split, values_from = value) |> 
+  mutate(
+    num = if_else(is.na(num), lag(num), num)
+  )
+
+
+## Subject level summary of sleep questionnaire ======
+sleep_quiz_summary_subject <-
+  sleep_quiz_interim_trans |>
+  pivot_wider(names_from = name, values_from = c(value, num))
+
+## Group level summary of sleep questionnaire    ======
+sleep_quiz_summary <-
+  sleep_quiz_interim_trans |>
   summarise(
     .by = name, 
     , m   = mean(value, na.rm=T)
@@ -207,7 +221,7 @@ sleep_quiz_summary <-
     , max = max(value,  na.rm=T)
     , n = unique(num)
   ) |>
-  add_row(name = "PANAS", .before=6) |>
+  add_row(name = "PANAS", .before=7) |>
   left_join(
     sleep_quiz_alpha
     , by = "name"
