@@ -18,7 +18,7 @@ options(
   #' **Table related settings**
   , project_save_tbls_to_file        = TRUE
   , project_save_tbls_location       = "tables/"
-  , project_save_tbls_formats        = c(".html", ".docx")
+  , project_save_tbls_formats        = c(".html", ".docx", ".rtf")
   , project_save_tbls_with_date_time = FALSE
   
   #' **Bayesian related settings**
@@ -35,7 +35,7 @@ options(
   #' Generally, leave the below alone.
   , project_custom_colours = list(
     B = "#000000", W = "#ffffff"
-    , `/G` = "#F5F5F5", `-k` = "#D3D3D3", k = "#808080", `+K` = "#404040", `*K` = "#1A1A1A"
+    , `/G` = "#F5F5F5", `-G` = "#D3D3D3", G = "#808080", `+G` = "#404040", `*G` = "#1A1A1A"
     , `/r` = "#ffd6d2", `-r` = "#F8A290", r = "#F8766D", `+r` = "#b20b00", `*r` = "#8c0000"
     , `/b` = "#d6e9ff", `-b` = "#8EBEFF", b = "#78ADFF", `+b` = "#00348C", `*b` = "#00246D"
     , `/g` = "#c9ffd6", `-g` = "#7AD686", g = "#00BA38", `+g` = "#006400", `*g` = "#004B00"

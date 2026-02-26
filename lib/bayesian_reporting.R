@@ -596,25 +596,25 @@ tab_bayes_generics <- function(data, fmt_md_var = F, pre_footnote="", post_footn
   
   # ER
   if( any( str_ends(c_names, "er" ) ) ){
-    er_dir <- "ER~dir~ indicates the evidence ratio that the effect is in the *b* specified direction."
+    er_dir <- "ER~dir~ indicate the evidence ratio that the effect is in the *b* specified direction."
     if(pre_footnote != ""){ er_dir = paste0(" ", er_dir) }
   } else { er_dir = ""}
   
   # P
   if( any( str_ends(c_names, "p") ) ){
-    p_dir <- " *p*~dir~ indicates the probability that the effect is in the *b* specified direction."
+    p_dir <- " *p*~dir~ indicate the probability that the effect is in the *b* specified direction."
   } else { p_dir <- "" }
   
   
   # Convergence
   if( any( str_ends(c_names, "rhat") ) ){
-    rhat <- " $\\hat{R}^2$ indicates convergence between and within-chain."
+    rhat <- " $\\hat{R}^2$ indicate convergence between and within-chain."
   } else { rhat <- "" }
   if( any( str_ends(c_names, "ess_bulk") ) ){
-    ess_bulk <- " $\\text{ESS}_{bulk}$ indicates the effective sample size of the bulk of the distribution."
+    ess_bulk <- " $\\text{ESS}_{bulk}$ indicate the effective sample size of the bulk of the distribution."
   } else { ess_bulk <- "" }
   if( any( str_ends(c_names, "ess_tail") ) ){
-    ess_tail <- " $\\text{ESS}_{bulk}$ indicates the effective sample size of the tails of the distribution."
+    ess_tail <- " $\\text{ESS}_{bulk}$ indicate the effective sample size of the tails of the distribution."
   } else { ess_tail <- "" }
   
   # Add empty space if some are present

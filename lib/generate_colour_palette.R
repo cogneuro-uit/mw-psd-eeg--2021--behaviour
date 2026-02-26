@@ -33,6 +33,7 @@ gen_col <- function(colour_str) {
     "/" # Very light/weak
     , "-" # Light/weak
     , "+" # Strong
+    , "*" # very strong
     , "#" # Custom hex color
   )
   

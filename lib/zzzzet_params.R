@@ -1,3 +1,6 @@
+# Establish future connections =====
+futr_establish()
+
 # Behaviour calculation       =====
 #' Set parameters for AE/BV calculation
 nback=25
