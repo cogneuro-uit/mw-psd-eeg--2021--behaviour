@@ -1,3 +1,6 @@
+# Check / download models from OSF before anything else loads =====
+check_models_vs_osf(relative_path)
+
 # Establish future connections =====
 futr_establish()
 

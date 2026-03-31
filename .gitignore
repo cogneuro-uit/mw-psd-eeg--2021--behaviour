@@ -6,6 +6,13 @@
 # ignore locally opened files
 .~* 
 
+# Ignore remotes -- should not be uploaded (blueprint available in this github though)
+config/**.yaml
+
+# Ignore model files (download from OSF via lib/check_models_vs_osf.R)
+data/**/[Bb]ayes*.[Rr][Dd][Aa][Tt][Aa]
+data/**/[Mm]od[-_]*.[Rr][Dd][Aa][Tt][Aa]
+
 # Ignore cache
 cache/*.[rR][dD][aA][tT][aA]
 cache/*.hash
