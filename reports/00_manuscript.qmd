@@ -326,13 +326,25 @@ Some differences were found in the SC model (see Table S5 for an overview). Afte
 
 figs[["interactions"]] <- 
   guide_area() + 
-  figs[["probes~PSD*time"]]      + labs(title="a") +
-  figs[["MW~PSD*behav"]]         + labs(title="b") +
-  figs[["SMW~PSD*pre_pos"]]      + labs(title="c") +
-  figs[["BV~PSD*time"]]          + labs(title="d") +
-  figs[["BV~PSD*pre_pos"]]       + labs(title="e") +
-  figs[["AE~PSD*time"]]          + labs(title="f") +
-  # figs[["Mood__PSD"]] + labs(title="d") +
+  # old
+  # figs[["probes~PSD*time"]]      + labs(title="a") +
+  # figs[["MW~PSD*behav"]]         + labs(title="b") +
+  # figs[["SMW~PSD*pre_pos"]]      + labs(title="c") +
+  # figs[["BV~PSD*time"]]          + labs(title="d") +
+  # figs[["BV~PSD*pre_pos"]]       + labs(title="e") +
+  # figs[["AE~PSD*time"]]          + labs(title="f") +
+  
+  # not used:
+  # # figs[["Mood__PSD"]] + labs(title="d") +
+  
+  # With bands
+  figs[["probes~PSD*time---cond"]]      + labs(title="a") +
+  figs[["MW~behav*PSD---cond"]]         + labs(title="b") +
+  figs[["SMW~PSD*pos---cond"]]      + labs(title="c") +
+  figs[["BV~PSD*time---cond"]]          + labs(title="d") +
+  figs[["BV~PSD*pos---cond"]]       + labs(title="e") +
+  figs[["AE~PSD*time---cond"]]          + labs(title="f") +
+  
   plot_layout(
     ncol = 2, 
     design = "AAAA
