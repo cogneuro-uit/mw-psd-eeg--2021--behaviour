@@ -1,4 +1,4 @@
-pre_pos_mood_tbl <- 
+change_neg_mood_tbl <- 
   bayes_tbl_sum(mod.mood.dich[["neg"]][["psdXmw"]], apa_table = T, add_loo_R2 = T)  |>
   bayes_tbl_add_sig() |>
   mutate_bayes_mod_beh() |> 
@@ -11,14 +11,14 @@ pre_pos_mood_tbl <-
     , by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.mood.ext[["diff_neg~AG_PSD*MW"]], apa_table = T, add_loo_R2 = T)  |>
+    bayes_tbl_sum(mod.mood.ext$`diff_neg~AG_PSD*MW`, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |> 
       rename_with( ~paste0("cont_ag_", .x), 3:6)
     , by = c("group", "var") 
   ) |>
   left_join(
-    bayes_tbl_sum(mod.mood.ext[["diff_neg~SR_PSD*MW"]], apa_table = T, add_loo_R2 = T)  |>
+    bayes_tbl_sum(mod.mood.ext$`diff_neg~SR_PSD*MW`, apa_table = T, add_loo_R2 = T)  |>
       bayes_tbl_add_sig() |>
       mutate_bayes_mod_beh() |> 
       rename_with( ~paste0("cont_sr_", .x), 3:6)
@@ -38,8 +38,8 @@ pre_pos_mood_tbl <-
 
 
 
-tbls[["pre_neg__pred_PSD_x_MW_across_sleep_variables"]] <- 
-  pre_neg_mood_tbl |>
+tbls[["affect_change__pred_PSD_x_MW_across_sleep_variables"]] <- 
+  change_neg_mood_tbl |>
   gt(groupname_col = "group") |>
   # tab_spanner("Dichotomous", starts_with("exc_")) |>
   tab_spanner("Strict Compliance", starts_with("exc_")) |>
@@ -67,12 +67,12 @@ tbls[["pre_neg__pred_PSD_x_MW_across_sleep_variables"]] <-
   ) |> 
   cols_label(starts_with(".e") ~ "") |>
   tab_bayes_generics(
-    pre_footnote = "Bold rows indicate a difference to the the Adjusted Partial Sleep Deprivation (PSD) model."
+    pre_footnote = "Bold rows indicate a difference to the the adjusted partial sleep deprivation (PSD) model."
     , post_footnote = "MW = Mind wandering"
   ) |>
-  tab_header("Predictors of Mood-diff Negative Affect")
+  tab_header("Predictors of Mood Change for Negative Affect Across Sleep Variable Treatments")
 
 conditional_save(
-  tbls[["pre_neg__pred_PSD_x_MW_across_sleep_variables"]]
+  tbls[["affect_change__pred_PSD_x_MW_across_sleep_variables"]]
   , "Mood Diff Negative - PSD x MW across sleep variables"
 )
