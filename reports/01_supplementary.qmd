@@ -231,107 +231,167 @@ tbls[["probe_descriptives_wide"]]
 figs[["desc_probes_additional_comparisons"]]
 ```
 
-## Dose-Response Models
-
-@tbl-dr-probes-models indicates the coefficients for the continuously treated PSD on the various MW types, and @tbl-dr-behavioural-models indicates the coefficients for the continuously treated PSD on the behaviours. Bold rows indicate a difference between the DR and SC models (see below).
-
-```{r}
-#| label: tbl-dr-probes-models
-#| tbl-cap: "Dose-Response Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
-#| tbl-cap-location: top
-#| ## META ##
-#| include: true
-#| warning: false
-#| message: false
-
-tbls[["cont_probit_model"]]
-```
-
-```{r}
-#| label: tbl-dr-behavioural-models
-#| tbl-cap: "Dose-Response Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
-#| tbl-cap-location: top
-#| ## META ##
-#| include: true
-#| warning: false
-#| message: false
-
-tbls[["dich_behav_models"]]
-```
-
-## Strict Compliance (SC) Models
-
-### Participants
-
-In the strict compliance (SC) models, we treated the partial sleep deprivation as a dichotomous variable. Using our pre-defined criteria for sleep loss, `r subj$red$exc` participants had to be excluded. This left the SC models with a total sample size of `r subj$red$num` participants with an average age of `r subj$red$age` (*SD* = `r subj$red$age_sd`, range = `r subj$red$age_min`-`r subj$red$age_max`, females = `r subj$red$gender_f`).
-
-## Bayesian Statistical Models
-
-### Thought Probes
-
-The Bayesian hierarchical ordered-probit models of the thought probes for the SC models are presented in @tbl-dr-probes-models. 
-
-```{r}
-#| label: tbl-dr-probes-models
-#| tbl-cap: "Dose-Response Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
-#| tbl-cap-location: top
-#| ## META ##
-#| include: true
-#| warning: false
-#| message: false
-
-tbls[["dich_probit_model"]]
-```
-
-### Behaviour
-
-The Bayesian hierarchical linear model of the behaviour for the SC models are presented in @tbl-sc-behavioural-models.
-
-```{r}
-#| label: tbl-sc-behavioural-models
-#| tbl-cap: "Dose-Response Bayesian Model for Mind Wandering, Mind Blanking and Spontaneous Mind Wandering"
-#| tbl-cap-location: top
-#| ## META ##
-#| include: true
-#| warning: false
-#| message: false
-
-tbls[["dich_behav_models"]]
-```
-
+{{< pagebreak >}}
 
 ::: landscape
 
-## Affect
+## Bayesian Models
 
-### Pre-Task Affect
+### Probes
+
+@tbl-mw-across-sleep-vars to @tbl-change-neg-across-sleep-vars indicate all bayesian models for the probes and behaviour as the outcome using various PSD predictor treatments (strict compliance vs. dose-response) as well as types (actigraphy, self-report and the adjusted PSD). Bold rows indicate a significant (*p*~dir~ >= .95) difference from the adjusted PSD.
 
 ```{r}
-#| label: tbl-psd-on-pre-task-affect
-#| tbl-cap: "Partial Sleep Deprivation on pre-Task Positive and Negative Affect"
+#| label: tbl-mw-across-sleep-vars
+#| tbl-cap: "Predictors of Mind Wandering Across Sleep Variable Treatments"
 #| tbl-cap-location: top
 #| ## META ##
 #| include: true
 #| warning: false
 #| message: false
 
-tbls[["psd_on_pre-task_affect"]]
+tbls[["MW_predictors_across_sleep_variables"]]
 ```
 
-### Affect Change Across the Task
-
 ```{r}
-#| label: tbl-psd-mw-on-pre-task-affect
-#| tbl-cap: "The Effect of Partial Sleep Deprivation and Mind Wandering on the Change in Affect Across the Task"
+#| label: tbl-mb-across-sleep-vars
+#| tbl-cap: "Predictors of Mind Blanking Across Sleep Variable Treatments"
 #| tbl-cap-location: top
 #| ## META ##
 #| include: true
 #| warning: false
 #| message: false
 
-tbls[["affect-change__psd+mw"]]
+tbls[["MB_predictors_across_sleep_variables"]]
 ```
 
+
+```{r}
+#| label: tbl-smw-across-sleep-vars
+#| tbl-cap: "Predictors of Spontaneous Mind Wandering Across Sleep Variable Treatments"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["SMW_predictors_across_sleep_variables"]]
+```
+
+
+### Behaviour
+
+```{r}
+#| label: tbl-bv-across-sleep-vars
+#| tbl-cap: "Predictors of Behavioural Variability Across Sleep Variable Treatments"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["BV_predictors_across_sleep_variables"]]
+```
+
+
+```{r}
+#| label: tbl-ae-across-sleep-vars
+#| tbl-cap: "Predictors of Approximate Entropy Across Sleep Variable Treatments"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["AE_predictors_across_sleep_variables"]]
+```
+
+
+### Affect
+
+@tbl-pre-pos-across-sleep-vars to @tbl-change-across-sleep-vars indicate all bayesian models for the affect as the outcome using various PSD predictor treatments (strict compliance vs. dose-response) as well as types (actigraphy, self-report and the adjusted PSD). Bold rows indicate a significant (*p*~dir~ >= .95) difference from the adjusted PSD.
+
+#### Pre-Task
+
+```{r}
+#| label: tbl-pre-pos-across-sleep-vars
+#| tbl-cap: "Predictors of Pre-Task Positive Affect Across Sleep Variable Treatments"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["pre_pos__pred_PSD_across_sleep_variables"]]
+```
+
+
+```{r}
+#| label: tbl-pre-neg-across-sleep-vars
+#| tbl-cap: "Predictors of Pre-Task Negative Affect Across Sleep Variable Treatments"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["pre_neg__pred_PSD_across_sleep_variables"]]
+```
+
+
+#### Affect Change
+
+```{r}
+#| label: tbl-change-pos-across-sleep-vars
+#| tbl-cap: "Predictors of Pre-Task Positive Affect Across Sleep Variable Treatments"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["pre_pos__pred_PSD_x_MW_across_sleep_variables"]]
+```
+
+```{r}
+#| label: tbl-change-neg-across-sleep-vars
+#| tbl-cap: "Predictors of Pre-Task Negative Affect Across Sleep Variable Treatments"
+#| tbl-cap-location: top
+#| ## META ##
+#| include: true
+#| warning: false
+#| message: false
+
+tbls[["pre_neg__pred_PSD_x_MW_across_sleep_variables"]]
+```
+
+
+<!-- ## Strict compliance vs. full sample -->
+
+<!-- ```{r} -->
+<!-- #| label: tbl-compare-sc-vs-full-sample-probes -->
+<!-- #| tbl-cap: "Comparison of Probe Predictors for the Dichotomously Treated Sleep Between the Strict Compliance and the Full Sample" -->
+<!-- #| tbl-cap-location: top -->
+<!-- #| ## META ## -->
+<!-- #| include: true -->
+<!-- #| warning: false -->
+<!-- #| message: false -->
+
+<!-- tbls[["all_pars_probit_model"]] -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- #| label: tbl-compare-sc-vs-full-sample-beh -->
+<!-- #| tbl-cap: "Comparison of Behavioural Predictors for the Dichotomously Treated Sleep Between the Strict Compliance and the Full Sample" -->
+<!-- #| tbl-cap-location: top -->
+<!-- #| ## META ## -->
+<!-- #| include: true -->
+<!-- #| warning: false -->
+<!-- #| message: false -->
+
+<!-- tbls[["all_pars_behav_models"]] #|> gt::tab_header("") -->
+<!-- ``` -->
 
 :::
 
@@ -349,12 +409,12 @@ Excluding participants based on an arbitrary threshold can be concerning as such
 #| warning: false
 #| message: false
 
-tbls[["compliance_test_excluded_vs_included"]] |> tab_header(title = "")
+tbls[["compliance_test_excluded_vs_included"]] 
 ```
 
 ## Order effects
 
-To test whether there was an effect of order, we ran 3 Bayesian hierarchical ordered-probit models of the outcomes MW, MB, S-MW, and 2 Bayesian hierarchical linear models for the outcomes BV and AE with the predictors PSD and session (S1 vs S2), including random intercepts. Generally, the results did not indicate any order effects, except for MB, which generally showed reduced MB during S2 (b = -0.34, ERdir = 40.1, pdir = .976). However, that effect was qualified by the S2 x PSD interaction, such that whilst MB was generally reduced during S2, this reduction diminished with increasing PSD (b = 0.34, ERdir = 114, pdir = .991). Similarly, there appears to be a training effect for AE, which showed a general increase in the second session, but did not interact with PSD. Crucially, the PSD effect on MW tendency remains even when we control for order. Results are displayed in @tbl-order_effects_on_probes and @tbl-order_effects_on_behav.
+To test whether there was an effect of order, we ran 3 Bayesian hierarchical ordered-probit models of the outcomes MW, MB, S-MW, and 2 Bayesian hierarchical linear models for the outcomes BV and AE with the predictors PSD and session (S1 vs S2), including random intercepts. Generally, the results did not indicate any order effects, except for MB, which generally showed reduced MB during S2 (b = -0.34, ERdir = 40.1, pdir = .976). However, that effect was qualified by the S2 x PSD interaction, such that whilst MB was generally reduced during S2, this reduction diminished with increasing PSD (b = 0.34, ERdir = 114, pdir = .991). Similarly, there appears to be a training effect for AE, which showed a general increase in the second session, but did not interact with PSD. Crucially, the PSD effect on MW tendency remains even when we control for order. Results are displayed in @tbl-order_effects_on_probes and @tbl-order_effects_on_behaviour
 
 ```{r}
 #| label: tbl-order_effects_on_probes
@@ -365,7 +425,7 @@ To test whether there was an effect of order, we ran 3 Bayesian hierarchical ord
 #| warning: false
 #| message: false
 
-tbls[["order_effects_on_probes"]] |> tab_header(title = "")
+tbls[["order_effects_on_probes"]]
 ```
 
 ```{r}
@@ -377,7 +437,7 @@ tbls[["order_effects_on_probes"]] |> tab_header(title = "")
 #| warning: false
 #| message: false
 
-tbls[["order_effects_on_behav"]] |> tab_header(title = "")
+tbls[["order_effects_on_behav"]]
 ```
 
 ## Test Time
@@ -393,7 +453,7 @@ We tested whether test time (09:00 vs. 11:00) had an effect on the thought probe
 #| warning: false
 #| message: false
 
-tbls[["test_time_on_probes"]] |> tab_header(title = "")
+tbls[["test_time_on_probes"]]
 ```
 
 ```{r}
@@ -405,7 +465,7 @@ tbls[["test_time_on_probes"]] |> tab_header(title = "")
 #| warning: false
 #| message: false
 
-tbls[["test_time_on_behav"]] |> tab_header(title = "")
+tbls[["test_time_on_behav"]]
 ```
 
 {{< pagebreak >}}
