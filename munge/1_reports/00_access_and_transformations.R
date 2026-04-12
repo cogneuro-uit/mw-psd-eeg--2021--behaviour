@@ -193,11 +193,12 @@ mood <- list(
     , n_s   = as_tibble( mod.mood.cont$neg$psd )
     , n_s.m = as_tibble( mod.mood.cont$neg$psdXmw )
   ),
+  # wrong. 
   dich = list(
-    p_s      = as_tibble( mod.mood.dich$pos$psd )
-    , p_s.m = as_tibble( mod.mood.dich$pos$psdXmw )
-    , n_s   = as_tibble( mod.mood.dich$neg$psd )
-    , n_s.m = as_tibble( mod.mood.dich$neg$psdXmw )
+    p_s     = as_tibble( mod.mood.dich.sc$pos$pre )
+    , p_s.m = as_tibble( mod.mood.dich.sc$pos$change )
+    , n_s   = as_tibble( mod.mood.dich.sc$neg$pre )
+    , n_s.m = as_tibble( mod.mood.dich.sc$neg$change )
   )
 )
 
