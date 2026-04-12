@@ -309,7 +309,7 @@ tbls[["AE_predictors_across_sleep_variables"]]
 
 ### Affect
 
-@tbl-pre-pos-across-sleep-vars to @tbl-change-across-sleep-vars indicate all bayesian models for the affect as the outcome using various PSD predictor treatments (strict compliance vs. dose-response) as well as types (actigraphy, self-report and the adjusted PSD). Bold rows indicate a significant (*p*~dir~ >= .95) difference from the adjusted PSD.
+@tbl-pre-pos-across-sleep-vars to @tbl-change-neg-across-sleep-vars indicate all bayesian models for the affect as the outcome using various PSD predictor treatments (strict compliance vs. dose-response) as well as types (actigraphy, self-report and the adjusted PSD). Bold rows indicate a significant (*p*~dir~ >= .95) difference from the adjusted PSD.
 
 #### Pre-Task
 
@@ -350,7 +350,7 @@ tbls[["pre_neg__pred_PSD_across_sleep_variables"]]
 #| warning: false
 #| message: false
 
-tbls[["pre_pos__pred_PSD_x_MW_across_sleep_variables"]]
+tbls[["affect_change_pos__pred_PSD_x_MW_across_sleep_variables"]]
 ```
 
 ```{r}
@@ -362,7 +362,7 @@ tbls[["pre_pos__pred_PSD_x_MW_across_sleep_variables"]]
 #| warning: false
 #| message: false
 
-tbls[["pre_neg__pred_PSD_x_MW_across_sleep_variables"]]
+tbls[["affect_change_neg__pred_PSD_x_MW_across_sleep_variables"]]
 ```
 
 
