@@ -6,7 +6,7 @@ authors:
     orcid: 0000-0003-2807-7504
     affiliation: 
       - ref: uit
-  - name: Samy Engebø Babiker
+  - name: Samy Babiker
     affiliation:
       - ref: uit
   - name: Aurora Marie Kleivik Vangen
